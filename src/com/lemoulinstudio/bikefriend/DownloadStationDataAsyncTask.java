@@ -72,16 +72,12 @@ public class DownloadStationDataAsyncTask extends AsyncTask<URL, Void, List<Stat
       for (Station station : stations) {
         MarkerOptions markerOptions = new MarkerOptions()
                 .position(new LatLng(station.latitude, station.longitude))
-                .title(station.englishName)
-                //.snippet(station.englishAddress)
-                .snippet("Bikes: " + station.nbBikes +
-                " Empty slots: " + station.nbEmptySlots)
                 .icon(BitmapDescriptorFactory.defaultMarker(
-                station.isTestStation ?
-                  BitmapDescriptorFactory.HUE_RED :
-                  (station.nbBikes == 0 || station.nbEmptySlots == 0) ?
-                    BitmapDescriptorFactory.HUE_ORANGE :
-                    BitmapDescriptorFactory.HUE_GREEN));
+                  station.isTestStation ?
+                    BitmapDescriptorFactory.HUE_RED :
+                    (station.nbBikes == 0 || station.nbEmptySlots == 0) ?
+                      BitmapDescriptorFactory.HUE_ORANGE :
+                      BitmapDescriptorFactory.HUE_GREEN));
         
         Marker marker = map.addMarker(markerOptions);
         siwa.bindMarkerToStation(marker, station);

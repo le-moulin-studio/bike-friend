@@ -1,15 +1,14 @@
 package com.lemoulinstudio.bikefriend;
 
-import android.graphics.Color;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.view.LayoutInflater;
+import android.app.Activity;
+import android.content.res.Resources;
 import android.view.View;
 import android.widget.TextView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -18,11 +17,31 @@ import java.util.Map;
  */
 public class StationInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
   
-  private Map<Marker, Station> markerToStation = new HashMap<Marker, Station>();
-  private View windowView;
+  private final View windowView;
+  private final Map<Marker, Station> markerToStation;
+  
+  private final boolean isChineseLanguage;
+  
+  private final String nbBikeFormat;
+  private final String nbEmptySlotFormat;
+  private final String dataAgeSecondFormat;
+  private final String dataAgeMinuteFormat;
+  private final String dataAgeHourFormat;
+  private final String dataAgeDayFormat;
 
-  public StationInfoWindowAdapter(LayoutInflater layoutInflater) {
-    windowView = layoutInflater.inflate(R.layout.station_info_window, null);
+  public StationInfoWindowAdapter(Activity activity) {
+    this.windowView = activity.getLayoutInflater().inflate(R.layout.station_info_window, null);
+    this.markerToStation = new HashMap<Marker, Station>();
+    
+    this.isChineseLanguage = Locale.getDefault().getLanguage().equals("zh");
+    
+    Resources resources = activity.getResources();
+    this.nbBikeFormat = resources.getString(R.string.map_popup_station_nb_bike_format);
+    this.nbEmptySlotFormat = resources.getString(R.string.map_popup_station_nb_empty_slot_format);
+    this.dataAgeSecondFormat = resources.getString(R.string.map_popup_station_data_age_sec_format);
+    this.dataAgeMinuteFormat = resources.getString(R.string.map_popup_station_data_age_min_format);
+    this.dataAgeHourFormat = resources.getString(R.string.map_popup_station_data_age_hour_format);
+    this.dataAgeDayFormat = resources.getString(R.string.map_popup_station_data_age_day_format);
   }
   
   public void bindMarkerToStation(Marker marker, Station station) {
@@ -35,34 +54,33 @@ public class StationInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
   
   public View getInfoWindow(Marker marker) {
     Station station = markerToStation.get(marker);
-    String name = station.englishName;
     
     TextView titleUi = ((TextView) windowView.findViewById(R.id.title));
-    titleUi.setText(name);
+    titleUi.setText(isChineseLanguage ? station.chineseName : station.englishName);
     
     TextView nbBicycleUi = ((TextView) windowView.findViewById(R.id.nb_bicycles));
-    nbBicycleUi.setText("Bicycles: " + station.nbBikes);
+    nbBicycleUi.setText(String.format(nbBikeFormat, station.nbBikes));
     
     TextView nbEmptySlotUi = ((TextView) windowView.findViewById(R.id.nb_empty_slots));
-    nbEmptySlotUi.setText("Empty Slots: " + station.nbEmptySlots);
+    nbEmptySlotUi.setText(String.format(nbEmptySlotFormat, station.nbEmptySlots));
     
     TextView stationDataAgeUi = ((TextView) windowView.findViewById(R.id.station_data_age));
     
     String ageString;
     long age = new Date().getTime() - station.date.getTime();
     if (age < 60 * 1000) {
-      ageString = String.format("%d sec(s)", age / 1000);
+      ageString = String.format(dataAgeSecondFormat, age / 1000);
     }
     else if (age < 60 * 60 * 1000) {
-      ageString = String.format("%d min(s)", age / (60 * 1000));
+      ageString = String.format(dataAgeMinuteFormat, age / (60 * 1000));
     }
     else if (age < 24 * 60 * 60 * 1000) {
-      ageString = String.format("%d hour(s)", age / (60 * 60 * 1000));
+      ageString = String.format(dataAgeHourFormat, age / (60 * 60 * 1000));
     }
     else {
-      ageString = String.format("%d day(s)", age / (24 * 60 * 60 * 1000));
+      ageString = String.format(dataAgeDayFormat, age / (24 * 60 * 60 * 1000));
     }
-    stationDataAgeUi.setText(String.format("Station data is %s old.", ageString));
+    stationDataAgeUi.setText(ageString);
     
     return windowView;
   }

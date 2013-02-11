@@ -33,7 +33,7 @@ public class StationMapActivity extends FragmentActivity {
       map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.station_map)).getMap();
       
       if (map != null) {
-        siwa = new StationInfoWindowAdapter(getLayoutInflater());
+        siwa = new StationInfoWindowAdapter(this);
         map.setInfoWindowAdapter(siwa);
         
         DownloadStationDataAsyncTask dsd = new DownloadStationDataAsyncTask(map, siwa);

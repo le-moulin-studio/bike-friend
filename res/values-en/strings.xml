@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">bikeFriend</string>
+  <string name="map_popup_station_nb_bike_format">Bicycles: %d</string>
+  <string name="map_popup_station_nb_empty_slot_format">Empty Slots: %d</string>
+  <string name="map_popup_station_data_age_sec_format">Station data is %d sec(s) old.</string>
+  <string name="map_popup_station_data_age_min_format">Station data is %d min(s) old.</string>
+  <string name="map_popup_station_data_age_hour_format">Station data is %d hour(s) old.</string>
+  <string name="map_popup_station_data_age_day_format">Station data is %d day(s) old.</string>
+</resources>
