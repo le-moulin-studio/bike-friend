@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content"
+  android:background="@drawable/custom_info_bubble"
+  android:orientation="vertical">
+  <TextView
+    android:id="@+id/title"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:singleLine="true"
+    android:textColor="#ff000000"
+    android:textSize="14dp"
+    android:textStyle="bold"/>
+  <TextView
+    android:id="@+id/nb_bicycles"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:singleLine="true"
+    android:textColor="#ff3f3f3f"
+    android:textSize="14dp"/>
+  <TextView
+    android:id="@+id/nb_empty_slots"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:singleLine="true"
+    android:textColor="#ff3f3f3f"
+    android:textSize="14dp"/>
+  <TextView
+    android:id="@+id/station_data_age"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:singleLine="true"
+    android:textColor="#ff7f7f7f"
+    android:textSize="14dp"/>
+</LinearLayout>

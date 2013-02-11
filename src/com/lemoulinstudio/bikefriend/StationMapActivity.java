@@ -4,12 +4,17 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MainActivity extends FragmentActivity {
+/**
+ *
+ * @author Vincent Cantin
+ */
+public class StationMapActivity extends FragmentActivity {
+  
+  public static final String LOG_TAG = "bikeFriend";
 
   private GoogleMap map;
+  private StationInfoWindowAdapter siwa;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -28,9 +33,14 @@ public class MainActivity extends FragmentActivity {
       map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.station_map)).getMap();
       
       if (map != null) {
-        map.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+        siwa = new StationInfoWindowAdapter(getLayoutInflater());
+        map.setInfoWindowAdapter(siwa);
+        
+        DownloadStationDataAsyncTask dsd = new DownloadStationDataAsyncTask(map, siwa);
+        dsd.execute();
       }
     }
+    
   }
 
 }
