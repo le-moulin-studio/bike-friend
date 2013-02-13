@@ -33,6 +33,8 @@ public class StationMapActivity extends FragmentActivity {
       map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.station_map)).getMap();
       
       if (map != null) {
+        map.setMyLocationEnabled(true);
+        
         siwa = new StationInfoWindowAdapter(this);
         map.setInfoWindowAdapter(siwa);
         
