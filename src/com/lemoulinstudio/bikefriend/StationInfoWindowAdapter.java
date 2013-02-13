@@ -20,7 +20,7 @@ public class StationInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
   private final View windowView;
   private final Map<Marker, Station> markerToStation;
   
-  private final boolean isChineseLanguage;
+  private final String language;
   
   private final String nbBikeFormat;
   private final String nbEmptySlotFormat;
@@ -33,7 +33,7 @@ public class StationInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     this.windowView = activity.getLayoutInflater().inflate(R.layout.station_info_window, null);
     this.markerToStation = new HashMap<Marker, Station>();
     
-    this.isChineseLanguage = Locale.getDefault().getLanguage().equals("zh");
+    this.language = Locale.getDefault().getLanguage();
     
     Resources resources = activity.getResources();
     this.nbBikeFormat = resources.getString(R.string.map_popup_station_nb_bike_format);
@@ -56,18 +56,18 @@ public class StationInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     Station station = markerToStation.get(marker);
     
     TextView titleUi = ((TextView) windowView.findViewById(R.id.title));
-    titleUi.setText(isChineseLanguage ? station.chineseName : station.englishName);
+    titleUi.setText(station.getName(language));
     
     TextView nbBicycleUi = ((TextView) windowView.findViewById(R.id.nb_bicycles));
-    nbBicycleUi.setText(String.format(nbBikeFormat, station.nbBikes));
+    nbBicycleUi.setText(String.format(nbBikeFormat, station.getNbBikes()));
     
     TextView nbEmptySlotUi = ((TextView) windowView.findViewById(R.id.nb_empty_slots));
-    nbEmptySlotUi.setText(String.format(nbEmptySlotFormat, station.nbEmptySlots));
+    nbEmptySlotUi.setText(String.format(nbEmptySlotFormat, station.getNbEmptySlots()));
     
     TextView stationDataAgeUi = ((TextView) windowView.findViewById(R.id.station_data_age));
     
     String ageString;
-    long age = new Date().getTime() - station.date.getTime();
+    long age = new Date().getTime() - station.getDate().getTime();
     if (age < 60 * 1000) {
       ageString = String.format(dataAgeSecondFormat, age / 1000);
     }

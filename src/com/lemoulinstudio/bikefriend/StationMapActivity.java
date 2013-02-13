@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.lemoulinstudio.bikefriend.cbike.CBikeStationProvider;
+import com.lemoulinstudio.bikefriend.ubike.YouBikeStationProvider;
 
 /**
  *
@@ -38,11 +40,10 @@ public class StationMapActivity extends FragmentActivity {
         siwa = new StationInfoWindowAdapter(this);
         map.setInfoWindowAdapter(siwa);
         
-        DownloadStationDataAsyncTask dsd = new DownloadStationDataAsyncTask(map, siwa);
-        dsd.execute();
+        DownloadStationDataAsyncTask task = new DownloadStationDataAsyncTask(map, siwa);
+        task.execute(new YouBikeStationProvider(), new CBikeStationProvider());
       }
     }
-    
   }
-
+  
 }

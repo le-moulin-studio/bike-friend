@@ -1,9 +1,14 @@
-package com.lemoulinstudio.bikefriend;
+package com.lemoulinstudio.bikefriend.ubike;
 
 import android.util.Log;
 import android.util.Xml;
+import com.google.android.gms.maps.model.LatLng;
+import com.lemoulinstudio.bikefriend.InternetStationProvider;
+import com.lemoulinstudio.bikefriend.StationMapActivity;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,7 +24,16 @@ import org.xmlpull.v1.XmlPullParserException;
  *
  * @author Vincent Cantin
  */
-public class StationXmlParser {
+public class YouBikeStationProvider extends InternetStationProvider<YouBikeStation> {
+  
+  private static URL getServiceURL() {
+    try {
+      return new URL("http://www.youbike.com.tw/genxml.php?lat=25.041282&lng=121.54089&radius=5&mode=0");
+    }
+    catch (MalformedURLException ex) {
+      return null;
+    }
+  }
 
   // No namespace.
   private final String ns = null;
@@ -29,7 +43,8 @@ public class StationXmlParser {
   private int thisYear;
   private Date now;
 
-  public StationXmlParser() {
+  public YouBikeStationProvider() {
+    super(getServiceURL());
     TimeZone taiwanTimeZone = TimeZone.getTimeZone("Asia/Taipei");
     this.dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     this.dateFormat.setTimeZone(taiwanTimeZone);
@@ -37,7 +52,7 @@ public class StationXmlParser {
     this.now = new Date();
   }
   
-  public List parse(InputStream in) throws XmlPullParserException, IOException {
+  public List<YouBikeStation> parseStations(InputStream in) throws IOException, ParsingException {
     try {
       XmlPullParser parser = Xml.newPullParser();
       parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
@@ -45,34 +60,39 @@ public class StationXmlParser {
       parser.nextTag();
 
       return readMarkers(parser);
-    } finally {
+    }
+    catch (XmlPullParserException e) {
+      throw new ParsingException(e);
+    }
+    finally {
       in.close();
     }
   }
 
-  private List<Station> readMarkers(XmlPullParser parser) throws XmlPullParserException, IOException {
-    List<Station> stations = new ArrayList<Station>();
+  private List<YouBikeStation> readMarkers(XmlPullParser parser) throws XmlPullParserException, IOException {
+    List<YouBikeStation> stations = new ArrayList<YouBikeStation>();
 
     parser.require(XmlPullParser.START_TAG, ns, "markers");
     while (parser.next() != XmlPullParser.END_TAG) {
       if (parser.getEventType() == XmlPullParser.START_TAG) {
         if (parser.getName().equals("marker")) {
-          Station station = new Station();
+          YouBikeStation station = new YouBikeStation();
 
           // Too bad the designers of the YouBike API didn't think of having an ID field.
           station.chineseName = parser.getAttributeValue(ns, "name");
           station.chineseAddress = parser.getAttributeValue(ns, "address");
           station.englishName = parser.getAttributeValue(ns, "nameen");
           station.englishAddress = parser.getAttributeValue(ns, "addressen");
-          station.latitude = readFloat(parser.getAttributeValue(ns, "lat"), -1.0f);
-          station.longitude = readFloat(parser.getAttributeValue(ns, "lng"), -1.0f);
-          station.date = readDate(parser.getAttributeValue(ns, "mday"));
-          station.isTestStation = readInt(parser.getAttributeValue(ns, "icon_type"), -1) == 1;
-          station.nbBikes = readInt(parser.getAttributeValue(ns, "tot"), -1);
-          station.nbEmptySlots = readInt(parser.getAttributeValue(ns, "sus"), -1);
-          station.nbTotalPlaces = readInt(parser.getAttributeValue(ns, "qqq"), -1);
+          station.location = new LatLng(
+                  parseFloat(parser.getAttributeValue(ns, "lat"), 0.0f),
+                  parseFloat(parser.getAttributeValue(ns, "lng"), 0.0f));
+          station.nbBikes = parseInt(parser.getAttributeValue(ns, "tot"), -1);
+          station.nbEmptySlots = parseInt(parser.getAttributeValue(ns, "sus"), -1);
+          station.nbTotalPlaces = parseInt(parser.getAttributeValue(ns, "qqq"), -1);
+          station.date = parseDate(parser.getAttributeValue(ns, "mday"));
+          station.isTestStation = parseInt(parser.getAttributeValue(ns, "icon_type"), -1) == 1;
           
-          if (isValid(station)) {
+          if (station.isValid()) {
             stations.add(station);
           }
 
@@ -87,23 +107,7 @@ public class StationXmlParser {
     return stations;
   }
 
-  private int readInt(String text, int defaultValue) {
-    try {
-      return Integer.parseInt(text);
-    } catch (NumberFormatException e) {
-      return defaultValue;
-    }
-  }
-
-  private float readFloat(String text, float defaultValue) {
-    try {
-      return Float.parseFloat(text);
-    } catch (NumberFormatException e) {
-      return defaultValue;
-    }
-  }
-
-  private Date readDate(String text) {
+  private Date parseDate(String text) {
     try {
       // We assume that the year is this year.
       Date date = dateFormat.parse("" + thisYear + "/" + text);
@@ -125,15 +129,6 @@ public class StationXmlParser {
     }
     
     return null;
-  }
-
-  private boolean isValid(Station station) {
-    return ((station.date != null) &&
-            (station.latitude != -1.0f) &&
-            (station.longitude != -1.0f) &&
-            (station.nbBikes != -1) &&
-            (station.nbEmptySlots != -1) &&
-            (station.nbTotalPlaces != -1));
   }
 
   private void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
