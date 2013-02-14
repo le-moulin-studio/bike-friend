@@ -49,7 +49,6 @@ public class YouBikeStationProvider extends InternetStationProvider<YouBikeStati
     this.dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     this.dateFormat.setTimeZone(taiwanTimeZone);
     this.thisYear = new GregorianCalendar(taiwanTimeZone).get(Calendar.YEAR);
-    this.now = new Date();
   }
   
   public List<YouBikeStation> parseStations(InputStream in) throws IOException, ParsingException {
@@ -59,6 +58,8 @@ public class YouBikeStationProvider extends InternetStationProvider<YouBikeStati
       parser.setInput(in, null);
       parser.nextTag();
 
+      now = new Date();
+      
       return readMarkers(parser);
     }
     catch (XmlPullParserException e) {

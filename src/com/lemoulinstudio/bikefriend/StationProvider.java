@@ -8,5 +8,6 @@ import java.util.List;
  * @author Vincent Cantin
  */
 public interface StationProvider<T extends Station> {
-  public List<T> getStations() throws IOException, InternetStationProvider.ParsingException;
+  public void fetchStations() throws IOException, InternetStationProvider.ParsingException;
+  public List<T> getStations();
 }

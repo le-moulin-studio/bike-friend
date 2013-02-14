@@ -32,6 +32,7 @@ public class DownloadStationDataAsyncTask extends AsyncTask<StationProvider, Voi
     try {
       List<Station> stations = new ArrayList<Station>();
       for (StationProvider stationProvider : stationProviders) {
+        stationProvider.fetchStations();
         stations.addAll(stationProvider.getStations());
       }
       return stations;

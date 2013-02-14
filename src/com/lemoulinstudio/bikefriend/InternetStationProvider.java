@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,6 +12,8 @@ import java.util.List;
  * @author Vincent Cantin
  */
 public abstract class InternetStationProvider<T extends Station> implements StationProvider<T> {
+  
+  private List<T> stations = new ArrayList<T>();
   
   public static class ParsingException extends Exception {
     public ParsingException(Throwable throwable) {
@@ -54,9 +57,13 @@ public abstract class InternetStationProvider<T extends Station> implements Stat
   // Note: this method should close the stream after it finished using it.
   protected abstract List<T> parseStations(InputStream in) throws IOException, ParsingException;
 
-  public List<T> getStations() throws IOException, ParsingException {
+  public void fetchStations() throws IOException, ParsingException {
     InputStream in = getDataStream();
-    return parseStations(in);
+    stations = parseStations(in);
+  }
+  
+  public List<T> getStations() {
+    return stations;
   }
   
 }

@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="app_name">bikeFriend</string>
+  
+  <string name="menu_refresh">Refresh</string>
+  <string name="menu_places">Places</string>
+  <string name="menu_place_taipei">Taipei</string>
+  <string name="menu_place_kaohsiung">KaoHsiung</string>
+  <string name="menu_settings">Settings</string>
+  <string name="menu_about">About</string>
+  
   <string name="map_popup_station_nb_bike_format">Bicycles: %d</string>
   <string name="map_popup_station_nb_empty_slot_format">Empty Slots: %d</string>
   <string name="map_popup_station_data_age_sec_format">Station data is %d sec(s) old.</string>
