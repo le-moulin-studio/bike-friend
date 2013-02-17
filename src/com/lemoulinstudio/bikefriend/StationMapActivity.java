@@ -4,13 +4,15 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.lemoulinstudio.bikefriend.cbike.CBikeStationProvider;
 import com.lemoulinstudio.bikefriend.ubike.YouBikeStationProvider;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -21,8 +23,11 @@ public class StationMapActivity extends FragmentActivity {
   public static final String LOG_TAG = "bikeFriend";
   private GoogleMap map;
   private StationInfoWindowAdapter siwa;
+  
   private YouBikeStationProvider youBikeProvider = new YouBikeStationProvider();
   private CBikeStationProvider cBikeProvider = new CBikeStationProvider();
+  private List<StationProvider<?>> stationProviders = Arrays.<StationProvider<?>>asList(
+          youBikeProvider, cBikeProvider);
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -42,16 +47,30 @@ public class StationMapActivity extends FragmentActivity {
     switch (item.getItemId()) {
       case R.id.menu_refresh: {
         if (map != null) {
-          refreshData();
+          for (StationProvider stationProvider : stationProviders) {
+            stationProvider.refreshData();
+          }
         }
         return true;
       }
       case R.id.menu_place_taipei: {
-        animateCameraToBoundingBox(youBikeProvider);
+        // TODO: change to fixed bouding box.
+        animateCameraToBoundingBox(youBikeProvider.getLatLngBounds());
+        return true;
+      }
+      case R.id.menu_place_taichung: {
+        // TODO: change to fixed bouding box.
+        //animateCameraToBoundingBox(...);
         return true;
       }
       case R.id.menu_place_kaohsiung: {
-        animateCameraToBoundingBox(cBikeProvider);
+        // TODO: change to fixed bouding box.
+        animateCameraToBoundingBox(cBikeProvider.getLatLngBounds());
+        return true;
+      }
+      case R.id.menu_place_tainan: {
+        // TODO: change to fixed bouding box.
+        //animateCameraToBoundingBox(...);
         return true;
       }
       case R.id.menu_settings: {
@@ -79,26 +98,27 @@ public class StationMapActivity extends FragmentActivity {
       if (map != null) {
         map.setMyLocationEnabled(true);
         map.setInfoWindowAdapter(siwa);
-
-        refreshData();
+        
+        for (StationProvider stationProvider : stationProviders) {
+          stationProvider.setMap(map);
+          stationProvider.setStationInfoWindowAdapter(siwa);
+        }
+        
+        map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+          public void onCameraChange(CameraPosition cp) {
+            for (StationProvider stationProvider : stationProviders) {
+              stationProvider.notifyCameraChanged();
+            }
+          }
+        });
       }
     }
   }
 
-  private void refreshData() {
-    DownloadStationDataAsyncTask task = new DownloadStationDataAsyncTask(map, siwa);
-    task.execute(youBikeProvider, cBikeProvider);
-  }
-
-  private void animateCameraToBoundingBox(StationProvider<?> stationProvider) {
-    if (map != null) {
-      LatLngBounds.Builder builder = new LatLngBounds.Builder();
-      for (Station station : stationProvider.getStations()) {
-        builder.include(station.getLocation());
-      }
-
-      CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(), 50);
-      map.animateCamera(cameraUpdate);
+  private void animateCameraToBoundingBox(LatLngBounds bounds) {
+    if (bounds != null) {
+      map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
     }
   }
+  
 }

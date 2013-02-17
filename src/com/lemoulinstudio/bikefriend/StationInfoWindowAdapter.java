@@ -48,6 +48,10 @@ public class StationInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     markerToStation.put(marker, station);
   }
 
+  public void unbindMarker(Marker marker) {
+    markerToStation.remove(marker);
+  }
+
   public void unbindAllMarkers() {
     markerToStation.clear();
   }

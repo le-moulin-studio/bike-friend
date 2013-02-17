@@ -16,10 +16,22 @@
         android:showAsAction="ifRoom"
         android:title="@string/menu_place_taipei"/>
       <item
+        android:id="@+id/menu_place_taichung"
+        android:icon="@drawable/ic_action_location"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_place_taichung"
+        android:visible="false"/>
+      <item
         android:id="@+id/menu_place_kaohsiung"
         android:icon="@drawable/ic_action_location"
         android:showAsAction="ifRoom"
         android:title="@string/menu_place_kaohsiung"/>
+      <item
+        android:id="@+id/menu_place_tainan"
+        android:icon="@drawable/ic_action_location"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_place_tainan"
+        android:visible="false"/>
     </menu>
   </item>
   <item
