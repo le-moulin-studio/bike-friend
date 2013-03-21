@@ -120,6 +120,10 @@ public abstract class InternetStationProvider<T extends Station> implements Stat
   }
   
   protected LatLngBounds computeBounds(List<T> stations) {
+    if (stations.isEmpty()) {
+      return null;
+    }
+    
     LatLngBounds.Builder builder = new LatLngBounds.Builder();
     for (Station station : stations) {
       builder.include(station.getLocation());
