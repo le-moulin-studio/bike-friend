@@ -28,7 +28,7 @@ public class YouBikeStationProvider extends InternetStationProvider<YouBikeStati
   
   private static URL getServiceURL() {
     try {
-      return new URL("http://www.youbike.com.tw/genxml.php?lat=25.041282&lng=121.54089&radius=5&mode=0");
+      return new URL("http://www.youbike.com.tw/genxml.php");
     }
     catch (MalformedURLException ex) {
       return null;

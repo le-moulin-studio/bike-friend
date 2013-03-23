@@ -3,6 +3,9 @@
   <string name="app_name">bikeFriend</string>
   
   <string name="menu_refresh">Refresh</string>
+  <string name="menu_layer">Layers</string>
+  <string name="menu_layer_bike">Bike</string>
+  <string name="menu_layer_ev">EV</string>
   <string name="menu_places">Places</string>
   <string name="menu_place_taipei">Taipei</string>
   <string name="menu_place_taichung">Taichung</string>

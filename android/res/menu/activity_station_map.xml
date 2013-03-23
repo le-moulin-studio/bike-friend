@@ -5,6 +5,26 @@
     android:showAsAction="ifRoom"
     android:title="@string/menu_refresh"/>
   <item
+    android:id="@+id/menu_layer"
+    android:icon="@drawable/ic_action_refresh"
+    android:showAsAction="ifRoom"
+    android:title="@string/menu_layer">
+    <menu>
+      <group android:checkableBehavior="all">
+        <item
+          android:id="@+id/menu_layer_bike"
+          android:icon="@drawable/ic_action_location"
+          android:showAsAction="ifRoom"
+          android:title="@string/menu_layer_bike"/>
+        <item
+          android:id="@+id/menu_layer_ev"
+          android:icon="@drawable/ic_action_location"
+          android:showAsAction="ifRoom"
+          android:title="@string/menu_layer_ev"/>
+      </group>
+    </menu>
+  </item>
+  <item
     android:id="@+id/menu_places"
     android:icon="@drawable/ic_action_goto"
     android:showAsAction="ifRoom"

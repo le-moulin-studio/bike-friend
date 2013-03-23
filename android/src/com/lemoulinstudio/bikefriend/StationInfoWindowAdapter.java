@@ -59,6 +59,10 @@ public class StationInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
   public View getInfoWindow(Marker marker) {
     Station station = markerToStation.get(marker);
     
+    if (station == null) {
+      return null;
+    }
+    
     TextView titleUi = ((TextView) windowView.findViewById(R.id.title));
     titleUi.setText(station.getName(language));
     

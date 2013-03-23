@@ -1,5 +1,6 @@
 package com.lemoulinstudio.bikefriend;
 
+import com.lemoulinstudio.bikefriend.ev.EVLayer;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
@@ -9,8 +10,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.lemoulinstudio.bikefriend.cbike.CBikeStationProvider;
-import com.lemoulinstudio.bikefriend.ubike.YouBikeStationProvider;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,41 +20,53 @@ import java.util.List;
 public class StationMapActivity extends FragmentActivity {
 
   public static final String LOG_TAG = "bikeFriend";
+  
   private GoogleMap map;
   private StationInfoWindowAdapter siwa;
   
-  private YouBikeStationProvider youBikeProvider = new YouBikeStationProvider();
-  private CBikeStationProvider cBikeProvider = new CBikeStationProvider();
-  private List<StationProvider<?>> stationProviders = Arrays.<StationProvider<?>>asList(
-          youBikeProvider, cBikeProvider);
-
+  private BikeLayer bikeLayer;
+  private EVLayer evLayer;
+  private List<MapLayer> layers;
+  
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.station_map);
     siwa = new StationInfoWindowAdapter(this);
+    
+    bikeLayer = new BikeLayer();
+    evLayer = new EVLayer();
+    layers = Arrays.asList(bikeLayer, evLayer);
+    
+    bikeLayer.setDisplayed(true);
   }
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.activity_station_map, menu);
+    
+    for (MapLayer layer : layers) {
+      MenuItem menuItem = menu.findItem(layer.getMenuId());
+      menuItem.setChecked(layer.isDisplayed());
+    }
+    
     return true;
   }
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
+    int menuItemId = item.getItemId();
+    
+    switch (menuItemId) {
       case R.id.menu_refresh: {
-        if (map != null) {
-          for (StationProvider stationProvider : stationProviders) {
-            stationProvider.refreshData();
-          }
+        for (MapLayer layer : layers) {
+          layer.refresh();
         }
         return true;
       }
       case R.id.menu_place_taipei: {
         // TODO: change to fixed bouding box.
-        animateCameraToBoundingBox(youBikeProvider.getLatLngBounds());
+        animateCameraToBoundingBox(bikeLayer.youBikeProvider.getLatLngBounds());
         return true;
       }
       case R.id.menu_place_taichung: {
@@ -65,7 +76,7 @@ public class StationMapActivity extends FragmentActivity {
       }
       case R.id.menu_place_kaohsiung: {
         // TODO: change to fixed bouding box.
-        animateCameraToBoundingBox(cBikeProvider.getLatLngBounds());
+        animateCameraToBoundingBox(bikeLayer.cBikeProvider.getLatLngBounds());
         return true;
       }
       case R.id.menu_place_tainan: {
@@ -79,12 +90,20 @@ public class StationMapActivity extends FragmentActivity {
       case R.id.menu_about: {
         return true;
       }
-      default: {
-        return super.onOptionsItemSelected(item);
+    }
+    
+    // Check if the menuItem is for one of the layer.
+    for (MapLayer layer : layers) {
+      if (layer.getMenuId() == menuItemId) {
+        layer.setDisplayed(!item.isChecked());
+        item.setChecked(layer.isDisplayed());
+        return true;
       }
     }
+    
+    return super.onOptionsItemSelected(item);
   }
-
+  
   @Override
   protected void onResume() {
     super.onResume();
@@ -99,22 +118,22 @@ public class StationMapActivity extends FragmentActivity {
         map.setMyLocationEnabled(true);
         map.setInfoWindowAdapter(siwa);
         
-        for (StationProvider stationProvider : stationProviders) {
-          stationProvider.setMap(map);
-          stationProvider.setStationInfoWindowAdapter(siwa);
+        for (MapLayer layer : layers) {
+          layer.setMap(map);
+          layer.setStationInfoWindowsAdapter(siwa);
         }
         
         map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
           public void onCameraChange(CameraPosition cp) {
-            for (StationProvider stationProvider : stationProviders) {
-              stationProvider.notifyCameraChanged();
+            for (MapLayer layer : layers) {
+              layer.onCameraChanged();
             }
           }
         });
       }
     }
   }
-
+  
   private void animateCameraToBoundingBox(LatLngBounds bounds) {
     if (bounds != null) {
       map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));

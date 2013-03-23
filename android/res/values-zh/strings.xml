@@ -3,6 +3,9 @@
   <string name="app_name">自行車朋友</string>
   
   <string name="menu_refresh">更新資料</string>
+  <string name="menu_layer">分層顯示</string>
+  <string name="menu_layer_bike">自行車</string>
+  <string name="menu_layer_ev">電動車</string>
   <string name="menu_places">地方</string>
   <string name="menu_place_taipei">台北</string>
   <string name="menu_place_taichung">台中</string>
