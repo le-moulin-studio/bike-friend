@@ -84,6 +84,7 @@ public class YouBikeStationProvider extends InternetStationProvider<YouBikeStati
       }
     }
     
+    toDevNull(connection.getInputStream());
     connection.disconnect();
     
     if (sessionCookie == null) {
@@ -99,6 +100,21 @@ public class YouBikeStationProvider extends InternetStationProvider<YouBikeStati
     connection.connect();
 
     return connection.getInputStream();
+  }
+  
+  private void toDevNull(InputStream in) {
+    try {
+      byte[] buffer = new byte[1024];
+      while (in.read(buffer) != -1) {
+      }
+    }
+    catch (IOException e) {
+      // Just ignore, we don't mind.
+    }
+    finally {
+      try {in.close();}
+      catch (IOException e) {}
+    }
   }
   
   public List<YouBikeStation> parseStations(InputStream in) throws IOException, ParsingException {
