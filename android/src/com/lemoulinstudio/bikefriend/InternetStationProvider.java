@@ -26,7 +26,7 @@ public abstract class InternetStationProvider<T extends Station> implements Stat
     }
   }
   
-  private final URL url;
+  protected final URL url;
   private GoogleMap map;
   private StationInfoWindowAdapter siwa;
   private LatLngBounds bounds;
