@@ -7,6 +7,7 @@ import com.lemoulinstudio.bikefriend.InternetStationProvider;
 import com.lemoulinstudio.bikefriend.StationMapActivity;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
@@ -28,7 +29,7 @@ public class YouBikeStationProvider extends InternetStationProvider<YouBikeStati
   
   private static URL getServiceURL() {
     try {
-      return new URL("http://www.youbike.com.tw/genxml.php");
+      return new URL("http://www.youbike.com.tw/genxml9.php");
     }
     catch (MalformedURLException ex) {
       return null;
@@ -49,6 +50,71 @@ public class YouBikeStationProvider extends InternetStationProvider<YouBikeStati
     this.dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     this.dateFormat.setTimeZone(taiwanTimeZone);
     this.thisYear = new GregorianCalendar(taiwanTimeZone).get(Calendar.YEAR);
+  }
+  
+  private static URL stupidJokeUrl;
+  
+  static {
+    try {
+      stupidJokeUrl = new URL("http://www.youbike.com.tw/info.php");
+    }
+    catch (MalformedURLException ex) {
+    }
+  }
+  
+  @Override
+  protected InputStream getDataStream() throws IOException {
+    HttpURLConnection connection = (HttpURLConnection) stupidJokeUrl.openConnection();
+    connection.setReadTimeout(10000 /* milliseconds */);
+    connection.setConnectTimeout(15000 /* milliseconds */);
+    connection.setRequestMethod("GET");
+    connection.setDoInput(true);
+    connection.connect();
+    
+    String cookieLine = connection.getHeaderField("Set-Cookie");
+    if (cookieLine == null) {
+      return null;
+    }
+    
+    String[] cookies = cookieLine.split(";");
+    String sessionCookie = null;
+    for (String cookie : cookies) {
+      if (cookie.startsWith("PHPSESSID=")) {
+        sessionCookie = cookie.trim();
+      }
+    }
+    
+    toDevNull(connection.getInputStream());
+    connection.disconnect();
+    
+    if (sessionCookie == null) {
+      return null;
+    }
+    
+    connection = (HttpURLConnection) url.openConnection();
+    connection.setReadTimeout(10000 /* milliseconds */);
+    connection.setConnectTimeout(15000 /* milliseconds */);
+    connection.setRequestMethod("GET");
+    connection.setRequestProperty("Cookie", sessionCookie);
+    connection.setDoInput(true);
+    connection.connect();
+
+    return connection.getInputStream();
+  }
+  
+  private void toDevNull(InputStream in) {
+    try {
+      byte[] buffer = new byte[1024];
+      while (in.read(buffer) != -1) {
+      }
+    }
+    catch (IOException e) {
+      // Just ignore, we don't mind.
+    }
+    finally {
+      try {in.close();}
+      catch (IOException e) {}
+    }
   }
   
   public List<YouBikeStation> parseStations(InputStream in) throws IOException, ParsingException {

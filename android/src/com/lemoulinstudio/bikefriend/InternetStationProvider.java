@@ -26,7 +26,7 @@ public abstract class InternetStationProvider<T extends Station> implements Stat
     }
   }
   
-  private final URL url;
+  protected final URL url;
   private GoogleMap map;
   private StationInfoWindowAdapter siwa;
   private LatLngBounds bounds;
@@ -152,7 +152,12 @@ public abstract class InternetStationProvider<T extends Station> implements Stat
     @Override
     protected List<T> doInBackground(StationProvider... stationProviders) {
       try {
-        List<T> stations = parseStations(getDataStream());
+        InputStream dataStream = getDataStream();
+        if (dataStream == null) {
+          throw new IOException();
+        }
+        
+        List<T> stations = parseStations(dataStream);
         bounds = computeBounds(stations);
         return stations;
       }
