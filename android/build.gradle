@@ -22,7 +22,21 @@ dependencies {
 android {
   buildToolsVersion '19.0.1'
   compileSdkVersion 19
-}
+  
+  signingConfigs {
+    release {
+      storeFile file("../../keys/le-moulin-studio-release.keystore")
+      storePassword androidKeyStorePassword
+      keyAlias "le-moulin-studio"
+      keyPassword androidReleaseKeyPassword
+    }
+  }
+  
+  buildTypes {
+    release {
+      signingConfig signingConfigs.release
+    }
+  }}
 
 task wrapper(type: Wrapper) {
   gradleVersion = '1.9'
