@@ -1,0 +1,29 @@
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+
+  dependencies {
+    classpath 'com.android.tools.build:gradle:0.7.3'
+  }
+}
+
+apply plugin: 'android'
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  compile 'com.android.support:support-v4:19.0.1'
+  compile 'com.google.android.gms:play-services:3.1.+'
+}
+
+android {
+  buildToolsVersion '19.0.1'
+  compileSdkVersion 19
+}
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '1.9'
+}
