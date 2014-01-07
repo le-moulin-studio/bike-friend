@@ -23,6 +23,7 @@ local.properties
 # Misc
 /nbandroid/
 /nogit/
+private/
 .gradle/
 .nb-gradle/
 .nb-gradle-properties
