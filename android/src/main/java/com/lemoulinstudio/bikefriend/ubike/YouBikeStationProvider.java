@@ -1,25 +1,18 @@
 package com.lemoulinstudio.bikefriend.ubike;
 
-import android.util.Log;
-import android.util.Xml;
 import com.google.android.gms.maps.model.LatLng;
 import com.lemoulinstudio.bikefriend.InternetStationProvider;
-import com.lemoulinstudio.bikefriend.StationMapActivity;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  *
@@ -29,189 +22,75 @@ public class YouBikeStationProvider extends InternetStationProvider<YouBikeStati
   
   private static URL getServiceURL() {
     try {
-      return new URL("http://www.youbike.com.tw/genxml9.php");
+      return new URL("http://210.69.61.60:8080/you/gwjs_cityhall.json");
     }
     catch (MalformedURLException ex) {
       return null;
     }
   }
 
-  // No namespace.
-  private final String ns = null;
-  
-  // Helpful for parsing the date.
-  private SimpleDateFormat dateFormat;
-  private int thisYear;
-  private Date now;
+  private final SimpleDateFormat dateFormat;
 
   public YouBikeStationProvider() {
     super(getServiceURL());
+    
     TimeZone taiwanTimeZone = TimeZone.getTimeZone("Asia/Taipei");
-    this.dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    this.dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
     this.dateFormat.setTimeZone(taiwanTimeZone);
-    this.thisYear = new GregorianCalendar(taiwanTimeZone).get(Calendar.YEAR);
   }
   
-  private static URL stupidJokeUrl;
-  
-  static {
-    try {
-      stupidJokeUrl = new URL("http://www.youbike.com.tw/info.php");
+  private String readToString(InputStream in) throws IOException {
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    
+    int nbRead;
+    byte[] buffer = new byte[1024];
+    while ((nbRead = in.read(buffer)) != -1) {
+      baos.write(buffer, 0, nbRead);
     }
-    catch (MalformedURLException ex) {
-    }
+    
+    return new String(baos.toByteArray(), "UTF-8");
   }
-  
+
   @Override
-  protected InputStream getDataStream() throws IOException {
-    HttpURLConnection connection = (HttpURLConnection) stupidJokeUrl.openConnection();
-    connection.setReadTimeout(10000 /* milliseconds */);
-    connection.setConnectTimeout(15000 /* milliseconds */);
-    connection.setRequestMethod("GET");
-    connection.setDoInput(true);
-    connection.connect();
-    
-    String cookieLine = connection.getHeaderField("Set-Cookie");
-    if (cookieLine == null) {
-      return null;
-    }
-    
-    String[] cookies = cookieLine.split(";");
-    String sessionCookie = null;
-    for (String cookie : cookies) {
-      if (cookie.startsWith("PHPSESSID=")) {
-        sessionCookie = cookie.trim();
-      }
-    }
-    
-    toDevNull(connection.getInputStream());
-    connection.disconnect();
-    
-    if (sessionCookie == null) {
-      return null;
-    }
-    
-    connection = (HttpURLConnection) url.openConnection();
-    connection.setReadTimeout(10000 /* milliseconds */);
-    connection.setConnectTimeout(15000 /* milliseconds */);
-    connection.setRequestMethod("GET");
-    connection.setRequestProperty("Cookie", sessionCookie);
-    connection.setDoInput(true);
-    connection.connect();
-
-    return connection.getInputStream();
-  }
-  
-  private void toDevNull(InputStream in) {
-    try {
-      byte[] buffer = new byte[1024];
-      while (in.read(buffer) != -1) {
-      }
-    }
-    catch (IOException e) {
-      // Just ignore, we don't mind.
-    }
-    finally {
-      try {in.close();}
-      catch (IOException e) {}
-    }
-  }
-  
   public List<YouBikeStation> parseStations(InputStream in) throws IOException, ParsingException {
+    List<YouBikeStation> result = new ArrayList<YouBikeStation>();
+    
     try {
-      XmlPullParser parser = Xml.newPullParser();
-      parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-      parser.setInput(in, null);
-      parser.nextTag();
+      String jsonString = readToString(in);
+      JSONObject jsonRoot = new JSONObject(jsonString);
+      JSONArray jsonStations = jsonRoot.getJSONArray("retVal");
+      for (int i = 0; i < jsonStations.length(); i++) {
+        try {
+          JSONObject jsonStation = jsonStations.getJSONObject(i);
+          YouBikeStation station = new YouBikeStation();
 
-      now = new Date();
-      
-      return readMarkers(parser);
+          station.date           = dateFormat.parse(jsonStation.getString("mday"));
+          station.chineseName    = jsonStation.getString("sna");
+          station.chineseAddress = jsonStation.getString("ar");
+          station.englishName    = jsonStation.getString("snaen");
+          station.englishAddress = jsonStation.getString("aren");
+          station.location = new LatLng(
+                  Double.parseDouble(jsonStation.getString("lat")),
+                  Double.parseDouble(jsonStation.getString("lng")));
+          station.nbBikes = jsonStation.getInt("sbi");
+          station.nbEmptySlots = jsonStation.getInt("bemp");
+          station.nbTotalPlaces = jsonStation.getInt("tot");
+
+          result.add(station);
+        }
+        catch (Exception e) {
+          // If we cannot read this station, we just skip it.
+        }
+      }
     }
-    catch (XmlPullParserException e) {
+    catch (Exception e) {
       throw new ParsingException(e);
     }
     finally {
       in.close();
     }
-  }
-
-  private List<YouBikeStation> readMarkers(XmlPullParser parser) throws XmlPullParserException, IOException {
-    List<YouBikeStation> stations = new ArrayList<YouBikeStation>();
-
-    parser.require(XmlPullParser.START_TAG, ns, "markers");
-    while (parser.next() != XmlPullParser.END_TAG) {
-      if (parser.getEventType() == XmlPullParser.START_TAG) {
-        if (parser.getName().equals("marker")) {
-          YouBikeStation station = new YouBikeStation();
-
-          // Too bad the designers of the YouBike API didn't think of having an ID field.
-          station.chineseName = parser.getAttributeValue(ns, "name");
-          station.chineseAddress = parser.getAttributeValue(ns, "address");
-          station.englishName = parser.getAttributeValue(ns, "nameen");
-          station.englishAddress = parser.getAttributeValue(ns, "addressen");
-          station.location = new LatLng(
-                  parseFloat(parser.getAttributeValue(ns, "lat"), 0.0f),
-                  parseFloat(parser.getAttributeValue(ns, "lng"), 0.0f));
-          station.nbBikes = parseInt(parser.getAttributeValue(ns, "tot"), -1);
-          station.nbEmptySlots = parseInt(parser.getAttributeValue(ns, "sus"), -1);
-          station.nbTotalPlaces = parseInt(parser.getAttributeValue(ns, "qqq"), -1);
-          station.date = parseDate(parser.getAttributeValue(ns, "mday"));
-          station.isTestStation = parseInt(parser.getAttributeValue(ns, "icon_type"), -1) == 1;
-          
-          if (station.isValid()) {
-            stations.add(station);
-          }
-
-          parser.nextTag();
-          parser.require(XmlPullParser.END_TAG, ns, "marker");
-        } else {
-          skip(parser);
-        }
-      }
-    }
-
-    return stations;
-  }
-
-  private Date parseDate(String text) {
-    try {
-      // We assume that the year is this year.
-      Date date = dateFormat.parse("" + thisYear + "/" + text);
-      long deltaTime = now.getTime() - date.getTime();
-      
-      if (deltaTime >= 0) {
-        return date;
-      }
-      
-      // Handles the case where the request was made on the evening of a 31th december,
-      // right before midnight. Also rejects data which is more than 7 days old.
-      date = dateFormat.parse("" + (thisYear - 1) + "/" + text);
-      deltaTime = now.getTime() - date.getTime();
-      if (deltaTime >= 0 && deltaTime < 7 * 24 * 60 * 60 * 1000) {
-        return date;
-      }
-    } catch (ParseException ex) {
-      Log.d(StationMapActivity.LOG_TAG, "Error while parsing the date.", ex);
-    }
     
-    return null;
+    return result;
   }
 
-  private void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
-    if (parser.getEventType() != XmlPullParser.START_TAG) {
-      throw new IllegalStateException();
-    }
-    int depth = 1;
-    while (depth != 0) {
-      switch (parser.next()) {
-        case XmlPullParser.END_TAG:
-          depth--;
-          break;
-        case XmlPullParser.START_TAG:
-          depth++;
-          break;
-      }
-    }
-  }
 }

@@ -11,7 +11,7 @@
     android:layout_gravity="center_horizontal"
     android:singleLine="true"
     android:textColor="#ff000000"
-    android:textSize="14dp"
+    android:textSize="14sp"
     android:textStyle="bold"/>
   <TextView
     android:id="@+id/nb_bicycles"
@@ -19,19 +19,19 @@
     android:layout_height="wrap_content"
     android:singleLine="true"
     android:textColor="#ff3f3f3f"
-    android:textSize="14dp"/>
+    android:textSize="14sp"/>
   <TextView
     android:id="@+id/nb_empty_slots"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:singleLine="true"
     android:textColor="#ff3f3f3f"
-    android:textSize="14dp"/>
+    android:textSize="14sp"/>
   <TextView
     android:id="@+id/station_data_age"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:singleLine="true"
     android:textColor="#ff7f7f7f"
-    android:textSize="14dp"/>
+    android:textSize="14sp"/>
 </LinearLayout>

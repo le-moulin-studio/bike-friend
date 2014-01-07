@@ -30,7 +30,7 @@ public abstract class InternetStationProvider<T extends Station> implements Stat
   private GoogleMap map;
   private StationInfoWindowAdapter siwa;
   private LatLngBounds bounds;
-  private List<Marker> markers;
+  private final List<Marker> markers;
   private boolean stationsNeedRefresh;
   private boolean isFetchingStations;
   private boolean isVisible;
@@ -44,14 +44,17 @@ public abstract class InternetStationProvider<T extends Station> implements Stat
     this.markers = new ArrayList<Marker>();
   }
   
+  @Override
   public void setMap(GoogleMap map) {
     this.map = map;
   }
   
+  @Override
   public void setStationInfoWindowAdapter(StationInfoWindowAdapter siwa) {
     this.siwa = siwa;
   }
   
+  @Override
   public void notifyCameraChanged() {
     if (!isVisible || !stationsNeedRefresh || map == null) {
       return;
@@ -63,6 +66,7 @@ public abstract class InternetStationProvider<T extends Station> implements Stat
     }
   }
   
+  @Override
   public void refreshData() {
     // Mark the current data as obsolete, and let the lazy loading do its work.
     stationsNeedRefresh = true;
@@ -71,10 +75,12 @@ public abstract class InternetStationProvider<T extends Station> implements Stat
     notifyCameraChanged();
   }
   
+  @Override
   public LatLngBounds getLatLngBounds() {
     return bounds;
   }
   
+  @Override
   public void notifyVisibilityChanged(boolean isVisible) {
     this.isVisible = isVisible;
     for (Marker marker : markers) {
