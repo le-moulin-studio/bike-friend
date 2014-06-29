@@ -4,23 +4,25 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:0.7.3'
+    classpath 'com.android.tools.build:gradle:0.12.0'
   }
 }
 
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 repositories {
   mavenCentral()
 }
 
 dependencies {
-  compile 'com.android.support:support-v4:19.0.1'
-  compile 'com.google.android.gms:play-services:3.1.+'
+  compile 'com.android.support:support-v4:19.1.0'
+  
+  // Later versions made Android v2.2 obsolete, so I stick with this version of the lib.
+  compile 'com.google.android.gms:play-services:4.1.+'
 }
 
 android {
-  buildToolsVersion '19.0.1'
+  buildToolsVersion '20'
   compileSdkVersion 19
   
   signingConfigs {
@@ -36,8 +38,9 @@ android {
     release {
       signingConfig signingConfigs.release
     }
-  }}
+  }
+}
 
 task wrapper(type: Wrapper) {
-  gradleVersion = '1.9'
+  gradleVersion = '1.12'
 }
