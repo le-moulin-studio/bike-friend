@@ -22,7 +22,7 @@ public class YouBikeStationProvider extends InternetStationProvider<YouBikeStati
   
   private static URL getServiceURL() {
     try {
-      return new URL("http://210.69.61.60:8080/you/gwjs_cityhall.json");
+      return new URL("http://opendata.dot.taipei.gov.tw/opendata/gwjs_cityhall.json");
     }
     catch (MalformedURLException ex) {
       return null;
