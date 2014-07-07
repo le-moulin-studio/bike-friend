@@ -1,5 +1,6 @@
 package com.lemoulinstudio.bikefriend;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
@@ -8,6 +9,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.lemoulinstudio.bikefriend.cbike.CBikeStationProvider;
 import com.lemoulinstudio.bikefriend.ubike.YouBikeStationProvider;
@@ -20,7 +22,16 @@ import java.util.List;
  */
 public class StationMapActivity extends FragmentActivity {
 
+  // Tag for the debug messages of the app.
   public static final String LOG_TAG = "bikeFriend";
+  
+  // Keys for the settings of the app.
+  private static final String CAMERA_TARGET_LAT = "cameraTargetLat";
+  private static final String CAMERA_TARGET_LNG = "cameraTargetLng";
+  private static final String CAMERA_ZOOM = "cameraZoom";
+  private static final String CAMERA_TILT = "cameraTilt";
+  private static final String CAMERA_BEARING = "cameraBearing";
+  
   private GoogleMap map;
   private StationInfoWindowAdapter siwa;
   
@@ -32,6 +43,8 @@ public class StationMapActivity extends FragmentActivity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    
+    // Create the view.
     setContentView(R.layout.station_map);
     siwa = new StationInfoWindowAdapter(this);
   }
@@ -96,6 +109,21 @@ public class StationMapActivity extends FragmentActivity {
       map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.station_map)).getMap();
 
       if (map != null) {
+        // Reads the settings.
+        SharedPreferences settings = getPreferences(MODE_PRIVATE);
+        float cameraTargetLat = settings.getFloat(CAMERA_TARGET_LAT, 25.030142f);
+        float cameraTargetLng = settings.getFloat(CAMERA_TARGET_LNG, 121.53549f);
+        float cameraZoom = settings.getFloat(CAMERA_ZOOM, 13.0f);
+        float cameraTilt = settings.getFloat(CAMERA_TILT, 0.0f);
+        float cameraBearing = settings.getFloat(CAMERA_BEARING, 0.0f);
+
+        // Restores the state of the camera on the map.
+        CameraPosition cameraPosition = new CameraPosition(
+                new LatLng(cameraTargetLat, cameraTargetLng),
+                cameraZoom, cameraTilt, cameraBearing);
+        
+        map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        
         map.setMyLocationEnabled(true);
         map.setInfoWindowAdapter(siwa);
         
@@ -113,6 +141,26 @@ public class StationMapActivity extends FragmentActivity {
         });
       }
     }
+  }
+  
+  protected void onPause() {
+    super.onPause();
+    
+    // Saves the settings.
+    SharedPreferences settings = getPreferences(MODE_PRIVATE);
+    SharedPreferences.Editor editor = settings.edit();
+    
+    if (map != null) {
+      // Saves the state of the camera on the map.
+      CameraPosition cameraPosition = map.getCameraPosition();
+      editor.putFloat(CAMERA_TARGET_LAT, (float) cameraPosition.target.latitude);
+      editor.putFloat(CAMERA_TARGET_LNG, (float) cameraPosition.target.longitude);
+      editor.putFloat(CAMERA_ZOOM, cameraPosition.zoom);
+      editor.putFloat(CAMERA_TILT, cameraPosition.tilt);
+      editor.putFloat(CAMERA_BEARING, cameraPosition.bearing);
+    }
+    
+    editor.commit();
   }
 
   private void animateCameraToBoundingBox(LatLngBounds bounds) {
