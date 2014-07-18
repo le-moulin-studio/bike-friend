@@ -27,9 +27,9 @@ android {
   
   signingConfigs {
     release {
-      storeFile file("../../keys/le-moulin-studio-release.keystore")
+      storeFile file(androidKeyStorePath)
       storePassword androidKeyStorePassword
-      keyAlias "le-moulin-studio"
+      keyAlias androidReleaseKeyAlias
       keyPassword androidReleaseKeyPassword
     }
   }
