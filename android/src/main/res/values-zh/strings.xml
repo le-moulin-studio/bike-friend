@@ -5,6 +5,7 @@
   <string name="menu_refresh">更新資料</string>
   <string name="menu_places">地方</string>
   <string name="menu_place_taipei">台北</string>
+  <string name="menu_place_changhua">彰化</string>
   <string name="menu_place_taichung">台中</string>
   <string name="menu_place_kaohsiung">高雄</string>
   <string name="menu_place_tainan">台南</string>
