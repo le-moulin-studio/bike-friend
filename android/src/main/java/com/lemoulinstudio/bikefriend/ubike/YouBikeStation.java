@@ -10,6 +10,7 @@ import java.util.Date;
  */
 public class YouBikeStation extends Station {
   
+  public String id;
   public String chineseName;
   public String chineseAddress;
   public String englishName;

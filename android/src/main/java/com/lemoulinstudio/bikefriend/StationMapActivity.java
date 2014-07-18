@@ -13,6 +13,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.lemoulinstudio.bikefriend.cbike.CBikeStationProvider;
 import com.lemoulinstudio.bikefriend.ubike.YouBikeStationProvider;
+import com.lemoulinstudio.bikefriend.ubike.YouBikeStationProvider2;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,8 +36,8 @@ public class StationMapActivity extends FragmentActivity {
   private GoogleMap map;
   private StationInfoWindowAdapter siwa;
   
-  private YouBikeStationProvider youBikeProvider = new YouBikeStationProvider();
-  private CBikeStationProvider cBikeProvider = new CBikeStationProvider();
+  private StationProvider youBikeProvider = new YouBikeStationProvider2();
+  private StationProvider cBikeProvider = new CBikeStationProvider();
   private List<StationProvider<?>> stationProviders = Arrays.<StationProvider<?>>asList(
           youBikeProvider, cBikeProvider);
 
