@@ -14,8 +14,8 @@
   
   <string name="map_popup_station_nb_bike_format">自行車： %d個</string>
   <string name="map_popup_station_nb_empty_slot_format">空位子： %d個</string>
-  <string name="map_popup_station_data_age_sec_format">車站資料為%d秒前更新.</string>
-  <string name="map_popup_station_data_age_min_format">車站資料為%d分鐘前更新.</string>
-  <string name="map_popup_station_data_age_hour_format">車站資料為%d小時前更新.</string>
-  <string name="map_popup_station_data_age_day_format">車站資料為%d天前更新.</string>
+  <string name="map_popup_station_data_age_sec_format">車站資料為%d秒前更新</string>
+  <string name="map_popup_station_data_age_min_format">車站資料為%d分鐘前更新</string>
+  <string name="map_popup_station_data_age_hour_format">車站資料為%d小時前更新</string>
+  <string name="map_popup_station_data_age_day_format">車站資料為%d天前更新</string>
 </resources>

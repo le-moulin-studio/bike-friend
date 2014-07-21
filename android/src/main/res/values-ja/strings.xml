@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">BikeFriend</string>
+  
+  <string name="menu_refresh">更新</string>
+  <string name="menu_places">地方</string>
+  <string name="menu_place_taipei">台北</string>
+  <string name="menu_place_changhua">彰化</string>
+  <string name="menu_place_taichung">台中</string>
+  <string name="menu_place_kaohsiung">高雄</string>
+  <string name="menu_place_tainan">台南</string>
+  <string name="menu_settings">設定</string>
+  <string name="menu_about">BikeFriendについて關於</string>
+  
+  <string name="map_popup_station_nb_bike_format">自転車： %d台</string>
+  <string name="map_popup_station_nb_empty_slot_format">利用可： %d台</string>
+  <string name="map_popup_station_data_age_sec_format">空き情報は%d秒前に更新</string>
+  <string name="map_popup_station_data_age_min_format">空き情報は%d分前に更新</string>
+  <string name="map_popup_station_data_age_hour_format">空き情報は%d時間前に更新</string>
+  <string name="map_popup_station_data_age_day_format">空き情報は%d日前に更新</string>
+</resources>
