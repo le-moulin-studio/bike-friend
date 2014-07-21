@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">bikeFriend</string>
+  
+  <string name="menu_refresh">Aktualisieren</string>
+  <string name="menu_places">Orte</string>
+  <string name="menu_place_taipei">Taipei</string>
+  <string name="menu_place_changhua">Changhua</string>
+  <string name="menu_place_taichung">Taichung</string>
+  <string name="menu_place_kaohsiung">Kaohsiung</string>
+  <string name="menu_place_tainan">Tainan</string>
+  <string name="menu_settings">Einstellungen</string>
+  <string name="menu_about">Über uns</string>
+  
+  <string name="map_popup_station_nb_bike_format">Fahrräder: %d</string>
+  <string name="map_popup_station_nb_empty_slot_format">Freie Plätze: %d</string>
+  <string name="map_popup_station_data_age_sec_format">Aktualisiert vor %d Sekunden</string>
+  <string name="map_popup_station_data_age_min_format">Aktualisiert vor %d Minuten</string>
+  <string name="map_popup_station_data_age_hour_format">Aktualisiert vor %d Stunden</string>
+  <string name="map_popup_station_data_age_day_format">Aktualisiert vor %d Tagen</string>
+</resources>
