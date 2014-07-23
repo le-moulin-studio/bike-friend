@@ -23,11 +23,13 @@ public class YouBikeStation extends Station {
   public boolean isTestStation;
   
   public String getName(String languageCode) {
-    return "zh".equals(languageCode) ? chineseName : englishName;
+    return "zh".equals(languageCode) || "ja".equals(languageCode) ?
+            chineseName : englishName;
   }
 
   public String getAddress(String languageCode) {
-    return "zh".equals(languageCode) ? chineseAddress : englishAddress;
+    return "zh".equals(languageCode) || "ja".equals(languageCode) ?
+            chineseAddress : englishAddress;
   }
 
   public LatLng getLocation() {
