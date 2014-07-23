@@ -17,9 +17,9 @@ import org.xmlpull.v1.XmlPullParserException;
  *
  * @author Vincent Cantin
  */
-public class KaoHsiungStationProvider extends InternetStationProvider<CBikeStation> {
+public class KaohsiungStationProvider extends InternetStationProvider<CBikeStation> {
   
-  public KaoHsiungStationProvider() {
+  public KaohsiungStationProvider() {
     super("http://www.c-bike.com.tw/xml/stationlist.aspx",
           new CBikeStationXmlParserV1());
   }

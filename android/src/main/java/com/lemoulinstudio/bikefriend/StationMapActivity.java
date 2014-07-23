@@ -11,7 +11,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.lemoulinstudio.bikefriend.cbike.KaoHsiungStationProvider;
+import com.lemoulinstudio.bikefriend.cbike.KaohsiungStationProvider;
+import com.lemoulinstudio.bikefriend.ubike.ChanghuaStationProvider;
+import com.lemoulinstudio.bikefriend.ubike.TaichungStationProvider;
 import com.lemoulinstudio.bikefriend.ubike.TaipeiStationProvider;
 import java.util.Arrays;
 import java.util.List;
@@ -36,9 +38,12 @@ public class StationMapActivity extends FragmentActivity {
   private StationInfoWindowAdapter siwa;
   
   private StationProvider taipeiProvider = new TaipeiStationProvider();
-  private StationProvider kaoHsiungProvider = new KaoHsiungStationProvider();
+  private StationProvider changhuaProvider = new ChanghuaStationProvider();
+  private StationProvider taichungProvider = new TaichungStationProvider();
+  private StationProvider kaohsiungProvider = new KaohsiungStationProvider();
+  
   private List<StationProvider> stationProviders = Arrays.<StationProvider>asList(
-          taipeiProvider, kaoHsiungProvider);
+          taipeiProvider, changhuaProvider, taichungProvider, kaohsiungProvider);
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -71,14 +76,19 @@ public class StationMapActivity extends FragmentActivity {
         animateCameraToBoundingBox(taipeiProvider.getLatLngBounds());
         return true;
       }
+      case R.id.menu_place_changhua: {
+        // TODO: change to fixed bouding box.
+        animateCameraToBoundingBox(changhuaProvider.getLatLngBounds());
+        return true;
+      }
       case R.id.menu_place_taichung: {
         // TODO: change to fixed bouding box.
-        //animateCameraToBoundingBox(...);
+        animateCameraToBoundingBox(taichungProvider.getLatLngBounds());
         return true;
       }
       case R.id.menu_place_kaohsiung: {
         // TODO: change to fixed bouding box.
-        animateCameraToBoundingBox(kaoHsiungProvider.getLatLngBounds());
+        animateCameraToBoundingBox(kaohsiungProvider.getLatLngBounds());
         return true;
       }
       case R.id.menu_place_tainan: {

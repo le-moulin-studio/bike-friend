@@ -16,11 +16,15 @@
         android:showAsAction="ifRoom"
         android:title="@string/menu_place_taipei"/>
       <item
+        android:id="@+id/menu_place_changhua"
+        android:icon="@drawable/ic_action_location"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_place_changhua"/>
+      <item
         android:id="@+id/menu_place_taichung"
         android:icon="@drawable/ic_action_location"
         android:showAsAction="ifRoom"
-        android:title="@string/menu_place_taichung"
-        android:visible="false"/>
+        android:title="@string/menu_place_taichung"/>
       <item
         android:id="@+id/menu_place_kaohsiung"
         android:icon="@drawable/ic_action_location"
