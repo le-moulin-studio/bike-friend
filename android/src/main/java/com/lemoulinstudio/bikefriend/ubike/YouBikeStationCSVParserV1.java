@@ -7,8 +7,10 @@ import com.lemoulinstudio.bikefriend.Utils;
 import java.io.InputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import android.util.Log;
 
 /**
  * This parser extracts information from a data source in a format similar to CSV.
@@ -29,7 +31,7 @@ public class YouBikeStationCSVParserV1 implements StationParser<YouBikeStation> 
       String[] lines = rawData.split("\\|");
       for (String line : lines) {
         //Log.i("bikefriend", "line = " + line);
-        String[] elements = line.split("_");
+        String[] elements = line.split("_", -1);
         //Log.i("bikefriend", "elements = " + Arrays.toString(elements));
         
         if (elements.length >= 11) {
