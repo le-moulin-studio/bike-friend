@@ -46,13 +46,13 @@ public class YouBikeStationHtmlParserV2 implements StationParser<YouBikeStation>
     
     try {
       for (String line = br.readLine(); line != null; line = br.readLine()) {
-        if (line.contains("JSON.parse(decodeURIComponent(")) {
+        if (line.contains("JSON.parse(")) {
           Pattern p = Pattern.compile("'([^']*)'");
           Matcher m = p.matcher(line);
 
           if (m.find()) {
             String encodedData = m.group(1);
-            String jsonText = URLDecoder.decode(encodedData.replace("+", "%2B"), "UTF-8").replace("%2B", "+");
+            String jsonText = URLDecoder.decode(encodedData, "UTF-8");
             return parseStations(jsonText);
           }
         }
@@ -84,8 +84,8 @@ public class YouBikeStationHtmlParserV2 implements StationParser<YouBikeStation>
         station.date           = dateFormat.parse(jsonStation.getString("mday"));
         station.chineseName    = jsonStation.optString("sna", "n/a");
         station.chineseAddress = jsonStation.optString("ar", "n/a");
-        station.englishName    = jsonStation.optString("snaen", "n/a");
-        station.englishAddress = jsonStation.optString("aren", "n/a");
+        station.englishName    = jsonStation.optString("sna", "n/a");
+        station.englishAddress = jsonStation.optString("ar", "n/a");
         station.location = new LatLng(
                 Double.parseDouble(jsonStation.getString("lat")),
                 Double.parseDouble(jsonStation.getString("lng")));
