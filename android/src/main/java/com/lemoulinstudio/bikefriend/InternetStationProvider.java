@@ -20,13 +20,8 @@ import java.util.List;
  */
 public abstract class InternetStationProvider<T extends Station> implements StationProvider<T> {
   
-  public static class ParsingException extends Exception {
-    public ParsingException(Throwable throwable) {
-      super(throwable);
-    }
-  }
-  
-  protected final URL url;
+  private final URL url;
+  private final StationParser<T> stationParser;
   private GoogleMap map;
   private StationInfoWindowAdapter siwa;
   private LatLngBounds bounds;
@@ -34,10 +29,10 @@ public abstract class InternetStationProvider<T extends Station> implements Stat
   private boolean stationsNeedRefresh;
   private boolean isFetchingStations;
   private boolean isVisible;
-
   
-  protected InternetStationProvider(URL url) {
-    this.url = url;
+  protected InternetStationProvider(String urlString, StationParser<T> stationParser) {
+    this.url = Utils.toUrl(urlString);
+    this.stationParser = stationParser;
     this.stationsNeedRefresh = true;
     this.isFetchingStations = false;
     this.isVisible = true;
@@ -61,7 +56,7 @@ public abstract class InternetStationProvider<T extends Station> implements Stat
     }
     
     LatLngBounds cameraBoundingBox = map.getProjection().getVisibleRegion().latLngBounds;
-    if (bounds == null || intersects(cameraBoundingBox, bounds)) {
+    if (bounds == null || Utils.intersects(cameraBoundingBox, bounds)) {
       fetchStations();
     }
   }
@@ -90,6 +85,7 @@ public abstract class InternetStationProvider<T extends Station> implements Stat
     notifyCameraChanged();
   }
   
+  @SuppressWarnings({"unchecked"})
   private synchronized void fetchStations() {
     if (!isFetchingStations) {
       isFetchingStations = true;
@@ -109,62 +105,21 @@ public abstract class InternetStationProvider<T extends Station> implements Stat
       return connection.getInputStream();
   }
   
-  protected int parseInt(String text, int defaultValue) {
-    try {
-      return Integer.parseInt(text);
-    } catch (NumberFormatException e) {
-      return defaultValue;
-    }
-  }
-
-  protected float parseFloat(String text, float defaultValue) {
-    try {
-      return Float.parseFloat(text);
-    } catch (NumberFormatException e) {
-      return defaultValue;
-    }
-  }
-  
-  protected LatLngBounds computeBounds(List<T> stations) {
-    if (stations.isEmpty()) {
-      return null;
-    }
-    
-    LatLngBounds.Builder builder = new LatLngBounds.Builder();
-    for (Station station : stations) {
-      builder.include(station.getLocation());
-    }
-    return builder.build();
-  }
-  
-  protected boolean intersects(LatLngBounds bb1, LatLngBounds bb2) {
-    // b1:  +------+
-    // b2:     +------+
-    // intersection: b1.min < b2.max && b2.min < b1.max
-    return (bb1.southwest.latitude < bb2.northeast.latitude &&
-            bb2.southwest.latitude < bb1.northeast.latitude &&
-            bb1.southwest.longitude < bb2.northeast.longitude &&
-            bb2.southwest.longitude < bb1.northeast.longitude);
-  }
-  
-  // Note: this method should close the stream after it finished using it.
-  protected abstract List<T> parseStations(InputStream in) throws IOException, ParsingException;
-  
-  private class DownloadStationDataAsyncTask extends AsyncTask<StationProvider, Void, List<T>> {
+  private class DownloadStationDataAsyncTask extends AsyncTask<StationProvider<T>, Void, List<T>> {
 
     private boolean networkProblem;
     private boolean parsingProblem;
 
     @Override
-    protected List<T> doInBackground(StationProvider... stationProviders) {
+    protected List<T> doInBackground(StationProvider<T>... stationProviders) {
       try {
         InputStream dataStream = getDataStream();
         if (dataStream == null) {
           throw new IOException();
         }
         
-        List<T> stations = parseStations(dataStream);
-        bounds = computeBounds(stations);
+        List<T> stations = stationParser.parse(dataStream);
+        bounds = Utils.computeBounds(stations);
         return stations;
       }
       catch (IOException e) {

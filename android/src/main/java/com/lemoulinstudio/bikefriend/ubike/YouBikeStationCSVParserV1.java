@@ -1,57 +1,31 @@
 package com.lemoulinstudio.bikefriend.ubike;
 
-import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
-import com.lemoulinstudio.bikefriend.InternetStationProvider;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import com.lemoulinstudio.bikefriend.StationParser;
+import com.lemoulinstudio.bikefriend.ParsingException;
+import com.lemoulinstudio.bikefriend.Utils;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 /**
+ * This parser extracts information from a data source in a format similar to CSV.
+ * In this format, the lines are separated by a "|" and the values are separated by a "_".
  *
  * @author Vincent Cantin
  */
-public class YouBikeStationProvider2 extends InternetStationProvider<YouBikeStation> {
-  
-  private static URL getServiceURL() {
-    try {
-      return new URL("http://its.taipei.gov.tw/atis_index/aspx/Youbike.aspx?Mode=1");
-    }
-    catch (MalformedURLException ex) {
-      return null;
-    }
-  }
-
-  public YouBikeStationProvider2() {
-    super(getServiceURL());
-  }
-  
-  private String readToString(InputStream in) throws IOException {
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    
-    int nbRead;
-    byte[] buffer = new byte[1024];
-    while ((nbRead = in.read(buffer)) != -1) {
-      baos.write(buffer, 0, nbRead);
-    }
-    
-    return new String(baos.toByteArray(), "UTF-8");
-  }
+public class YouBikeStationCSVParserV1 implements StationParser<YouBikeStation> {
 
   @Override
-  public List<YouBikeStation> parseStations(InputStream in) throws IOException, ParsingException {
+  public List<YouBikeStation> parse(InputStream in) throws IOException, ParsingException {
     List<YouBikeStation> result = new ArrayList<YouBikeStation>();
     
     try {
       Date now = new Date();
       
-      String rawData = readToString(in);
+      String rawData = Utils.readToString(in);
       String[] lines = rawData.split("\\|");
       for (String line : lines) {
         //Log.i("bikefriend", "line = " + line);
@@ -88,5 +62,5 @@ public class YouBikeStationProvider2 extends InternetStationProvider<YouBikeStat
     
     return result;
   }
-
+  
 }
