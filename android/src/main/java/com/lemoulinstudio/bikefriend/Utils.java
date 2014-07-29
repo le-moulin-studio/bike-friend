@@ -9,6 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  *
@@ -76,6 +77,11 @@ public class Utils {
     catch (MalformedURLException e) {
       throw new RuntimeException(e);
     }
+  }
+  
+  public static boolean shouldDisplayChineseLocationsAndAddresses() {
+    String languageCode = Locale.getDefault().getLanguage();
+    return "zh".equals(languageCode) || "ja".equals(languageCode);
   }
   
 }

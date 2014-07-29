@@ -1,6 +1,7 @@
 package com.lemoulinstudio.bikefriend.ubike;
 
 import com.lemoulinstudio.bikefriend.InternetStationProvider;
+import com.lemoulinstudio.bikefriend.Utils;
 
 /**
  *
@@ -9,9 +10,9 @@ import com.lemoulinstudio.bikefriend.InternetStationProvider;
 public class ChanghuaStationProvider extends InternetStationProvider<YouBikeStation> {
   
   public ChanghuaStationProvider() {
-    //super("http://chcg.youbike.com.tw/en/f12.php?loc=chcg",
-    //      new YouBikeStationHtmlParserV2());
-    super("http://chcg.youbike.com.tw/cht/f12.php?loc=chcg",
+    super(Utils.shouldDisplayChineseLocationsAndAddresses() ?
+            "http://chcg.youbike.com.tw/cht/f12.php?loc=chcg" :
+            "http://chcg.youbike.com.tw/en/f12.php?loc=chcg",
           new YouBikeStationHtmlParserV2());
   }
   
