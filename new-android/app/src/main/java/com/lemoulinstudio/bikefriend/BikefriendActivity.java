@@ -1,146 +1,182 @@
 package com.lemoulinstudio.bikefriend;
 
-import android.app.Activity;
-
 import android.app.ActionBar;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.content.Context;
-import android.os.Build;
-import android.os.Bundle;
-import android.view.Gravity;
-import android.view.LayoutInflater;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.preference.PreferenceManager;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.Toast;
 
+import com.lemoulinstudio.bikefriend.drawer.DrawerListAdapter;
+import com.lemoulinstudio.bikefriend.preference.BikefriendPreferenceActivity;
+import com.lemoulinstudio.bikefriend.preference.BikefriendPreferences_;
 
-public class BikefriendActivity extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
-    /**
-     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
-     */
-    private NavigationDrawerFragment mNavigationDrawerFragment;
+@EActivity(R.layout.activity_bikefriend)
+public class BikefriendActivity extends FragmentActivity
+        implements GoogleMapFragment.FragmentListener {
 
-    /**
-     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
-     */
-    private CharSequence mTitle;
+    @Pref
+    protected BikefriendPreferences_ preferences;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bikefriend);
+    @ViewById(R.id.drawer_layout)
+    protected DrawerLayout drawerLayout;
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mTitle = getTitle();
+    @ViewById(R.id.drawer_list_view)
+    protected ListView drawerListView;
 
-        // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
+    protected ActionBarDrawerToggle actionBarDrawerToggle;
+
+    @AfterViews
+    protected void initViews() {
+        drawerListView.setAdapter(new DrawerListAdapter(this));
+
+        drawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                onDrawerItemClicked((int) id);
+            }
+        });
+
+        setClickedItem(mapItemId);
+
+        // set a custom shadow that overlays the main content when the drawer opens
+        drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+
+        // Helper between the navigation drawer and the action bar app icon.
+        actionBarDrawerToggle = new ActionBarDrawerToggle(
+                this,                             /* host Activity */
+                drawerLayout,                     /* DrawerLayout object */
+                R.drawable.ic_drawer,             /* nav drawer image to replace 'Up' caret */
+                R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
+                R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
+        ) {
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+
+                invalidateOptionsMenu(); // triggers a call of onPrepareOptionsMenu()
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+
+                // Warning: Could be a performance issue, consider caching this value.
+                if (!preferences.userLearnedDrawer().get()) {
+                    preferences.userLearnedDrawer().put(true);
+                }
+
+                invalidateOptionsMenu(); // triggers a call of onPrepareOptionsMenu()
+            }
+        };
+
+        // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
+        if (!preferences.userLearnedDrawer().get()) {
+            drawerLayout.openDrawer(drawerListView);
+        }
+
+        // Defer code dependent on restoration of previous instance state.
+        drawerLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                actionBarDrawerToggle.syncState();
+            }
+        });
+
+        drawerLayout.setDrawerListener(actionBarDrawerToggle);
     }
 
-    @Override
-    public void onNavigationDrawerItemSelected(int position) {
-        // update the main content by replacing fragments
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                .commit();
+    private void onDrawerItemClicked(int itemId) {
+        setClickedItem(itemId);
+        drawerLayout.closeDrawers();
     }
 
-    public void onSectionAttached(int number) {
-        switch (number) {
-            case 1:
-                mTitle = getString(R.string.title_section1);
-                break;
-            case 2:
-                mTitle = getString(R.string.title_section2);
-                break;
-            case 3:
-                mTitle = getString(R.string.title_section3);
-                break;
+    private int currentItemId = -1;
+    private final int mapItemId = 0;
+
+    private Fragment currentFragment;
+    private GoogleMapFragment_ googleMapFragment;
+
+    private void setClickedItem(int itemId) {
+        // If the user clicked on an item which is already displayed, we do nothing.
+        if (itemId != currentItemId) {
+            switch (itemId) {
+                case mapItemId: {
+                    if (googleMapFragment == null) {
+                        googleMapFragment = new GoogleMapFragment_();
+                    }
+
+                    currentFragment = googleMapFragment;
+                    break;
+                }
+            }
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, currentFragment)
+                    .commit();
+
+            currentItemId = itemId;
         }
     }
 
-    public void restoreActionBar() {
-        ActionBar actionBar = getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Forward the new configuration the drawer toggle component.
+        actionBarDrawerToggle.onConfigurationChanged(newConfig);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            // Only show items in the action bar relevant to this screen
-            // if the drawer is not showing. Otherwise, let the drawer
-            // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.bikefriend, menu);
-            restoreActionBar();
-            return true;
-        }
-        return super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.global, menu);
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        // Handle events on the home button and the drawer slider icon.
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
+
+        // Any other buttons are handled here.
+        switch (item.getItemId()) {
+            case R.id.action_settings: {
+                // Launch the preference activity
+                Intent i = new Intent(this, BikefriendPreferenceActivity.class);
+                startActivity(i);
+                return true;
+            }
+        }
+
+//        if (item.getItemId() == R.id.action_example) {
+//            Toast.makeText(getActivity(), "Example action.", Toast.LENGTH_SHORT).show();
+//            return true;
+//        }
+
         return super.onOptionsItemSelected(item);
     }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_bikefriend, container, false);
-            return rootView;
-        }
-
-        @Override
-        public void onAttach(Activity activity) {
-            super.onAttach(activity);
-            ((BikefriendActivity) activity).onSectionAttached(
-                    getArguments().getInt(ARG_SECTION_NUMBER));
-        }
-    }
-
 }
