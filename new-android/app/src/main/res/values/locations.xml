@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="latlngBound_taipei">
+        <item>24.987210</item>
+        <item>121.501474</item>
+        <item>25.085955</item>
+        <item>121.570671</item>
+    </string-array>
+    <string-array name="latlngBound_changhua">
+        <item>24.987210</item>
+        <item>121.501474</item>
+        <item>25.085955</item>
+        <item>121.570671</item>
+    </string-array>
+    <string-array name="latlngBound_taichung">
+        <item>24.987210</item>
+        <item>121.501474</item>
+        <item>25.085955</item>
+        <item>121.570671</item>
+    </string-array>
+    <string-array name="latlngBound_kaohsiung">
+        <item>24.987210</item>
+        <item>121.501474</item>
+        <item>25.085955</item>
+        <item>121.570671</item>
+    </string-array>
+    <string-array name="latlngBound_tainan">
+        <item>24.987210</item>
+        <item>121.501474</item>
+        <item>25.085955</item>
+        <item>121.570671</item>
+    </string-array>
+</resources>

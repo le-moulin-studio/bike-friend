@@ -72,19 +72,27 @@ public class BikefriendActivity extends FragmentActivity
                 R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
         ) {
             @Override
-            public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
-
-                invalidateOptionsMenu(); // triggers a call of onPrepareOptionsMenu()
-            }
-
-            @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
 
                 // Warning: Could be a performance issue, consider caching this value.
                 if (!preferences.userLearnedDrawer().get()) {
                     preferences.userLearnedDrawer().put(true);
+                }
+
+                if (currentFragment != null) {
+                    currentFragment.setHasOptionsMenu(false);
+                }
+
+                invalidateOptionsMenu(); // triggers a call of onPrepareOptionsMenu()
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+
+                if (currentFragment != null) {
+                    currentFragment.setHasOptionsMenu(true);
                 }
 
                 invalidateOptionsMenu(); // triggers a call of onPrepareOptionsMenu()
@@ -165,6 +173,8 @@ public class BikefriendActivity extends FragmentActivity
         // Any other buttons are handled here.
         switch (item.getItemId()) {
             case R.id.action_settings: {
+                drawerLayout.closeDrawers();
+
                 // Launch the preference activity
                 Intent i = new Intent(this, BikefriendPreferenceActivity.class);
                 startActivity(i);

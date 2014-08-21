@@ -14,9 +14,10 @@
     <string name="drawer_service_information">Service Information</string>
     <string name="drawer_emergency">Emergency</string>
 
+    <string name="menu_refresh">Refresh</string>
+    <string name="menu_places">Places</string>
     <string name="menu_settings">Settings</string>
 
-    <string name="menu_places">Places</string>
     <string name="menu_place_taipei">Taipei</string>
     <string name="menu_place_changhua">Changhua</string>
     <string name="menu_place_taichung">Taichung</string>
