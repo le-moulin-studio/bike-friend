@@ -74,13 +74,9 @@ public class MapsForgeFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+
         mapView.getLayerManager().getLayers().remove(tileRendererLayer);
         tileRendererLayer.onDestroy();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
         tileCache.destroy();
     }
 

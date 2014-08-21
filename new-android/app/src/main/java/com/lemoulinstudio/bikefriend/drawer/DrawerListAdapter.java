@@ -28,9 +28,9 @@ public class DrawerListAdapter extends BaseAdapter {
         items = Arrays.<Object>asList(
                 new DrawerListItem(R.drawable.ic_action_map, R.string.drawer_map),
                 new DrawerListItem(R.drawable.ic_action_important, R.string.drawer_preferred_stations),
-                new DrawerListItem(R.drawable.ic_action_chronometer, R.string.drawer_chronometer),
+                new DrawerListItem(R.drawable.ic_action_chronometer_grey, R.string.drawer_chronometer),
                 //new DrawerListItem(0, R.string.drawer_history),
-                new DrawerListItem(R.drawable.ic_action_lost_and_found, R.string.drawer_lost_and_found),
+                new DrawerListItem(R.drawable.ic_action_lost_and_found_grey, R.string.drawer_lost_and_found),
                 new DrawerListItem(R.drawable.ic_action_about, R.string.drawer_service_information),
                 new DrawerListItem(R.drawable.ic_action_red_cross, R.string.drawer_emergency));
     }
