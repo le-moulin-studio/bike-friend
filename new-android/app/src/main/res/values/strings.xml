@@ -17,7 +17,6 @@
     <string name="menu_refresh">Refresh</string>
     <string name="menu_places">Places</string>
     <string name="menu_settings">Settings</string>
-
     <string name="menu_place_taipei">Taipei</string>
     <string name="menu_place_changhua">Changhua</string>
     <string name="menu_place_taichung">Taichung</string>
@@ -32,6 +31,7 @@
     <string name="map_popup_station_data_age_day_format">Station data is %d day(s) old.</string>
 
     <string name="preference_activity_title">Settings</string>
+
     <string name="preference_map_provider">Map Provider</string>
     <string-array name="preference_map_provider_value">
         <item>GoogleMap</item> <!-- do not translate -->

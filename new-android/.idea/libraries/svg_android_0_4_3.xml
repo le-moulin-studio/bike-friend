@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="svg-android-0.4.3">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.mapsforge/svg-android/0.4.3/13e5211dd53a95aedbbd138b69955810c3d48433/svg-android-0.4.3.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.mapsforge/svg-android/0.4.3/59f5d8ed862c6e71b3268fa71c5789c2daa11e76/svg-android-0.4.3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -39,4 +39,7 @@ dependencies {
     compile 'com.google.android.gms:play-services:4.1.+'
 
     compile "org.androidannotations:androidannotations-api:3.0.1"
+
+    // The library for displaying the map from OpenStreetMap.
+    compile "org.mapsforge:mapsforge-map-android:0.4.3"
 }

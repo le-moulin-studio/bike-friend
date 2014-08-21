@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.lemoulinstudio.bikefriend.drawer.DrawerListAdapter;
 import com.lemoulinstudio.bikefriend.preference.BikefriendPreferenceActivity;
 import com.lemoulinstudio.bikefriend.preference.BikefriendPreferences_;
+import com.lemoulinstudio.bikefriend.preference.MapProvider;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
@@ -125,17 +126,30 @@ public class BikefriendActivity extends FragmentActivity
 
     private Fragment currentFragment;
     private GoogleMapFragment_ googleMapFragment;
+    private MapsForgeFragment_ mapsForgeFragment;
 
     private void setClickedItem(int itemId) {
         // If the user clicked on an item which is already displayed, we do nothing.
         if (itemId != currentItemId) {
             switch (itemId) {
                 case mapItemId: {
-                    if (googleMapFragment == null) {
-                        googleMapFragment = new GoogleMapFragment_();
+                    MapProvider mapProvider = MapProvider.valueOf(preferences.mapProvider().get());
+                    switch (mapProvider) {
+                        case GoogleMap: {
+                            if (googleMapFragment == null) {
+                                googleMapFragment = new GoogleMapFragment_();
+                            }
+                            currentFragment = googleMapFragment;
+                            break;
+                        }
+                        case OpenStreetMap: {
+                            if (mapsForgeFragment == null) {
+                                mapsForgeFragment = new MapsForgeFragment_();
+                            }
+                            currentFragment = mapsForgeFragment;
+                            break;
+                        }
                     }
-
-                    currentFragment = googleMapFragment;
                     break;
                 }
             }
