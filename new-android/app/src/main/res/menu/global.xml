@@ -1,9 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".com.lemoulinstudio.bikefriend.BikefriendActivity">
     <item android:id="@+id/action_settings"
         android:title="@string/menu_settings"
         android:icon="@drawable/ic_action_settings"
         android:orderInCategory="100"
-        android:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom" />
 </menu>

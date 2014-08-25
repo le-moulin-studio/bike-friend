@@ -1,24 +1,24 @@
 package com.lemoulinstudio.bikefriend;
 
-import android.app.ActionBar;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
+import com.j256.ormlite.dao.Dao;
+import com.lemoulinstudio.bikefriend.db.BikeStation;
+import com.lemoulinstudio.bikefriend.db.MyDatabaseHelper;
 import com.lemoulinstudio.bikefriend.drawer.DrawerListAdapter;
 import com.lemoulinstudio.bikefriend.preference.BikefriendPreferenceActivity;
 import com.lemoulinstudio.bikefriend.preference.BikefriendPreferences_;
@@ -26,15 +26,19 @@ import com.lemoulinstudio.bikefriend.preference.MapProvider;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.OrmLiteDao;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 @EActivity(R.layout.activity_bikefriend)
-public class BikefriendActivity extends FragmentActivity
+public class BikefriendActivity extends ActionBarActivity
         implements GoogleMapFragment.FragmentListener {
 
     @Pref
     protected BikefriendPreferences_ preferences;
+
+    @OrmLiteDao(helper = MyDatabaseHelper.class, model = BikeStation.class)
+    Dao<BikeStation, String> bikeStationDao;
 
     @ViewById(R.id.drawer_layout)
     protected DrawerLayout drawerLayout;
@@ -60,7 +64,7 @@ public class BikefriendActivity extends FragmentActivity
         // set a custom shadow that overlays the main content when the drawer opens
         drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
 
@@ -195,11 +199,6 @@ public class BikefriendActivity extends FragmentActivity
                 return true;
             }
         }
-
-//        if (item.getItemId() == R.id.action_example) {
-//            Toast.makeText(getActivity(), "Example action.", Toast.LENGTH_SHORT).show();
-//            return true;
-//        }
 
         return super.onOptionsItemSelected(item);
     }
