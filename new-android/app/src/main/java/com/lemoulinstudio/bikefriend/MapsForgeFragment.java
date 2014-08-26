@@ -8,6 +8,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.lemoulinstudio.bikefriend.db.DataSourceEnum;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
@@ -104,23 +106,19 @@ public class MapsForgeFragment extends Fragment {
                 return true;
             }
             case R.id.menu_place_taipei: {
-                animateCameraToBoundingBox(R.array.latlngBound_taipei);
+                animateCameraToBoundingBox(DataSourceEnum.YouBike_Taipei);
                 return true;
             }
             case R.id.menu_place_changhua: {
-                animateCameraToBoundingBox(R.array.latlngBound_changhua);
+                animateCameraToBoundingBox(DataSourceEnum.YouBike_Changhua);
                 return true;
             }
             case R.id.menu_place_taichung: {
-                animateCameraToBoundingBox(R.array.latlngBound_taichung);
+                animateCameraToBoundingBox(DataSourceEnum.YouBike_Taichung);
                 return true;
             }
             case R.id.menu_place_kaohsiung: {
-                animateCameraToBoundingBox(R.array.latlngBound_kaohsiung);
-                return true;
-            }
-            case R.id.menu_place_tainan: {
-                animateCameraToBoundingBox(R.array.latlngBound_tainan);
+                animateCameraToBoundingBox(DataSourceEnum.CityBike_Kaohsiung);
                 return true;
             }
             default: {
@@ -129,11 +127,10 @@ public class MapsForgeFragment extends Fragment {
         }
     }
 
-    private void animateCameraToBoundingBox(int latlngResource) {
-        String[] boundStrings = getActivity().getResources().getStringArray(latlngResource);
+    private void animateCameraToBoundingBox(DataSourceEnum dataSource) {
         LatLong center = new LatLong(
-                (Double.parseDouble(boundStrings[0]) + Double.parseDouble(boundStrings[2])) / 2,
-                (Double.parseDouble(boundStrings[1]) + Double.parseDouble(boundStrings[3])) / 2);
+                (dataSource.bounds.southwest.latitude + dataSource.bounds.northeast.latitude) / 2,
+                (dataSource.bounds.southwest.longitude + dataSource.bounds.northeast.longitude) / 2);
         mapView.getModel().mapViewPosition.animateTo(center);
     }
 

@@ -14,8 +14,8 @@
    height="1052.3622047"
    id="svg3768"
    version="1.1"
-   inkscape:version="0.48.3.1 r9886"
-   sodipodi:docname="bikeFriend.svg"
+   inkscape:version="0.48.5 r10040"
+   sodipodi:docname="old icons.svg"
    enable-background="new">
   <sodipodi:namedview
      id="base"
@@ -24,9 +24,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.9050967"
-     inkscape:cx="264.06782"
-     inkscape:cy="987.96155"
+     inkscape:zoom="4.4726308"
+     inkscape:cx="460.85511"
+     inkscape:cy="839.16756"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -34,7 +34,7 @@
      inkscape:snap-to-guides="false"
      inkscape:snap-page="false"
      inkscape:window-width="1220"
-     inkscape:window-height="872"
+     inkscape:window-height="856"
      inkscape:window-x="99"
      inkscape:window-y="56"
      inkscape:window-maximized="0"
@@ -139,5 +139,14 @@
          id="tspan3767"
          x="37.012619"
          y="-62.988255">96, 72, 48, 36</tspan></text>
+    <path
+       inkscape:export-ydpi="525.11725"
+       inkscape:export-xdpi="525.11725"
+       sodipodi:nodetypes="cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+       inkscape:connector-curvature="0"
+       id="path3108"
+       d="m 470.66671,187.50793 1.44382,0.92817 0.10318,1.23757 3.30019,1.6501 1.03131,0.61878 2.18344,0.17606 0.39488,2.60847 1.85636,0.10314 -0.30939,0.82504 -2.37202,1.6501 -1.44382,1.75322 -0.51567,4.0221 1.34071,3.50644 -0.51566,2.37201 -1.44382,1.54696 -0.92819,4.12523 -1.85634,1.3407 -0.10318,1.85636 -1.23756,1.44383 1.0313,2.26888 -3.50644,13.407 -2.68141,9.3849 -1.03131,0.41252 -1.23756,3.30018 -1.23757,2.16575 -1.23757,0.30939 -0.30939,0.72192 0.51565,1.0313 -1.95949,1.95949 -2.26888,1.54697 -0.30938,1.65009 -2.6814,6.90977 -0.10318,7.52853 -1.03131,0.72192 0.30938,2.16575 -0.41251,0 -0.72193,-0.82505 -1.3407,-0.30939 -0.61878,0.72191 -0.82504,-0.30939 0.20626,-1.13444 -0.82504,-1.13443 0.92816,-2.26889 -1.3407,-3.40331 -0.92816,-3.19705 -6.18786,-3.50644 -2.68139,-3.71271 0.72191,-0.82505 -1.95949,-4.64089 -0.51565,-2.47514 -3.30018,-3.19705 2.78453,-7.0129 0.20626,-4.12523 0.10317,-3.30018 1.13444,-1.65009 -0.30939,-2.16575 1.75323,-1.23757 4.0221,-7.94107 4.02209,-6.90976 2.16575,-2.26888 0.92818,-2.68139 1.65009,-1.6501 1.03131,-0.30939 1.13444,-2.16575 -0.20626,-1.0313 3.09392,-4.0221 0.10307,-1.3407 2.16574,-1.3407 3.81585,-1.3407 2.16574,-0.41253 1.23757,-0.61878 -0.10318,-0.51565 1.13443,-1.95949 z"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline"
+       inkscape:export-filename="/Users/Vincent/Desktop/bike-friend/new-android/art/ic_action_taiwan_512.png" />
   </g>
 </svg>

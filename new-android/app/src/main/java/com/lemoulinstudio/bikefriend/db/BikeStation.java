@@ -27,10 +27,16 @@ public class BikeStation {
     public String englishAddress;
 
     @DatabaseField
+    public String englishDescription;
+
+    @DatabaseField
     public String chineseName;
 
     @DatabaseField
     public String chineseAddress;
+
+    @DatabaseField
+    public String chineseDescription;
 
     @DatabaseField
     public int nbEmptySlots;
@@ -40,6 +46,17 @@ public class BikeStation {
 
     @DatabaseField
     public Date lastUpdate;
+
+    @DatabaseField
+    public boolean isPreferred;
+
+    public boolean isValid() {
+        return (lastUpdate != null) &&
+                (latitude != 0.0f) &&
+                (longitude != 0.0f) &&
+                (nbBicycles != -1) &&
+                (nbEmptySlots != -1);
+    }
 
     @Override
     public String toString() {

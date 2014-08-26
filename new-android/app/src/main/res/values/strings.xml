@@ -22,6 +22,7 @@
     <string name="menu_place_taichung">Taichung</string>
     <string name="menu_place_kaohsiung">Kaohsiung</string>
     <string name="menu_place_tainan">Tainan</string>
+    <string name="menu_place_taiwan">Taiwan</string>
 
     <string name="map_popup_station_nb_bike_format">Bicycles: %d</string>
     <string name="map_popup_station_nb_empty_slot_format">Empty Slots: %d</string>

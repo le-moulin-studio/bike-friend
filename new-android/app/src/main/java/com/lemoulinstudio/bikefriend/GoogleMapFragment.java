@@ -1,49 +1,74 @@
 package com.lemoulinstudio.bikefriend;
 
-import android.app.Activity;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.lemoulinstudio.bikefriend.db.BikeStation;
+import com.lemoulinstudio.bikefriend.db.DataSourceEnum;
 import com.lemoulinstudio.bikefriend.preference.BikefriendPreferences_;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+
 @EFragment
-public class GoogleMapFragment extends SupportMapFragment {
+public class GoogleMapFragment extends SupportMapFragment implements BikeStationListener {
 
-    public static interface FragmentListener {
-    }
-
-    private FragmentListener fragmentListener;
+    private final Map<DataSourceEnum, List<Marker>> dataSourceToMarkers;
 
     public GoogleMapFragment() {
+        dataSourceToMarkers = new EnumMap<DataSourceEnum, List<Marker>>(DataSourceEnum.class);
+        for (DataSourceEnum dataSource : DataSourceEnum.values()) {
+            dataSourceToMarkers.put(dataSource, new ArrayList<Marker>());
+        }
     }
 
     @Pref
     protected BikefriendPreferences_ preferences;
 
+    @Bean
+    protected BikeStationProviderRepository bikeStationProviderRepository;
+
+    @Bean
+    protected StationInfoWindowAdapter siwa;
+
     @AfterViews
     protected void setupViews() {
-        GoogleMap map = getMap();
+        final GoogleMap map = getMap();
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         map.setMyLocationEnabled(true);
+        map.setInfoWindowAdapter(siwa);
+
+        map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+            public void onCameraChange(CameraPosition cp) {
+                LatLngBounds visibleRegion = map.getProjection().getVisibleRegion().latLngBounds;
+                for (BikeStationProvider bikeStationProvider : bikeStationProviderRepository.getBikeStationProviders()) {
+                    LatLngBounds providerBounds = bikeStationProvider.getBounds();
+                    if (Utils.intersects(visibleRegion, providerBounds)) {
+                        bikeStationProvider.notifyStationsAreWatched();
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -62,36 +87,39 @@ public class GoogleMapFragment extends SupportMapFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_refresh: {
-//                if (getMap() != null) {
-//                    for (StationProvider stationProvider : stationProviders) {
-//                        stationProvider.refreshData();
-//                    }
-//                }
+                LatLngBounds visibleRegion = getMap().getProjection().getVisibleRegion().latLngBounds;
+                for (BikeStationProvider bikeStationProvider : bikeStationProviderRepository.getBikeStationProviders()) {
+                    LatLngBounds providerBounds = bikeStationProvider.getBounds();
+                    if (Utils.intersects(visibleRegion, providerBounds)) {
+                        bikeStationProvider.updateData();
+                    }
+                }
                 return true;
             }
             case R.id.menu_place_taipei: {
-//                LatLngBounds bounds = getMap().getProjection().getVisibleRegion().latLngBounds;
-//                Log.i("bikefriend", String.format("bounds = [%f, %f, %f, %f]",
-//                        bounds.southwest.latitude, bounds.southwest.longitude,
-//                        bounds.northeast.latitude, bounds.northeast.longitude));
-//                bounds = new LatLngBounds(new LatLng(24.987210, 121.501474), new LatLng(25.085955, 121.570671));
-                animateCameraToBoundingBox(R.array.latlngBound_taipei);
-                return true;
-            }
-            case R.id.menu_place_changhua: {
-                animateCameraToBoundingBox(R.array.latlngBound_changhua);
+                animateCameraToBoundingBox(bikeStationProviderRepository
+                        .getBikeStationProvider(DataSourceEnum.YouBike_Taipei).getBounds());
                 return true;
             }
             case R.id.menu_place_taichung: {
-                animateCameraToBoundingBox(R.array.latlngBound_taichung);
+                animateCameraToBoundingBox(bikeStationProviderRepository
+                        .getBikeStationProvider(DataSourceEnum.YouBike_Taichung).getBounds());
+                return true;
+            }
+            case R.id.menu_place_changhua: {
+                animateCameraToBoundingBox(bikeStationProviderRepository
+                        .getBikeStationProvider(DataSourceEnum.YouBike_Changhua).getBounds());
                 return true;
             }
             case R.id.menu_place_kaohsiung: {
-                animateCameraToBoundingBox(R.array.latlngBound_kaohsiung);
+                animateCameraToBoundingBox(bikeStationProviderRepository
+                        .getBikeStationProvider(DataSourceEnum.CityBike_Kaohsiung).getBounds());
                 return true;
             }
-            case R.id.menu_place_tainan: {
-                animateCameraToBoundingBox(R.array.latlngBound_tainan);
+            case R.id.menu_place_taiwan: {
+                animateCameraToBoundingBox(new LatLngBounds(
+                        new LatLng(21.885012f, 119.877213f),
+                        new LatLng(25.210294f, 122.180730f)));
                 return true;
             }
             default: {
@@ -100,12 +128,42 @@ public class GoogleMapFragment extends SupportMapFragment {
         }
     }
 
-    private void animateCameraToBoundingBox(int latlngResource) {
-        String[] boundStrings = getActivity().getResources().getStringArray(latlngResource);
-        LatLngBounds bounds = new LatLngBounds(
-                new LatLng(Double.parseDouble(boundStrings[0]), Double.parseDouble(boundStrings[1])),
-                new LatLng(Double.parseDouble(boundStrings[2]), Double.parseDouble(boundStrings[3])));
+    private void animateCameraToBoundingBox(LatLngBounds bounds) {
+//        Log.i("bikefriend", String.format("bounds = [%ff, %ff, %ff, %ff]",
+//                bounds.southwest.latitude, bounds.southwest.longitude,
+//                bounds.northeast.latitude, bounds.northeast.longitude));
+//        LatLngBounds cameraBounds = getMap().getProjection().getVisibleRegion().latLngBounds;
+//        Log.i("bikefriend", String.format("cameraBounds = [%ff, %ff, %ff, %ff]",
+//                cameraBounds.southwest.latitude, cameraBounds.southwest.longitude,
+//                cameraBounds.northeast.latitude, cameraBounds.northeast.longitude));
         getMap().animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
+    }
+
+    @Override
+    public void onBikeStationUpdated(BikeStationProvider bikeStationProvider) {
+        List<Marker> markers = dataSourceToMarkers.get(bikeStationProvider.getDataSourceEnum());
+
+        // Remove the old markers.
+        for (Marker marker : markers) {
+            marker.remove();
+            siwa.unbindMarker(marker);
+        }
+        markers.clear();
+
+        GoogleMap map = getMap();
+
+        for (BikeStation station : bikeStationProvider.getBikeStationList()) {
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(new LatLng(station.latitude, station.longitude))
+                    .icon(BitmapDescriptorFactory.defaultMarker(
+                        (station.nbBicycles == 0 || station.nbEmptySlots == 0) ?
+                                BitmapDescriptorFactory.HUE_ORANGE :
+                                BitmapDescriptorFactory.HUE_GREEN));
+
+            Marker marker = map.addMarker(markerOptions);
+            markers.add(marker);
+            siwa.bindMarkerToStation(marker, station);
+        }
     }
 
     @Override
@@ -119,8 +177,12 @@ public class GoogleMapFragment extends SupportMapFragment {
                 preferences.cameraZoom().get(),
                 preferences.cameraTilt().get(),
                 preferences.cameraBearing().get());
-
         getMap().moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        // Initializes the markers on the map, according to the bike stations already available (in memory or db).
+        for (BikeStationProvider bikeStationProvider : bikeStationProviderRepository.getBikeStationProviders()) {
+            onBikeStationUpdated(bikeStationProvider);
+        }
     }
 
     public void onPause() {
@@ -139,15 +201,20 @@ public class GoogleMapFragment extends SupportMapFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        //fragmentListener = (FragmentListener) activity;
+    public void onStart() {
+        super.onStart();
+
+        for (BikeStationProvider bikeStationProvider : bikeStationProviderRepository.getBikeStationProviders()) {
+            bikeStationProvider.addListener(this);
+        }
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        //fragmentListener = null;
-    }
+    public void onStop() {
+        super.onStop();
 
+        for (BikeStationProvider bikeStationProvider : bikeStationProviderRepository.getBikeStationProviders()) {
+            bikeStationProvider.removeListener(this);
+        }
+    }
 }

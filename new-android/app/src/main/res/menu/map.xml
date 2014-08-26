@@ -19,15 +19,15 @@
                 app:showAsAction="never"
                 android:title="@string/menu_place_taipei"/>
             <item
-                android:id="@+id/menu_place_changhua"
-                android:icon="@drawable/ic_action_place"
-                app:showAsAction="never"
-                android:title="@string/menu_place_changhua"/>
-            <item
                 android:id="@+id/menu_place_taichung"
                 android:icon="@drawable/ic_action_place"
                 app:showAsAction="never"
                 android:title="@string/menu_place_taichung"/>
+            <item
+                android:id="@+id/menu_place_changhua"
+                android:icon="@drawable/ic_action_place"
+                app:showAsAction="never"
+                android:title="@string/menu_place_changhua"/>
             <item
                 android:id="@+id/menu_place_kaohsiung"
                 android:icon="@drawable/ic_action_place"
@@ -39,6 +39,11 @@
                 app:showAsAction="never"
                 android:title="@string/menu_place_tainan"
                 android:visible="false"/>
+            <item
+                android:id="@+id/menu_place_taiwan"
+                android:icon="@drawable/ic_action_taiwan"
+                app:showAsAction="never"
+                android:title="@string/menu_place_taiwan"/>
         </menu>
     </item>
 </menu>

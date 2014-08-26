@@ -31,8 +31,7 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 @EActivity(R.layout.activity_bikefriend)
-public class BikefriendActivity extends ActionBarActivity
-        implements GoogleMapFragment.FragmentListener {
+public class BikefriendActivity extends ActionBarActivity {
 
     @Pref
     protected BikefriendPreferences_ preferences;
