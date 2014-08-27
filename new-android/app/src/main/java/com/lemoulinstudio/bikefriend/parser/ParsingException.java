@@ -1,4 +1,4 @@
-package com.lemoulinstudio.bikefriend;
+package com.lemoulinstudio.bikefriend.parser;
 
 public class ParsingException extends Exception {
   

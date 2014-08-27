@@ -2,7 +2,7 @@ package com.lemoulinstudio.bikefriend.db;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.lemoulinstudio.bikefriend.BikeStationParser;
+import com.lemoulinstudio.bikefriend.parser.BikeStationParser;
 import com.lemoulinstudio.bikefriend.R;
 import com.lemoulinstudio.bikefriend.Utils;
 import com.lemoulinstudio.bikefriend.parser.CityBikeStationXmlParserV1;

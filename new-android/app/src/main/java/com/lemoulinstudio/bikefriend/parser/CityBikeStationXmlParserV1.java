@@ -1,8 +1,7 @@
 package com.lemoulinstudio.bikefriend.parser;
 
 import android.util.Xml;
-import com.lemoulinstudio.bikefriend.BikeStationParser;
-import com.lemoulinstudio.bikefriend.ParsingException;
+
 import com.lemoulinstudio.bikefriend.Utils;
 import com.lemoulinstudio.bikefriend.db.BikeStation;
 import com.lemoulinstudio.bikefriend.db.DataSourceEnum;

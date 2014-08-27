@@ -9,6 +9,7 @@ import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.stmt.DeleteBuilder;
 import com.lemoulinstudio.bikefriend.db.BikeStation;
 import com.lemoulinstudio.bikefriend.db.DataSourceEnum;
+import com.lemoulinstudio.bikefriend.parser.ParsingException;
 
 import java.io.IOException;
 import java.io.InputStream;

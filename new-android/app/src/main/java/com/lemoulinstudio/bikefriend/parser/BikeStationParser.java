@@ -1,7 +1,8 @@
-package com.lemoulinstudio.bikefriend;
+package com.lemoulinstudio.bikefriend.parser;
 
 import com.lemoulinstudio.bikefriend.db.BikeStation;
 import com.lemoulinstudio.bikefriend.db.DataSourceEnum;
+import com.lemoulinstudio.bikefriend.parser.ParsingException;
 
 import java.io.InputStream;
 import java.io.IOException;
