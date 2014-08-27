@@ -120,19 +120,19 @@ public class BikefriendActivity extends ActionBarActivity {
     private int currentItemId = -1;
     private final int mapItemId = 0;
     private final int favoriteItemId = 1;
-    private final int chronoItemId = 2;
+    private final int chronometerItemId = 2;
     private final int lostFoundItemId = 3;
     private final int serviceInfoItemId = 4;
     private final int emergencyItemId = 5;
 
     private Fragment currentFragment;
-    private GoogleMapFragment_ googleMapFragment;
-    private MapsForgeFragment_ mapsForgeFragment;
-    //private FavoriteFragment_ favoriteFragment;
-    private ChronoFragment_ chronoFragment;
-    //private LostFoundFragment_ lostFoundFragment;
-    //private ServiceInfoFragment_ serviceInfoFragment;
-    //private EmergencyFragment_ emergencyFragment;
+    private GoogleMapFragment googleMapFragment;
+    private MapsForgeFragment mapsForgeFragment;
+    private FavoriteFragment favoriteFragment;
+    private ChronometerFragment chronometerFragment;
+    private LostFoundFragment lostFoundFragment;
+    private ServiceInfoFragment serviceInfoFragment;
+    private EmergencyFragment emergencyFragment;
 
     private void setClickedItem(int itemId) {
         // If the user clicked on an item which is already displayed, we do nothing.
@@ -159,19 +159,38 @@ public class BikefriendActivity extends ActionBarActivity {
                     break;
                 }
                 case favoriteItemId: {
+                    if (favoriteFragment == null) {
+                        favoriteFragment = new FavoriteFragment_();
+                    }
+                    currentFragment = favoriteFragment;
                     break;
                 }
-                case chronoItemId: {
-                    currentFragment = new ChronoFragment_();
+                case chronometerItemId: {
+                    if (chronometerFragment == null) {
+                        chronometerFragment = new ChronometerFragment_();
+                    }
+                    currentFragment = chronometerFragment;
                     break;
                 }
                 case lostFoundItemId: {
+                    if (lostFoundFragment == null) {
+                        lostFoundFragment = new LostFoundFragment_();
+                    }
+                    currentFragment = lostFoundFragment;
                     break;
                 }
                 case serviceInfoItemId: {
+                    if (serviceInfoFragment == null) {
+                        serviceInfoFragment = new ServiceInfoFragment_();
+                    }
+                    currentFragment = serviceInfoFragment;
                     break;
                 }
                 case emergencyItemId: {
+                    if (emergencyFragment == null) {
+                        emergencyFragment = new EmergencyFragment_();
+                    }
+                    currentFragment = emergencyFragment;
                     break;
                 }
             }
