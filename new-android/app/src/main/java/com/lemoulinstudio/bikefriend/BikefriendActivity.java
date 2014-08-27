@@ -16,9 +16,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.j256.ormlite.dao.Dao;
-import com.lemoulinstudio.bikefriend.db.BikeStation;
-import com.lemoulinstudio.bikefriend.db.MyDatabaseHelper;
 import com.lemoulinstudio.bikefriend.drawer.DrawerListAdapter;
 import com.lemoulinstudio.bikefriend.preference.BikefriendPreferenceActivity;
 import com.lemoulinstudio.bikefriend.preference.BikefriendPreferences_;
@@ -26,7 +23,6 @@ import com.lemoulinstudio.bikefriend.preference.MapProvider;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.OrmLiteDao;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
@@ -35,9 +31,6 @@ public class BikefriendActivity extends ActionBarActivity {
 
     @Pref
     protected BikefriendPreferences_ preferences;
-
-    @OrmLiteDao(helper = MyDatabaseHelper.class, model = BikeStation.class)
-    Dao<BikeStation, String> bikeStationDao;
 
     @ViewById(R.id.drawer_layout)
     protected DrawerLayout drawerLayout;

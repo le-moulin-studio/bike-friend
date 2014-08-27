@@ -3,36 +3,101 @@ package com.lemoulinstudio.bikefriend;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.google.android.gms.internal.du;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.misc.TransactionManager;
 import com.lemoulinstudio.bikefriend.db.BikeStation;
 import com.lemoulinstudio.bikefriend.db.DataSourceEnum;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
 
 public class BikeStationProviderImpl implements BikeStationProvider {
 
     protected final DataSourceEnum dataSource;
-    protected long dataObsolescenceInMs; // This is tweaked by the user in the settings.
-
-    protected List<BikeStation> bikeStationList;
+    protected final Dao<BikeStation, String> bikeStationDao;
+    protected final Collection<BikeStation> bikeStations;
     protected LatLngBounds bounds;
     protected Date lastUpdateDate;
 
+    protected long dataObsolescenceInMs; // This is tweaked by the user in the settings.
+
     public BikeStationProviderImpl(
             DataSourceEnum dataSource,
+            Dao<BikeStation, String> bikeStationDao,
             Date lastUpdateDate) {
         this.dataSource = dataSource;
-        this.dataObsolescenceInMs = 60 * 1000; // 1 min
-        this.bikeStationList = new ArrayList<BikeStation>();
+        this.bikeStationDao = bikeStationDao;
+        this.bikeStations = new ArrayList<BikeStation>();
         this.lastUpdateDate = lastUpdateDate;
+
+        this.dataObsolescenceInMs = 60 * 1000; // 1 min
+
+        new LoadStationsFromDbAsyncTask().execute(this);
+    }
+
+    private void updateMemFromDb() throws SQLException {
+        Log.d(BikefriendApplication.TAG, dataSource.name() + " updateMemFromDb()");
+
+        List<BikeStation> dbBikeStations = bikeStationDao.queryForEq("dataSource", dataSource);
+        bikeStations.clear();
+        bikeStations.addAll(dbBikeStations);
+    }
+
+    private void updateDbFromMem() throws SQLException {
+        Log.d(BikefriendApplication.TAG, dataSource.name() + " updateDbFromMem()");
+
+        TransactionManager.callInTransaction(bikeStationDao.getConnectionSource(),
+            new Callable<Void>() {
+                @Override
+                public Void call() throws Exception {
+                    for (BikeStation bikeStation : bikeStations) {
+                        bikeStationDao.createOrUpdate(bikeStation);
+                    }
+                    return null;
+                }
+            });
+    }
+
+    // TODO: Use this function when loading db->mem, and make it mutually exclusive.
+    private void updateMemFromServers(Collection<BikeStation> netStations) {
+        Log.d(BikefriendApplication.TAG, dataSource.name() + " updateMemFromServers()");
+
+        for (BikeStation netStation : netStations) {
+            BikeStation memStation = findBikeStationFromId(netStation.id, bikeStations);
+
+            if (memStation == null) {
+                // This is a new station, we add it to the list.
+                bikeStations.add(netStation);
+            }
+            else {
+                // We update the state of the memStation from the attributes of the netStation.
+                memStation.updateFrom(netStation);
+            }
+        }
+    }
+
+    private BikeStation findBikeStationFromId(String id, Collection<BikeStation> stations) {
+        if (id == null) {
+            return null;
+        }
+
+        for (BikeStation station : stations) {
+            if (id.equals(station.id)) {
+                return station;
+            }
+        }
+
+        return null;
     }
 
     protected Set<BikeStationListener> listeners = new HashSet<BikeStationListener>();
@@ -45,6 +110,24 @@ public class BikeStationProviderImpl implements BikeStationProvider {
     @Override
     public void removeListener(BikeStationListener listener) {
         listeners.remove(listener);
+    }
+
+    private void fireOnServerNotReachable() {
+        for (BikeStationListener listener : listeners) {
+            listener.onServerNotReachable(this);
+        }
+    }
+
+    private void fireOnParseError() {
+        for (BikeStationListener listener : listeners) {
+            listener.onParseError(this);
+        }
+    }
+
+    private void fireOnBikeStationUpdated() {
+        for (BikeStationListener listener : listeners) {
+            listener.onBikeStationUpdated(this);
+        }
     }
 
     @Override
@@ -69,7 +152,7 @@ public class BikeStationProviderImpl implements BikeStationProvider {
         long duration = now - lastUpdate;
 
         if (duration >= dataObsolescenceInMs && duration >= dataSource.noReloadDurationInMs) {
-            Log.d(BikefriendApplication.TAG, "duration = " + duration);
+            //Log.d(BikefriendApplication.TAG, dataSource.name() + " duration = " + duration);
             updateData();
         }
     }
@@ -85,36 +168,36 @@ public class BikeStationProviderImpl implements BikeStationProvider {
         }
     }
 
-    // This is called by the download task.
-    private synchronized void setUpdatedData(List<BikeStation> stations) {
-        Log.d(BikefriendApplication.TAG, dataSource.name() + " setUpdatedData()");
-
-        if (stations != null) {
-            bikeStationList = stations;
-            bounds = Utils.computeBounds(stations);
-            lastUpdateDate = new Date();
-        }
-        isFetchingStations = false;
-
-        for (BikeStationListener listener : listeners) {
-            listener.onBikeStationUpdated(BikeStationProviderImpl.this);
-        }
+    @Override
+    public Collection<BikeStation> getBikeStations() {
+        return bikeStations;
     }
 
-    @Override
-    public List<BikeStation> getBikeStationList() {
-        return bikeStationList;
+    private class LoadStationsFromDbAsyncTask extends AsyncTask<BikeStationProvider, Void, Void> {
+
+        @Override
+        protected Void doInBackground(BikeStationProvider... params) {
+            try {updateMemFromDb();}
+            catch (SQLException e) {}
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void arg) {
+            fireOnBikeStationUpdated();
+        }
     }
 
     private class DownloadStationDataAsyncTask extends AsyncTask<BikeStationProvider, Void, List<BikeStation>> {
 
-        private boolean networkProblem;
-        private boolean parsingProblem;
+        private volatile boolean networkProblem;
+        private volatile boolean parsingProblem;
 
         protected InputStream getDataStream() throws IOException {
             HttpURLConnection connection = (HttpURLConnection) dataSource.url.openConnection();
             connection.setReadTimeout(10000 /* milliseconds */);
-            connection.setConnectTimeout(15000 /* milliseconds */);
+            connection.setConnectTimeout(10000 /* milliseconds */);
             connection.setRequestMethod("GET");
             connection.setDoInput(true);
             connection.connect();
@@ -130,14 +213,25 @@ public class BikeStationProviderImpl implements BikeStationProvider {
                     throw new IOException();
                 }
 
-                return dataSource.parser.parse(dataStream);
+                List<BikeStation> stations = dataSource.parser.parse(dataStream);
+
+                updateMemFromServers(stations);
+                try {
+                    updateDbFromMem();
+                }
+                catch (SQLException e) {}
+                bounds = Utils.computeBounds(bikeStations);
+                lastUpdateDate = new Date();
+                isFetchingStations = false;
+
+                return stations;
             }
             catch (IOException e) {
-                Log.d(BikefriendApplication.TAG, "Network problem.", e);
+                //Log.d(BikefriendApplication.TAG, "Network problem.", e);
                 networkProblem = true;
             }
             catch (ParsingException e) {
-                Log.d(BikefriendApplication.TAG, "Parsing problem.", e);
+                //Log.d(BikefriendApplication.TAG, "Parsing problem.", e);
                 parsingProblem = true;
             }
 
@@ -146,13 +240,17 @@ public class BikeStationProviderImpl implements BikeStationProvider {
 
         @Override
         protected void onPostExecute(List<BikeStation> stations) {
-            // TODO: Notification to tell the user that there is a problem getting the data.
+            //Log.d(BikefriendApplication.TAG, dataSource.name() + " DownloadStationDataAsyncTask.onPostExecute()");
+
             if (networkProblem) {
+                fireOnServerNotReachable();
             }
             else if (parsingProblem) {
+                fireOnParseError();
             }
-
-            setUpdatedData(stations);
+            else if (stations != null) {
+                fireOnBikeStationUpdated();
+            }
         }
     }
 

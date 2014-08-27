@@ -24,7 +24,7 @@ import java.util.Map;
  *
  * @author Vincent Cantin
  */
-@EBean(scope = EBean.Scope.Singleton)
+@EBean
 public class StationInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
     private final Map<Marker, BikeStation> markerToStation;
@@ -72,7 +72,7 @@ public class StationInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     }
 
     public void unbindAllMarkers() {
-    markerToStation.clear();
+        markerToStation.clear();
     }
 
     public View getInfoWindow(Marker marker) {

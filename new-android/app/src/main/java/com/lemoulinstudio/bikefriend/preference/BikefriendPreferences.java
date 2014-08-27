@@ -13,15 +13,16 @@ public interface BikefriendPreferences {
 
     @DefaultBoolean(false) boolean userLearnedDrawer();
 
-    @DefaultFloat(25.030142f) float cameraTargetLat();
-    @DefaultFloat(121.53549f) float cameraTargetLng();
-    @DefaultFloat(13.0f) float cameraZoom();
+    @DefaultFloat((24.979649f + 25.137976f) / 2) float cameraTargetLat();
+    @DefaultFloat((121.493065f + 121.662750f) / 2) float cameraTargetLng();
+    @DefaultFloat(11.0f) float cameraZoom();
     @DefaultFloat(0.0f) float cameraTilt();
     @DefaultFloat(0.0f) float cameraBearing();
 
     /* Data exposed to the user. */
 
-    @DefaultString("GoogleMap") String mapProvider();
+    @DefaultString("2min") String dataValidityDuration();
     @DefaultString("DefinedBySystem") String locationLanguage();
+    @DefaultString("GoogleMap") String mapProvider();
 
 }

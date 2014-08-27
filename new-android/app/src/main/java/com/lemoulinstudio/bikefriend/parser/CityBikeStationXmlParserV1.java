@@ -79,6 +79,7 @@ public class CityBikeStationXmlParserV1 implements BikeStationParser {
     parser.require(XmlPullParser.START_TAG, ns, "Station");
     
     BikeStation station = new BikeStation();
+    station.dataSource = dataSource;
     station.lastUpdate = new Date();
 
     while (parser.nextTag() != XmlPullParser.END_TAG) {

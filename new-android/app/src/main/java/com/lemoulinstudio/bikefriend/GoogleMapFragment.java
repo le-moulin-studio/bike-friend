@@ -1,10 +1,13 @@
 package com.lemoulinstudio.bikefriend;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -23,6 +26,7 @@ import com.lemoulinstudio.bikefriend.preference.BikefriendPreferences_;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.res.StringRes;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
@@ -50,6 +54,15 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
 
     @Bean
     protected StationInfoWindowAdapter siwa;
+
+    @StringRes(R.string.message_network_not_available)
+    protected String messageNetworkNotAvailable;
+
+    @StringRes(R.string.message_server_not_reachable_format)
+    protected String messageServerNotReachable;
+
+    @StringRes(R.string.message_parse_error_format)
+    protected String messageDataParseError;
 
     @AfterViews
     protected void setupViews() {
@@ -87,12 +100,17 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_refresh: {
-                LatLngBounds visibleRegion = getMap().getProjection().getVisibleRegion().latLngBounds;
-                for (BikeStationProvider bikeStationProvider : bikeStationProviderRepository.getBikeStationProviders()) {
-                    LatLngBounds providerBounds = bikeStationProvider.getBounds();
-                    if (Utils.intersects(visibleRegion, providerBounds)) {
-                        bikeStationProvider.updateData();
+                if (isNetworkAvailable()) {
+                    LatLngBounds visibleRegion = getMap().getProjection().getVisibleRegion().latLngBounds;
+                    for (BikeStationProvider bikeStationProvider : bikeStationProviderRepository.getBikeStationProviders()) {
+                        LatLngBounds providerBounds = bikeStationProvider.getBounds();
+                        if (Utils.intersects(visibleRegion, providerBounds)) {
+                            bikeStationProvider.updateData();
+                        }
                     }
+                }
+                else {
+                    Toast.makeText(getActivity(), messageNetworkNotAvailable, Toast.LENGTH_LONG).show();
                 }
                 return true;
             }
@@ -128,6 +146,13 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
         }
     }
 
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
     private void animateCameraToBoundingBox(LatLngBounds bounds) {
 //        Log.i("bikefriend", String.format("bounds = [%ff, %ff, %ff, %ff]",
 //                bounds.southwest.latitude, bounds.southwest.longitude,
@@ -137,6 +162,20 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
 //                cameraBounds.southwest.latitude, cameraBounds.southwest.longitude,
 //                cameraBounds.northeast.latitude, cameraBounds.northeast.longitude));
         getMap().animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
+    }
+
+    @Override
+    public void onServerNotReachable(BikeStationProvider bikeStationProvider) {
+        String placeName = getActivity().getString(bikeStationProvider.getDataSourceEnum().placeNameRes);
+        String message = String.format(messageServerNotReachable, placeName);
+        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onParseError(BikeStationProvider bikeStationProvider) {
+        String placeName = getActivity().getString(bikeStationProvider.getDataSourceEnum().placeNameRes);
+        String message = String.format(messageDataParseError, placeName);
+        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -152,7 +191,7 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
 
         GoogleMap map = getMap();
 
-        for (BikeStation station : bikeStationProvider.getBikeStationList()) {
+        for (BikeStation station : bikeStationProvider.getBikeStations()) {
             MarkerOptions markerOptions = new MarkerOptions()
                     .position(new LatLng(station.latitude, station.longitude))
                     .icon(BitmapDescriptorFactory.defaultMarker(
@@ -216,5 +255,7 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
         for (BikeStationProvider bikeStationProvider : bikeStationProviderRepository.getBikeStationProviders()) {
             bikeStationProvider.removeListener(this);
         }
+
+        siwa.unbindAllMarkers();
     }
 }

@@ -42,7 +42,8 @@ public class YouBikeStationCSVParserV1 implements BikeStationParser {
         
         if (elements.length >= 11) {
           BikeStation station = new BikeStation();
-          station.id = elements[0];
+          station.id = dataSource.idPrefix + elements[0];
+          station.dataSource = dataSource;
           station.chineseName = elements[1];
           int nbTotalPlaces = Integer.parseInt(elements[2]);
           station.nbBicycles = Integer.parseInt(elements[3]);

@@ -1,9 +1,11 @@
 package com.lemoulinstudio.bikefriend;
 
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.j256.ormlite.dao.Dao;
 import com.lemoulinstudio.bikefriend.db.BikeStation;
 import com.lemoulinstudio.bikefriend.db.DataSourceEnum;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -61,6 +63,6 @@ public interface BikeStationProvider {
      *
      * @return The bike station list.
      */
-    public List<BikeStation> getBikeStationList();
+    public Collection<BikeStation> getBikeStations();
 
 }

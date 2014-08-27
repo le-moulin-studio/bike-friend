@@ -24,6 +24,10 @@
     <string name="menu_place_tainan">Tainan</string>
     <string name="menu_place_taiwan">Taiwan</string>
 
+    <string name="message_network_not_available">Network is not available</string>
+    <string name="message_server_not_reachable_format">Problem: The server for %s is not reachable</string>
+    <string name="message_parse_error_format">Problem: Cannot parse the data from %s\'s server</string>
+
     <string name="map_popup_station_nb_bike_format">Bicycles: %d</string>
     <string name="map_popup_station_nb_empty_slot_format">Empty Slots: %d</string>
     <string name="map_popup_station_data_age_sec_format">Station data is %d sec(s) old.</string>
@@ -33,14 +37,18 @@
 
     <string name="preference_activity_title">Settings</string>
 
-    <string name="preference_map_provider">Map Provider</string>
-    <string-array name="preference_map_provider_value">
-        <item>GoogleMap</item> <!-- do not translate -->
-        <item>OpenStreetMap</item> <!-- do not translate -->
+    <string name="preference_data_validity_duration">Data validity duration</string>
+    <string-array name="preference_data_validity_duration_value">
+        <item>1min</item> <!-- do not translate -->
+        <item>2min</item> <!-- do not translate -->
+        <item>3min</item> <!-- do not translate -->
+        <item>5min</item> <!-- do not translate -->
     </string-array>
-    <string-array name="preference_map_provider_display">
-        <item>Proprietary GoogleMap</item>
-        <item>Free OpenStreetMap</item>
+    <string-array name="preference_data_validity_duration_display">
+        <item>1 minute</item>
+        <item>2 minutes</item>
+        <item>3 minutes</item>
+        <item>5 minutes</item>
     </string-array>
 
     <string name="preference_location_language">Location language</string>
@@ -55,6 +63,16 @@
         <item>Chinese</item>
         <item>English</item>
         <item>Chinese and english</item>
+    </string-array>
+
+    <string name="preference_map_provider">Map Provider</string>
+    <string-array name="preference_map_provider_value">
+        <item>GoogleMap</item> <!-- do not translate -->
+        <item>OpenStreetMap</item> <!-- do not translate -->
+    </string-array>
+    <string-array name="preference_map_provider_display">
+        <item>Proprietary GoogleMap</item>
+        <item>Free OpenStreetMap</item>
     </string-array>
 
 </resources>

@@ -47,6 +47,8 @@ public class YouBikeStationJsonParserV1 implements BikeStationParser {
         try {
           JSONObject jsonStation = jsonStations.getJSONObject(i);
           BikeStation station = new BikeStation();
+          station.id             = dataSource.idPrefix + jsonStation.getString("iid");
+          station.dataSource     = dataSource;
           station.lastUpdate     = dateFormat.parse(jsonStation.getString("mday"));
           station.chineseName    = jsonStation.getString("sna");
           station.chineseAddress = jsonStation.getString("ar");

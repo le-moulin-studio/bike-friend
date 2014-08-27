@@ -2,11 +2,11 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <ListPreference
-        android:key="mapProvider"
-        android:title="@string/preference_map_provider"
-        android:entryValues="@array/preference_map_provider_value"
-        android:entries="@array/preference_map_provider_display"
-        android:defaultValue="GoogleMap"
+        android:key="dataValidityDuration"
+        android:title="@string/preference_data_validity_duration"
+        android:entryValues="@array/preference_data_validity_duration_value"
+        android:entries="@array/preference_data_validity_duration_display"
+        android:defaultValue="2min"
         />
     <ListPreference
         android:key="locationLanguage"
@@ -14,5 +14,12 @@
         android:entryValues="@array/preference_location_language_value"
         android:entries="@array/preference_location_language_display"
         android:defaultValue="DefinedBySystem"
+        />
+    <ListPreference
+        android:key="mapProvider"
+        android:title="@string/preference_map_provider"
+        android:entryValues="@array/preference_map_provider_value"
+        android:entries="@array/preference_map_provider_display"
+        android:defaultValue="GoogleMap"
         />
 </PreferenceScreen>

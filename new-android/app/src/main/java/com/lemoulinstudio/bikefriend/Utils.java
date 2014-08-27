@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
@@ -34,7 +35,7 @@ public class Utils {
     return new String(baos.toByteArray(), "UTF-8");
   }
   
-  public static LatLngBounds computeBounds(List<BikeStation> stations) {
+  public static LatLngBounds computeBounds(Collection<BikeStation> stations) {
     if (stations.isEmpty()) {
       return null;
     }
