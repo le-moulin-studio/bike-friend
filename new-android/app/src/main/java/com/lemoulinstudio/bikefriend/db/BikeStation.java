@@ -58,13 +58,18 @@ public class BikeStation {
                 (nbEmptySlots != -1);
     }
 
-    public void updateFrom(BikeStation otherStation) {
+    public void updateFrom(BikeStation otherStation, boolean isFromDb) {
         if (otherStation.lastUpdate != null) {
             if (this.lastUpdate != null && this.lastUpdate.after(otherStation.lastUpdate)) {
                 return;
             }
             this.lastUpdate = otherStation.lastUpdate;
         }
+
+        if (isFromDb) {
+            this.isPreferred = otherStation.isPreferred;
+        }
+
         if (otherStation.latitude != 0.0f) {
             this.latitude = otherStation.latitude;
         }

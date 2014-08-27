@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.misc.TransactionManager;
+import com.j256.ormlite.stmt.DeleteBuilder;
 import com.lemoulinstudio.bikefriend.db.BikeStation;
 import com.lemoulinstudio.bikefriend.db.DataSourceEnum;
 
@@ -49,8 +50,9 @@ public class BikeStationProviderImpl implements BikeStationProvider {
         Log.d(BikefriendApplication.TAG, dataSource.name() + " updateMemFromDb()");
 
         List<BikeStation> dbBikeStations = bikeStationDao.queryForEq("dataSource", dataSource);
-        bikeStations.clear();
-        bikeStations.addAll(dbBikeStations);
+        synchronized (bikeStations) {
+            updateMemFrom(dbBikeStations, true);
+        }
     }
 
     private void updateDbFromMem() throws SQLException {
@@ -60,28 +62,48 @@ public class BikeStationProviderImpl implements BikeStationProvider {
             new Callable<Void>() {
                 @Override
                 public Void call() throws Exception {
-                    for (BikeStation bikeStation : bikeStations) {
-                        bikeStationDao.createOrUpdate(bikeStation);
+                    // Wipe the previous stations of this data source from the DB.
+                    DeleteBuilder<BikeStation, String> deleteBuilder = bikeStationDao.deleteBuilder();
+                    deleteBuilder.where().eq("dataSource", dataSource);
+                    deleteBuilder.delete();
+
+                    // Write the stations from the memory to the DB.
+                    synchronized (bikeStations) {
+                        for (BikeStation bikeStation : bikeStations) {
+                            bikeStationDao.createOrUpdate(bikeStation);
+                        }
                     }
+
                     return null;
                 }
             });
     }
 
-    // TODO: Use this function when loading db->mem, and make it mutually exclusive.
-    private void updateMemFromServers(Collection<BikeStation> netStations) {
+    private void updateMemFromServers(Collection<BikeStation> otherStations) {
+        updateMemFrom(otherStations, false);
+    }
+
+    private void updateMemFrom(Collection<BikeStation> otherStations, boolean isFromDb) {
         Log.d(BikefriendApplication.TAG, dataSource.name() + " updateMemFromServers()");
 
-        for (BikeStation netStation : netStations) {
-            BikeStation memStation = findBikeStationFromId(netStation.id, bikeStations);
+        for (BikeStation otherStation : otherStations) {
+            BikeStation memStation = findBikeStationFromId(otherStation.id, bikeStations);
 
             if (memStation == null) {
                 // This is a new station, we add it to the list.
-                bikeStations.add(netStation);
-            }
-            else {
+                bikeStations.add(otherStation);
+            } else {
                 // We update the state of the memStation from the attributes of the netStation.
-                memStation.updateFrom(netStation);
+                memStation.updateFrom(otherStation, isFromDb);
+            }
+        }
+
+        for (BikeStation memStation : bikeStations) {
+            BikeStation otherStation = findBikeStationFromId(memStation.id, otherStations);
+
+            if (otherStation == null) {
+                // This station is no longer there, we can delete it.
+                bikeStations.remove(memStation);
             }
         }
     }
@@ -215,9 +237,11 @@ public class BikeStationProviderImpl implements BikeStationProvider {
 
                 List<BikeStation> stations = dataSource.parser.parse(dataStream);
 
-                updateMemFromServers(stations);
                 try {
-                    updateDbFromMem();
+                    synchronized (bikeStations) {
+                        updateMemFromServers(stations);
+                        updateDbFromMem();
+                    }
                 }
                 catch (SQLException e) {}
                 bounds = Utils.computeBounds(bikeStations);

@@ -30,6 +30,7 @@ import org.androidannotations.annotations.res.StringRes;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -190,18 +191,20 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
         markers.clear();
 
         GoogleMap map = getMap();
+        Collection<BikeStation> bikeStations = bikeStationProvider.getBikeStations();
+        synchronized (bikeStations) {
+            for (BikeStation station : bikeStations) {
+                MarkerOptions markerOptions = new MarkerOptions()
+                        .position(new LatLng(station.latitude, station.longitude))
+                        .icon(BitmapDescriptorFactory.defaultMarker(
+                                (station.nbBicycles == 0 || station.nbEmptySlots == 0) ?
+                                        BitmapDescriptorFactory.HUE_ORANGE :
+                                        BitmapDescriptorFactory.HUE_GREEN));
 
-        for (BikeStation station : bikeStationProvider.getBikeStations()) {
-            MarkerOptions markerOptions = new MarkerOptions()
-                    .position(new LatLng(station.latitude, station.longitude))
-                    .icon(BitmapDescriptorFactory.defaultMarker(
-                        (station.nbBicycles == 0 || station.nbEmptySlots == 0) ?
-                                BitmapDescriptorFactory.HUE_ORANGE :
-                                BitmapDescriptorFactory.HUE_GREEN));
-
-            Marker marker = map.addMarker(markerOptions);
-            markers.add(marker);
-            siwa.bindMarkerToStation(marker, station);
+                Marker marker = map.addMarker(markerOptions);
+                markers.add(marker);
+                siwa.bindMarkerToStation(marker, station);
+            }
         }
     }
 
