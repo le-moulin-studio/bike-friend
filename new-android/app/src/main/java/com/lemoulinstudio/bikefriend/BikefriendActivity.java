@@ -119,10 +119,20 @@ public class BikefriendActivity extends ActionBarActivity {
 
     private int currentItemId = -1;
     private final int mapItemId = 0;
+    private final int favoriteItemId = 1;
+    private final int chronoItemId = 2;
+    private final int lostFoundItemId = 3;
+    private final int serviceInfoItemId = 4;
+    private final int emergencyItemId = 5;
 
     private Fragment currentFragment;
     private GoogleMapFragment_ googleMapFragment;
     private MapsForgeFragment_ mapsForgeFragment;
+    //private FavoriteFragment_ favoriteFragment;
+    private ChronoFragment_ chronoFragment;
+    //private LostFoundFragment_ lostFoundFragment;
+    //private ServiceInfoFragment_ serviceInfoFragment;
+    //private EmergencyFragment_ emergencyFragment;
 
     private void setClickedItem(int itemId) {
         // If the user clicked on an item which is already displayed, we do nothing.
@@ -146,6 +156,22 @@ public class BikefriendActivity extends ActionBarActivity {
                             break;
                         }
                     }
+                    break;
+                }
+                case favoriteItemId: {
+                    break;
+                }
+                case chronoItemId: {
+                    currentFragment = new ChronoFragment_();
+                    break;
+                }
+                case lostFoundItemId: {
+                    break;
+                }
+                case serviceInfoItemId: {
+                    break;
+                }
+                case emergencyItemId: {
                     break;
                 }
             }
