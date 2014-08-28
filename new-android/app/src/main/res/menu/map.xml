@@ -46,4 +46,9 @@
                 android:title="@string/menu_place_taiwan"/>
         </menu>
     </item>
+    <item
+        android:id="@+id/menu_layers"
+        android:icon="@drawable/ic_action_layer"
+        app:showAsAction="ifRoom"
+        android:title="@string/menu_layers"/>
 </menu>

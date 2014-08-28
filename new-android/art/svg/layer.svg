@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.5 r10040"
+   sodipodi:docname="layer.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.7"
+     inkscape:cx="171.07304"
+     inkscape:cy="653.59827"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1301"
+     inkscape:window-height="774"
+     inkscape:window-x="4"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="actionbar"
+     style="display:inline">
+    <rect
+       style="fill:#252725;fill-opacity:1;stroke:none"
+       id="rect3828"
+       width="728.17438"
+       height="145.36668"
+       x="8.646348"
+       y="20.657839" />
+  </g>
+  <g
+     inkscape:label="icon"
+     inkscape:groupmode="layer"
+     id="layer1"
+     style="display:inline">
+    <path
+       id="rect3830"
+       style="fill:none;stroke:#ffffff;stroke-width:5.56167698;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dashoffset:0"
+       d="m 360.34512,50.482984 82.18352,0 -38.41354,38.89654 -82.18352,0 z m 61.07006,21.374155 -17.31255,17.531251 -61.0625,0 -21.09378,21.375 82.1875,0 38.40623,-38.906251 -21.125,0 z m -1e-5,21.406251 -17.28169,17.5 -61.0625,0 -21.12497,21.375 82.1875,0 38.40626,-38.875 -21.125,0 z"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/Users/Vincent/Desktop/bike-friend/new-android/art/ic_action_layer_white_512.png"
+       inkscape:export-xdpi="365.28741"
+       inkscape:export-ydpi="365.28741" />
+  </g>
+</svg>
