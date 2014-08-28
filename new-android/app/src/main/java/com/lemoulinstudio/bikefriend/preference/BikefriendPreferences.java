@@ -3,6 +3,7 @@ package com.lemoulinstudio.bikefriend.preference;
 import org.androidannotations.annotations.sharedpreferences.DefaultBoolean;
 import org.androidannotations.annotations.sharedpreferences.DefaultFloat;
 import org.androidannotations.annotations.sharedpreferences.DefaultInt;
+import org.androidannotations.annotations.sharedpreferences.DefaultLong;
 import org.androidannotations.annotations.sharedpreferences.DefaultString;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
 
@@ -18,6 +19,9 @@ public interface BikefriendPreferences {
     @DefaultFloat(11.0f) float cameraZoom();
     @DefaultFloat(0.0f) float cameraTilt();
     @DefaultFloat(0.0f) float cameraBearing();
+
+    @DefaultBoolean(false) boolean chronometerIsStarted();
+    @DefaultLong(0) long chronometerStartTime();
 
     /* Data exposed to the user. */
 
