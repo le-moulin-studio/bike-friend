@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:id="@+id/station_info"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:weightSum="1">
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|left"
+        android:singleLine="true"
+        android:textColor="#ff000000"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:text="station Name" />
+    <TextView
+        android:id="@+id/nb_bicycles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:textColor="#ff3f3f3f"
+        android:textSize="14sp"
+        android:text="Bikes: 0" />
+    <TextView
+        android:id="@+id/nb_empty_slots"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:textColor="#ff3f3f3f"
+        android:textSize="14sp"
+        android:text="Empty slots: 0" />
+    <TextView
+        android:id="@+id/station_data_age"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:textColor="#ff7f7f7f"
+        android:textSize="14sp"
+        android:text="1h old" />
+
+    <!--<TextView-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="46dp"-->
+        <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
+        <!--android:text="Large Text"-->
+        <!--android:id="@+id/fragment_favorite_station_station_name"-->
+        <!--android:layout_weight="0.94"-->
+        <!--android:textAlignment="center" />-->
+    </LinearLayout>
+
+    <!--android:src="@android:drawable/btn_star"-->
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fragment_favorite_station_starbutton"
+        android:src="@drawable/star_button"
+        android:clickable="true"
+        android:layout_gravity="end"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:background="@android:color/transparent" />
+</RelativeLayout>

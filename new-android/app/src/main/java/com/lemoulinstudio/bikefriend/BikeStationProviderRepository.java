@@ -17,6 +17,8 @@ import org.androidannotations.annotations.OrmLiteDao;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.sql.SQLException;
+
 
 @EBean(scope = EBean.Scope.Singleton)
 public class BikeStationProviderRepository {
@@ -49,5 +51,10 @@ public class BikeStationProviderRepository {
 
         // Not found.
         return null;
+    }
+
+    // This can be called from the favoriteFragment.
+    public void updateDbFromMem(BikeStation bikeStation) throws SQLException {
+        bikeStationDao.update(bikeStation);
     }
 }
