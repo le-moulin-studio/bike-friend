@@ -38,6 +38,8 @@ import java.util.Map;
 @EFragment
 public class GoogleMapFragment extends SupportMapFragment implements BikeStationListener {
 
+    private boolean displayBicyclesOnMarkers;
+
     private final Map<DataSourceEnum, List<Marker>> dataSourceToMarkers;
 
     public GoogleMapFragment() {
@@ -98,6 +100,13 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
     }
 
     @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.menu_bicycle).setVisible(displayBicyclesOnMarkers);
+        menu.findItem(R.id.menu_parking).setVisible(!displayBicyclesOnMarkers);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_refresh: {
@@ -113,6 +122,23 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
                 else {
                     Toast.makeText(getActivity(), messageNetworkNotAvailable, Toast.LENGTH_LONG).show();
                 }
+                return true;
+            }
+            case R.id.menu_bicycle: {
+                // The user wants to change to display parkings.
+                displayBicyclesOnMarkers = false;
+                getActivity().supportInvalidateOptionsMenu();
+                recreateAllTheMarkers();
+                return true;
+            }
+            case R.id.menu_parking: {
+                // The user wants to change to display bicycles.
+                displayBicyclesOnMarkers = true;
+                getActivity().supportInvalidateOptionsMenu();
+                recreateAllTheMarkers();
+                return true;
+            }
+            case R.id.menu_layers: {
                 return true;
             }
             case R.id.menu_place_taipei: {
@@ -221,6 +247,12 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
                 preferences.cameraBearing().get());
         getMap().moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
+        displayBicyclesOnMarkers = preferences.displayBicyclesOnMarkers().get();
+
+        recreateAllTheMarkers();
+    }
+
+    private void recreateAllTheMarkers() {
         // Initializes the markers on the map, according to the bike stations already available (in memory or db).
         for (BikeStationProvider bikeStationProvider : bikeStationProviderRepository.getBikeStationProviders()) {
             onBikeStationUpdated(bikeStationProvider);
@@ -239,6 +271,7 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
                 .cameraZoom().put(cameraPosition.zoom)
                 .cameraTilt().put(cameraPosition.tilt)
                 .cameraBearing().put(cameraPosition.bearing)
+                .displayBicyclesOnMarkers().put(displayBicyclesOnMarkers)
                 .apply();
     }
 

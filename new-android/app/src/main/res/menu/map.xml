@@ -8,6 +8,16 @@
         app:showAsAction="ifRoom"
         android:title="@string/menu_refresh"/>
     <item
+        android:id="@+id/menu_bicycle"
+        android:icon="@drawable/ic_action_bicycle"
+        app:showAsAction="ifRoom"
+        android:title="@string/menu_bicycle"/>
+    <item
+        android:id="@+id/menu_parking"
+        android:icon="@drawable/ic_action_parking"
+        app:showAsAction="ifRoom"
+        android:title="@string/menu_bicycle"/>
+    <item
         android:id="@+id/menu_places"
         android:icon="@drawable/ic_action_goto_location"
         app:showAsAction="ifRoom"

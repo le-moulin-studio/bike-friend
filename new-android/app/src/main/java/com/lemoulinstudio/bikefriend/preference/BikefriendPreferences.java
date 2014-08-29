@@ -20,6 +20,8 @@ public interface BikefriendPreferences {
     @DefaultFloat(0.0f) float cameraTilt();
     @DefaultFloat(0.0f) float cameraBearing();
 
+    @DefaultBoolean(true) boolean displayBicyclesOnMarkers();
+
     @DefaultBoolean(false) boolean chronometerIsStarted();
     @DefaultLong(0) long chronometerStartTime();
 
