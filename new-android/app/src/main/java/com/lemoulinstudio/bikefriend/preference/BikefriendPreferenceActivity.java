@@ -22,10 +22,10 @@ public class BikefriendPreferenceActivity extends PreferenceActivity
         super.onCreate(savedInstanceState);
 
         // Sets the inter-activity fade in/out animation.
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
         // Sets up the home button in the action bar.
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        //getActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Set which preferences to use.
         getPreferenceManager().setSharedPreferencesName(PREFERENCES_NAME);
@@ -60,7 +60,7 @@ public class BikefriendPreferenceActivity extends PreferenceActivity
     protected void onPause() {
         super.onPause();
         getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     @Override

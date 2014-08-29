@@ -81,7 +81,7 @@ public class BikefriendActivity extends ActionBarActivity {
                     currentFragment.setHasOptionsMenu(false);
                 }
 
-                invalidateOptionsMenu(); // triggers a call of onPrepareOptionsMenu()
+                supportInvalidateOptionsMenu(); // triggers a call of onPrepareOptionsMenu()
             }
 
             @Override
@@ -92,7 +92,7 @@ public class BikefriendActivity extends ActionBarActivity {
                     currentFragment.setHasOptionsMenu(true);
                 }
 
-                invalidateOptionsMenu(); // triggers a call of onPrepareOptionsMenu()
+                supportInvalidateOptionsMenu(); // triggers a call of onPrepareOptionsMenu()
             }
         };
 
