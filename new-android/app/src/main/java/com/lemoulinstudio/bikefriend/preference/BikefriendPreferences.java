@@ -31,4 +31,8 @@ public interface BikefriendPreferences {
     @DefaultString("DefinedBySystem") String locationLanguage();
     @DefaultString("GoogleMap") String mapProvider();
 
+    @DefaultBoolean(true) boolean mapStationsLayer();
+    @DefaultBoolean(false) boolean mapWCLayer();
+    @DefaultBoolean(false) boolean mapDrinkableWaterLayer();
+
 }

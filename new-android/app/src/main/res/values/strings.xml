@@ -39,6 +39,10 @@
     <string name="map_popup_station_data_age_hour_format">Station data is %d hour(s) old.</string>
     <string name="map_popup_station_data_age_day_format">Station data is %d day(s) old.</string>
 
+    <string name="map_popup_layer_stations">Stations</string>
+    <string name="map_popup_layer_toilets">Toilets</string>
+    <string name="map_popup_layer_drinkable_water">Drinkable Water</string>
+
     <string name="preference_activity_title">Settings</string>
 
     <string name="preference_data_validity_duration">Data validity duration</string>
