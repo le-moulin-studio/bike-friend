@@ -14,6 +14,7 @@ import com.lemoulinstudio.bikefriend.db.BikeStation;
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.RootContext;
 import org.androidannotations.annotations.res.StringRes;
 
 import java.sql.SQLException;
@@ -33,8 +34,10 @@ public class FavoriteStationsAdapter extends BaseAdapter {
     @Bean
     protected BikeStationProviderRepository bikeStationProviderRepository;
 
-    protected final LayoutInflater inflater;
-    protected final Context ctx;
+    protected LayoutInflater inflater;
+
+    @RootContext
+    protected Context context;
 
     // Duplicate with StationInfoWindowAdapter
     @StringRes(R.string.map_popup_station_nb_bike_format)
@@ -61,25 +64,26 @@ public class FavoriteStationsAdapter extends BaseAdapter {
 
     protected int total;
 
-    public FavoriteStationsAdapter(Context context) {
+    @AfterInject
+    protected void setupViews() {
         inflater = LayoutInflater.from(context);
-        ctx = context;
         items = new ArrayList();
         itemClasses = Arrays.<Class>asList(BikeStation.class, BikeStationProvider.class);
+
+        updateItems();
     }
 
-    @AfterInject
-    public void updateItems() {
+    private void updateItems() {
         // Build List of favorite items
         items.clear();
         Collection<BikeStationProvider> providers = bikeStationProviderRepository.getBikeStationProviders();
         for (BikeStationProvider provider : providers) {
-            boolean providerAdded = false;
+            boolean providerAlreadyAdded = false;
             for (BikeStation station : provider.getBikeStations()) {
                 if (station.isPreferred) {
-                    if (!providerAdded) {
-                        providerAdded = !providerAdded;
+                    if (!providerAlreadyAdded) {
                         items.add(provider);
+                        providerAlreadyAdded = true;
                     }
                     if (i18nStationName(station) != null) {
                         items.add(station);
@@ -153,8 +157,8 @@ public class FavoriteStationsAdapter extends BaseAdapter {
             stationDataAgeUi.setText(ageString);
             // end
 
-            ImageButton starUi = (ImageButton ) convertView.findViewById(R.id.fragment_favorite_station_starbutton);
-            starUi.setImageResource(R.drawable.ic_action_important);
+            ImageButton starButton = (ImageButton) convertView.findViewById(R.id.fragment_favorite_station_starbutton);
+            starButton.setImageResource(R.drawable.ic_action_important);
 
             View.OnClickListener saveAsfavorite = new View.OnClickListener(){
                 public void onClick(android.view.View view) {
@@ -168,7 +172,7 @@ public class FavoriteStationsAdapter extends BaseAdapter {
                 }
             };
 
-            starUi.setOnClickListener(saveAsfavorite);
+            starButton.setOnClickListener(saveAsfavorite);
         }
         else {
             // Provider
@@ -182,11 +186,7 @@ public class FavoriteStationsAdapter extends BaseAdapter {
 
     public static String i18nStationName(BikeStation station) {
         String languageCode = Locale.getDefault().getLanguage();
-        if (languageCode.equals("zh") || languageCode.equals("ja"))
-        {
-            return station.chineseName;
-        }
-        return station.englishName;
+        return languageCode.equals("zh") || languageCode.equals("ja") ?
+             station.chineseName : station.englishName;
     }
 }
-
