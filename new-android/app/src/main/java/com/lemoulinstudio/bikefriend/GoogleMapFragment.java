@@ -188,16 +188,10 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
                 }
                 return true;
             }
-            case R.id.menu_bicycle: {
-                // The user wants to change to display parkings.
-                displayBicyclesOnMarkers = false;
-                getActivity().supportInvalidateOptionsMenu();
-                recreateAllTheMarkers();
-                return true;
-            }
+            case R.id.menu_bicycle:
             case R.id.menu_parking: {
-                // The user wants to change to display bicycles.
-                displayBicyclesOnMarkers = true;
+                // The user wants to switch between displaying available bicycles and available parkings.
+                displayBicyclesOnMarkers = !displayBicyclesOnMarkers;
                 getActivity().supportInvalidateOptionsMenu();
                 recreateAllTheMarkers();
                 return true;
