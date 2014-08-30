@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.TextPaint;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,6 +34,8 @@ import com.lemoulinstudio.bikefriend.preference.BikefriendPreferences_;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.FragmentById;
+import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.DrawableRes;
 import org.androidannotations.annotations.res.StringRes;
 import org.androidannotations.annotations.sharedpreferences.Pref;
@@ -44,8 +47,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@EFragment
-public class GoogleMapFragment extends SupportMapFragment implements BikeStationListener {
+@EFragment(R.layout.fragment_google_map)
+public class GoogleMapFragment extends Fragment implements BikeStationListener {
 
     private boolean displayBicyclesOnMarkers;
     private Map<DataSourceEnum, List<Marker>> dataSourceToMarkers;
@@ -70,6 +73,9 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
     @Bean
     protected StationInfoWindowAdapter siwa;
 
+    @FragmentById(R.id.map_fragment)
+    protected SupportMapFragment mapFragment;
+
     @DrawableRes(R.drawable.map_marker_green)
     protected Drawable markerDrawableGreen;
 
@@ -90,7 +96,7 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
 
     @AfterViews
     protected void setupViews() {
-        final GoogleMap map = getMap();
+        final GoogleMap map = mapFragment.getMap();
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         map.setMyLocationEnabled(true);
         map.setInfoWindowAdapter(siwa);
@@ -175,7 +181,7 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
         switch (item.getItemId()) {
             case R.id.menu_refresh: {
                 if (isNetworkAvailable()) {
-                    LatLngBounds visibleRegion = getMap().getProjection().getVisibleRegion().latLngBounds;
+                    LatLngBounds visibleRegion = mapFragment.getMap().getProjection().getVisibleRegion().latLngBounds;
                     for (BikeStationProvider bikeStationProvider : bikeStationProviderRepository.getBikeStationProviders()) {
                         LatLngBounds providerBounds = bikeStationProvider.getBounds();
                         if (Utils.intersects(visibleRegion, providerBounds)) {
@@ -246,7 +252,7 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
 //        Log.i("bikefriend", String.format("cameraBounds = [%ff, %ff, %ff, %ff]",
 //                cameraBounds.southwest.latitude, cameraBounds.southwest.longitude,
 //                cameraBounds.northeast.latitude, cameraBounds.northeast.longitude));
-        getMap().animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
+        mapFragment.getMap().animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
     }
 
     @Override
@@ -274,7 +280,7 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
         }
         markers.clear();
 
-        GoogleMap map = getMap();
+        GoogleMap map = mapFragment.getMap();
         Collection<BikeStation> bikeStations = bikeStationProvider.getBikeStations();
         synchronized (bikeStations) {
             for (BikeStation station : bikeStations) {
@@ -301,7 +307,7 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
                 preferences.cameraZoom().get(),
                 preferences.cameraTilt().get(),
                 preferences.cameraBearing().get());
-        getMap().moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        mapFragment.getMap().moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
         displayBicyclesOnMarkers = preferences.displayBicyclesOnMarkers().get();
 
@@ -319,7 +325,7 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
         super.onPause();
 
         // Saves the state of the camera on the map.
-        CameraPosition cameraPosition = getMap().getCameraPosition();
+        CameraPosition cameraPosition = mapFragment.getMap().getCameraPosition();
 
         preferences.edit()
                 .cameraTargetLat().put((float) cameraPosition.target.latitude)
