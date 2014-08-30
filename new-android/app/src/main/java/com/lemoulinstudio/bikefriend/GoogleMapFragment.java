@@ -10,10 +10,18 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.text.Layout;
 import android.text.TextPaint;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -37,6 +45,7 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.res.DrawableRes;
 import org.androidannotations.annotations.res.StringRes;
 import org.androidannotations.annotations.sharedpreferences.Pref;
+import org.mapsforge.map.layer.Layer;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -51,7 +60,13 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
     private boolean displayBicyclesOnMarkers;
     private Map<DataSourceEnum, List<Marker>> dataSourceToMarkers;
     private Map<Integer, BitmapDescriptor> numberToMarkerBitmapDescriptor;
+    private Map<Object, List<Marker>> dataSourceWcToMarkers;
+    private Map<Object, List<Marker>> dataSourceDrinkableWaterToMarkers;
     private TextPaint textPaint;
+
+    private boolean displayMapStationLayer;
+    private boolean displayMapWCLayer;
+    private boolean displayMapDrinkableWaterLayer;
 
     public GoogleMapFragment() {
         dataSourceToMarkers = new EnumMap<DataSourceEnum, List<Marker>>(DataSourceEnum.class);
@@ -60,6 +75,10 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
         }
 
         numberToMarkerBitmapDescriptor = new HashMap<Integer, BitmapDescriptor>();
+        dataSourceWcToMarkers = new HashMap();
+        dataSourceWcToMarkers.put(new Object(), new ArrayList());
+        dataSourceDrinkableWaterToMarkers = new HashMap();
+        dataSourceDrinkableWaterToMarkers.put(new Object(), new ArrayList());
     }
 
     @Pref
@@ -88,6 +107,15 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
 
     @StringRes(R.string.message_parse_error_format)
     protected String messageDataParseError;
+
+    @StringRes(R.string.map_popup_layer_stations)
+    protected String messageLayerStations;
+
+    @StringRes(R.string.map_popup_layer_toilets)
+    protected String messageLayerWC;
+
+    @StringRes(R.string.map_popup_layer_drinkable_water)
+    protected String messageLayerDrinkableWater;
 
     @AfterViews
     protected void setupViews() {
@@ -195,10 +223,77 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
                 // The user wants to switch between displaying available bicycles and available parkings.
                 displayBicyclesOnMarkers = !displayBicyclesOnMarkers;
                 getActivity().supportInvalidateOptionsMenu();
+                displayMapStationLayer = true;
                 recreateAllTheMarkers();
+
                 return true;
             }
             case R.id.menu_layers: {
+                // Select layers to display on map
+                LayoutInflater inflater = LayoutInflater.from(this.getActivity());
+                View popup = inflater.inflate(R.layout.fragment_layer, null, false);
+
+                final CheckBox checkBoxStationsUi = (CheckBox)popup.findViewById(R.id.checkBoxStationLayer);
+                Log.d(BikefriendApplication.TAG, "onOptionSelected: displayMapStationLayer:"+displayMapStationLayer);
+                checkBoxStationsUi.setChecked(displayMapStationLayer);
+                checkBoxStationsUi.setText(messageLayerStations);
+                checkBoxStationsUi.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
+                    public void onCheckedChanged(android.widget.CompoundButton compoundButton, boolean checked) {
+                        displayMapStationLayer = checked;
+                        if (checked) {
+                            GoogleMapFragment.this.recreateAllTheMarkers();
+                        }
+                        else {
+                            GoogleMapFragment.this.removeAllTheBikeStationMarkers();
+                        }
+                    }}
+                );
+
+                final CheckBox checkBoxWCUi = (CheckBox)popup.findViewById(R.id.checkBoxWCLayer);
+                checkBoxWCUi.setChecked(displayMapWCLayer);
+                checkBoxWCUi.setText(messageLayerWC);
+                checkBoxWCUi.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
+                    public void onCheckedChanged(android.widget.CompoundButton compoundButton, boolean checked) {
+                        displayMapWCLayer = checked;
+                        if (checked) {
+                            GoogleMapFragment.this.recreateAllTheWCMarkers();
+                        }
+                        else {
+                            GoogleMapFragment.this.removeAllTheWCMarkers();
+                        }
+                    }}
+                );
+
+                final CheckBox checkBoxDrinkableWaterUi = (CheckBox)popup.findViewById(R.id.checkBoxDrinkableWater);
+                checkBoxDrinkableWaterUi.setChecked(displayMapDrinkableWaterLayer);
+                checkBoxDrinkableWaterUi.setText(messageLayerDrinkableWater);
+                checkBoxDrinkableWaterUi.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
+                    public void onCheckedChanged(android.widget.CompoundButton compoundButton, boolean checked) {
+                        displayMapDrinkableWaterLayer = checked;
+                        if (checked) {
+                            GoogleMapFragment.this.recreateAllTheDrinkableWaterMarkers();
+                        } else {
+                            GoogleMapFragment.this.removeAllTheDrinkableWaterMarkers();
+                        }
+                    }}
+                );
+
+                View parentView = this.getView();
+                final PopupWindow popupUi =  new PopupWindow(getActivity());
+                popup.measure(View.MeasureSpec.UNSPECIFIED,View.MeasureSpec.UNSPECIFIED);
+                popupUi.setContentView(popup);
+                popupUi.setWidth(popup.getMeasuredWidth());
+                popupUi.setHeight(popup.getMeasuredHeight());
+                popupUi.setOutsideTouchable(true);
+                popupUi.setFocusable(true);
+                popupUi.showAtLocation(parentView, Gravity.CENTER, 0, 0);
+                popupUi.update();
+                popupUi.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        popupUi.dismiss();
+                    }
+                });
                 return true;
             }
             case R.id.menu_place_taipei: {
@@ -267,14 +362,12 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
 
     @Override
     public void onBikeStationUpdated(BikeStationProvider bikeStationProvider) {
-        List<Marker> markers = dataSourceToMarkers.get(bikeStationProvider.getDataSourceEnum());
-
-        // Remove the old markers.
-        for (Marker marker : markers) {
-            marker.remove();
-            siwa.unbindMarker(marker);
+        if (!displayMapStationLayer) {
+            // Prevents displaying markers due to update triggered implicitly from onStart's registerForBikeStationUpdates
+            return;
         }
-        markers.clear();
+        List<Marker> markers = dataSourceToMarkers.get(bikeStationProvider.getDataSourceEnum());
+        removeAllMarkers(markers);
 
         GoogleMap map = getMap();
         Collection<BikeStation> bikeStations = bikeStationProvider.getBikeStations();
@@ -292,6 +385,54 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
         }
     }
 
+    public void onWCUpdated(Object provider) {
+        List<Marker> markers = dataSourceWcToMarkers.values().iterator().next(); //FIXME: No proper datasource
+        removeAllMarkers(markers);
+
+        GoogleMap map = getMap();
+        Collection<float[] /* latitude/longitude*/> stations = new ArrayList<float[]>();
+        // FIXME Dummy data
+        float coordinate1[] = {25.028662f, 121.56612f};
+        float coordinate2[] = {25.034937f, 121.557662f};
+        stations.add(coordinate1);
+        stations.add(coordinate2);
+        // end
+        synchronized (stations) {
+            for (float[] station : stations) {
+                MarkerOptions markerOptions = new MarkerOptions()
+                        .position(new LatLng(station[0], station[1]))
+                        .icon(getMarkerBitmapDescriptor(5));
+
+                Marker marker = map.addMarker(markerOptions);
+                markers.add(marker);
+            }
+        }
+    }
+
+    public void onDrinkableWaterUpdated(Object provider) {
+        List<Marker> markers = dataSourceDrinkableWaterToMarkers.values().iterator().next(); //FIXME: No proper datasource
+        removeAllMarkers(markers);
+
+        GoogleMap map = getMap();
+        Collection<float[] /* latitude/longitude*/> stations = new ArrayList<float[]>();
+        // FIXME Dummy data
+        float coordinate1[] = {25.128662f, 121.56612f};
+        float coordinate2[] = {25.234937f, 121.557662f};
+        stations.add(coordinate1);
+        stations.add(coordinate2);
+        // end
+        synchronized (stations) {
+            for (float[] station : stations) {
+                MarkerOptions markerOptions = new MarkerOptions()
+                        .position(new LatLng(station[0], station[1]))
+                        .icon(getMarkerBitmapDescriptor(2));
+
+                Marker marker = map.addMarker(markerOptions);
+                markers.add(marker);
+            }
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -305,9 +446,42 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
                 preferences.cameraBearing().get());
         getMap().moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
+        // Restore Map Layers state
+        Log.d(BikefriendApplication.TAG, "onResume: displayMapStationLayer("+displayMapStationLayer+") -> "+displayMapStationLayer);
+        displayMapStationLayer = preferences.mapStationsLayer().get();
+        Log.d(BikefriendApplication.TAG, "                                                             |-> "+displayMapStationLayer);
+        displayMapWCLayer = preferences.mapWCLayer().get();
+        displayMapDrinkableWaterLayer = preferences.mapDrinkableWaterLayer().get();
+
         displayBicyclesOnMarkers = preferences.displayBicyclesOnMarkers().get();
 
-        recreateAllTheMarkers();
+        // Display layers as per user preference at first
+        if (displayMapStationLayer) {
+            recreateAllTheMarkers();
+        }
+        if (displayMapWCLayer) {
+            recreateAllTheWCMarkers();
+        }
+        if (displayMapDrinkableWaterLayer) {
+            recreateAllTheDrinkableWaterMarkers();
+        }
+    }
+
+    private void removeAllBikeStationsMarkers(List<Marker> markers) {
+        // Remove the old markers.
+        for (Marker marker : markers) {
+            marker.remove();
+            siwa.unbindMarker(marker);
+        }
+        markers.clear();
+    }
+
+    private void removeAllMarkers(List<Marker> markers) {
+        // Remove the old markers.
+        for (Marker marker : markers) {
+            marker.remove();
+        }
+        markers.clear();
     }
 
     private void recreateAllTheMarkers() {
@@ -317,12 +491,51 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
         }
     }
 
+    private void removeAllTheBikeStationMarkers() {
+        for (List<Marker> markers : dataSourceToMarkers.values()) {
+            removeAllMarkers(markers);
+        }
+    }
+
+    private void recreateAllTheWCMarkers() {
+        // Initializes the markers on the map, according to the WCs already available (in memory or db).
+        onWCUpdated(null);
+    }
+
+    private void removeAllTheWCMarkers() {
+        List<Marker> markers = dataSourceWcToMarkers.values().iterator().next();
+        removeAllMarkers(markers);
+    }
+
+    private void recreateAllTheDrinkableWaterMarkers() {
+        // Initializes the markers on the map, according to the water drinkable source already available (in memory or db).
+        onDrinkableWaterUpdated(null);
+    }
+
+    private void removeAllTheDrinkableWaterMarkers() {
+        List<Marker> markers = dataSourceDrinkableWaterToMarkers.values().iterator().next();
+        removeAllMarkers(markers);
+    }
+
+    private void registerForBikeStationUpdates() {
+        for (BikeStationProvider bikeStationProvider : bikeStationProviderRepository.getBikeStationProviders()) {
+            bikeStationProvider.addListener(this);
+        }
+    }
+
+    private void unregisterForBikeStationUpdates() {
+        for (BikeStationProvider bikeStationProvider : bikeStationProviderRepository.getBikeStationProviders()) {
+            bikeStationProvider.removeListener(this);
+        }
+    }
+
     public void onPause() {
         super.onPause();
 
         // Saves the state of the camera on the map.
         CameraPosition cameraPosition = getMap().getCameraPosition();
 
+        Log.d(BikefriendApplication.TAG, "onPause: displayMapStationLayer("+displayMapStationLayer+")");
         preferences.edit()
                 .cameraTargetLat().put((float) cameraPosition.target.latitude)
                 .cameraTargetLng().put((float) cameraPosition.target.longitude)
@@ -330,25 +543,25 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
                 .cameraTilt().put(cameraPosition.tilt)
                 .cameraBearing().put(cameraPosition.bearing)
                 .displayBicyclesOnMarkers().put(displayBicyclesOnMarkers)
+                .mapStationsLayer().put(displayMapStationLayer)
+                .mapWCLayer().put(displayMapWCLayer)
+                .mapDrinkableWaterLayer().put(displayMapDrinkableWaterLayer)
                 .apply();
+        Log.d(BikefriendApplication.TAG, "                                                           |"+displayMapStationLayer);
     }
 
     @Override
     public void onStart() {
         super.onStart();
 
-        for (BikeStationProvider bikeStationProvider : bikeStationProviderRepository.getBikeStationProviders()) {
-            bikeStationProvider.addListener(this);
-        }
+        registerForBikeStationUpdates();
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        for (BikeStationProvider bikeStationProvider : bikeStationProviderRepository.getBikeStationProviders()) {
-            bikeStationProvider.removeListener(this);
-        }
+        unregisterForBikeStationUpdates();
 
         siwa.unbindAllMarkers();
     }
