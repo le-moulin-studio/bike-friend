@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -49,7 +50,7 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
 
     private boolean displayBicyclesOnMarkers;
     private Map<DataSourceEnum, List<Marker>> dataSourceToMarkers;
-    private Map<Integer, Bitmap> numberToMarkerBitmap;
+    private Map<Integer, BitmapDescriptor> numberToMarkerBitmapDescriptor;
     private TextPaint textPaint;
 
     public GoogleMapFragment() {
@@ -58,7 +59,7 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
             dataSourceToMarkers.put(dataSource, new ArrayList<Marker>());
         }
 
-        numberToMarkerBitmap = new HashMap<Integer, Bitmap>();
+        numberToMarkerBitmapDescriptor = new HashMap<Integer, BitmapDescriptor>();
     }
 
     @Pref
@@ -114,15 +115,16 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
         textPaint.setTextAlign(Paint.Align.CENTER);
     }
 
-    private Bitmap getMarkerBitmap(int number) {
+    private BitmapDescriptor getMarkerBitmapDescriptor(int number) {
         // We put a hard maximum of 99 on the number, flash mobs are not our typical users.
         number = Math.min(number, 99);
 
-        if (!numberToMarkerBitmap.containsKey(number)) {
-            numberToMarkerBitmap.put(number, createMarkerBitmap(number));
+        if (!numberToMarkerBitmapDescriptor.containsKey(number)) {
+            numberToMarkerBitmapDescriptor.put(number,
+                    BitmapDescriptorFactory.fromBitmap(createMarkerBitmap(number)));
         }
 
-        return numberToMarkerBitmap.get(number);
+        return numberToMarkerBitmapDescriptor.get(number);
     }
 
     private Bitmap createMarkerBitmap(int number) {
@@ -280,8 +282,8 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
             for (BikeStation station : bikeStations) {
                 MarkerOptions markerOptions = new MarkerOptions()
                         .position(new LatLng(station.latitude, station.longitude))
-                        .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmap(
-                                displayBicyclesOnMarkers ? station.nbBicycles : station.nbEmptySlots)));
+                        .icon(getMarkerBitmapDescriptor(displayBicyclesOnMarkers ?
+                                station.nbBicycles : station.nbEmptySlots));
 
                 Marker marker = map.addMarker(markerOptions);
                 markers.add(marker);
