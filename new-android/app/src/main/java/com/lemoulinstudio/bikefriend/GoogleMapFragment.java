@@ -1,9 +1,16 @@
 package com.lemoulinstudio.bikefriend;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.text.TextPaint;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,12 +33,14 @@ import com.lemoulinstudio.bikefriend.preference.BikefriendPreferences_;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.res.DrawableRes;
 import org.androidannotations.annotations.res.StringRes;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,14 +48,17 @@ import java.util.Map;
 public class GoogleMapFragment extends SupportMapFragment implements BikeStationListener {
 
     private boolean displayBicyclesOnMarkers;
-
-    private final Map<DataSourceEnum, List<Marker>> dataSourceToMarkers;
+    private Map<DataSourceEnum, List<Marker>> dataSourceToMarkers;
+    private Map<Integer, Bitmap> numberToMarkerBitmap;
+    private TextPaint textPaint;
 
     public GoogleMapFragment() {
         dataSourceToMarkers = new EnumMap<DataSourceEnum, List<Marker>>(DataSourceEnum.class);
         for (DataSourceEnum dataSource : DataSourceEnum.values()) {
             dataSourceToMarkers.put(dataSource, new ArrayList<Marker>());
         }
+
+        numberToMarkerBitmap = new HashMap<Integer, Bitmap>();
     }
 
     @Pref
@@ -57,6 +69,15 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
 
     @Bean
     protected StationInfoWindowAdapter siwa;
+
+    @DrawableRes(R.drawable.map_marker_green)
+    protected Drawable markerDrawableGreen;
+
+    @DrawableRes(R.drawable.map_marker_yellow)
+    protected Drawable markerDrawableYellow;
+
+    @DrawableRes(R.drawable.map_marker_red)
+    protected Drawable markerDrawableRed;
 
     @StringRes(R.string.message_network_not_available)
     protected String messageNetworkNotAvailable;
@@ -85,6 +106,49 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
                 }
             }
         });
+
+        textPaint = new TextPaint();
+        textPaint.setColor(Color.BLACK);
+        textPaint.setTextSize(markerDrawableGreen.getIntrinsicHeight() * 0.5f);
+        textPaint.setAntiAlias(true);
+        textPaint.setTextAlign(Paint.Align.CENTER);
+    }
+
+    private Bitmap getMarkerBitmap(int number) {
+        // We put a hard maximum of 99 on the number, flash mobs are not our typical users.
+        number = Math.min(number, 99);
+
+        if (!numberToMarkerBitmap.containsKey(number)) {
+            numberToMarkerBitmap.put(number, createMarkerBitmap(number));
+        }
+
+        return numberToMarkerBitmap.get(number);
+    }
+
+    private Bitmap createMarkerBitmap(int number) {
+        Drawable markerDrawable = number >= 5 ? markerDrawableGreen :
+                number > 0 ? markerDrawableYellow : markerDrawableRed;
+
+        int width = markerDrawable.getIntrinsicWidth();
+        int height = markerDrawable.getIntrinsicHeight();
+
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+
+        String text = "" + number;
+
+        markerDrawable.setBounds(0, 0, width, height);
+        markerDrawable.draw(canvas);
+
+        Rect textBounds = new Rect();
+        textPaint.getTextBounds(text, 0, text.length(), textBounds);
+
+        canvas.drawText(text,
+                width / 2,
+                (height + textBounds.height()) / 2,
+                textPaint);
+
+        return bitmap;
     }
 
     @Override
@@ -222,10 +286,8 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
             for (BikeStation station : bikeStations) {
                 MarkerOptions markerOptions = new MarkerOptions()
                         .position(new LatLng(station.latitude, station.longitude))
-                        .icon(BitmapDescriptorFactory.defaultMarker(
-                                (station.nbBicycles == 0 || station.nbEmptySlots == 0) ?
-                                        BitmapDescriptorFactory.HUE_ORANGE :
-                                        BitmapDescriptorFactory.HUE_GREEN));
+                        .icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmap(
+                                displayBicyclesOnMarkers ? station.nbBicycles : station.nbEmptySlots)));
 
                 Marker marker = map.addMarker(markerOptions);
                 markers.add(marker);
