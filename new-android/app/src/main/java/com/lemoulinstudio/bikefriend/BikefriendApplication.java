@@ -4,7 +4,7 @@ import android.app.Application;
 
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EApplication;
-import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
+//import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 
 @EApplication
 public class BikefriendApplication extends Application {
@@ -15,7 +15,7 @@ public class BikefriendApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        AndroidGraphicFactory.createInstance(this);
+//        AndroidGraphicFactory.createInstance(this);
 
         //initStuffsInBackground();
     }

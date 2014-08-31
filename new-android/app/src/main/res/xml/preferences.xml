@@ -15,11 +15,11 @@
         android:entries="@array/preference_location_language_display"
         android:defaultValue="DefinedBySystem"
         />
-    <ListPreference
+    <!--ListPreference
         android:key="mapProvider"
         android:title="@string/preference_map_provider"
         android:entryValues="@array/preference_map_provider_value"
         android:entries="@array/preference_map_provider_display"
         android:defaultValue="GoogleMap"
-        />
+        /-->
 </PreferenceScreen>

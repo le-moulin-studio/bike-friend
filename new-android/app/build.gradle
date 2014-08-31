@@ -41,7 +41,7 @@ dependencies {
     compile "org.androidannotations:androidannotations-api:3.0.1"
 
     // The library for displaying the map from OpenStreetMap.
-    compile "org.mapsforge:mapsforge-map-android:0.4.3"
+//    compile "org.mapsforge:mapsforge-map-android:0.4.3"
 
     // The ORMlite library for persisting the station's data.
     compile group: "com.j256.ormlite", name: "ormlite-core", version: "4.48"

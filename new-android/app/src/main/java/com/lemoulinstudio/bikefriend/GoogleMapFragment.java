@@ -10,7 +10,6 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.text.Layout;
 import android.text.TextPaint;
 import android.util.Log;
 import android.view.Gravity;
@@ -20,7 +19,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
@@ -45,7 +43,6 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.res.DrawableRes;
 import org.androidannotations.annotations.res.StringRes;
 import org.androidannotations.annotations.sharedpreferences.Pref;
-import org.mapsforge.map.layer.Layer;
 
 import java.util.ArrayList;
 import java.util.Collection;
