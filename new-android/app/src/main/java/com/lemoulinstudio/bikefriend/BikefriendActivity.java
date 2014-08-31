@@ -23,6 +23,7 @@ import com.lemoulinstudio.bikefriend.preference.MapProvider;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
@@ -51,7 +52,7 @@ public class BikefriendActivity extends ActionBarActivity {
             }
         });
 
-        setClickedItem(mapItemId);
+        setClickedItem(currentItemId);
 
         // set a custom shadow that overlays the main content when the drawer opens
         drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
@@ -117,7 +118,6 @@ public class BikefriendActivity extends ActionBarActivity {
         drawerLayout.closeDrawers();
     }
 
-    private int currentItemId = -1;
     private final int mapItemId = 0;
     private final int favoriteItemId = 1;
     private final int chronometerItemId = 2;
@@ -126,7 +126,11 @@ public class BikefriendActivity extends ActionBarActivity {
     private final int emergencyItemId = 5;
     private final int settingItemId = 6;
 
+    @InstanceState
+    protected int currentItemId = mapItemId; // The map is the default view displayed when we launch the app.
+
     private Fragment currentFragment;
+
     private GoogleMapFragment googleMapFragment;
     private MapsForgeFragment mapsForgeFragment;
     private FavoriteFragment favoriteFragment;
@@ -137,7 +141,7 @@ public class BikefriendActivity extends ActionBarActivity {
 
     private void setClickedItem(int itemId) {
         // If the user clicked on an item which is already displayed, we do nothing.
-        if (itemId != currentItemId) {
+        if (currentFragment == null || itemId != currentItemId) {
             switch (itemId) {
                 case mapItemId: {
                     MapProvider mapProvider = MapProvider.valueOf(preferences.mapProvider().get());
