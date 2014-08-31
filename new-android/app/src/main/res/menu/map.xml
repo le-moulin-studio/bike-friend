@@ -60,5 +60,6 @@
         android:id="@+id/menu_layers"
         android:icon="@drawable/ic_action_layer"
         app:showAsAction="ifRoom"
-        android:title="@string/menu_layers"/>
+        android:title="@string/menu_layers"
+        android:visible="false"/>
 </menu>

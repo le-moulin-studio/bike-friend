@@ -120,10 +120,14 @@ public class BikefriendActivity extends ActionBarActivity {
     private final int mapItemId = 0;
     private final int favoriteItemId = 1;
     private final int chronometerItemId = 2;
-    private final int lostFoundItemId = 3;
-    private final int serviceInfoItemId = 4;
-    private final int emergencyItemId = 5;
-    private final int settingItemId = 6;
+    //private final int lostFoundItemId = 3;
+    //private final int serviceInfoItemId = 4;
+    //private final int emergencyItemId = 5;
+    //private final int settingItemId = 6;
+    private final int lostFoundItemId = 43;
+    private final int serviceInfoItemId = 44;
+    private final int emergencyItemId = 45;
+    private final int settingItemId = 3;
 
     @InstanceState
     protected int currentItemId = mapItemId; // The map is the default view displayed when we launch the app.
