@@ -44,6 +44,8 @@
     <string name="map_popup_layer_toilets">Toilets</string>
     <string name="map_popup_layer_drinkable_water">Drinkable Water</string>
 
+    <string name="favorite_list_empty_list_text">To list stations in this view,\nplease mark them as favorite.</string>
+
     <string name="chronometer_started_at_message_format">Chronometer started at %1$02d:%2$02d:%3$02d</string>
     <string name="chronometer_time_format">%1$02d:%2$02d:%3$02d</string>
     <string name="chronometer_start_button">Start</string>
