@@ -124,6 +124,7 @@ public class BikefriendActivity extends ActionBarActivity {
     private final int lostFoundItemId = 3;
     private final int serviceInfoItemId = 4;
     private final int emergencyItemId = 5;
+    private final int settingItemId = 6;
 
     private Fragment currentFragment;
     private GoogleMapFragment googleMapFragment;
@@ -192,6 +193,12 @@ public class BikefriendActivity extends ActionBarActivity {
                     }
                     currentFragment = emergencyFragment;
                     break;
+                }
+                case settingItemId: {
+                    // Launch the preference activity
+                    Intent i = new Intent(this, BikefriendPreferenceActivity.class);
+                    startActivity(i);
+                    return;
                 }
             }
 
