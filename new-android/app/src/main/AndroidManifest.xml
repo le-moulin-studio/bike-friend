@@ -39,12 +39,7 @@
         <activity
             android:name=".preference.BikefriendPreferenceActivity"
             android:label="@string/preference_activity_title"
-            android:parentActivityName=".BikefriendActivity_"
             android:exported="false">
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".BikefriendActivity_" />
         </activity>
 
         <meta-data android:name="com.google.android.maps.v2.API_KEY"
