@@ -231,7 +231,6 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
                 View popup = inflater.inflate(R.layout.fragment_layer, null, false);
 
                 final CheckBox checkBoxStationsUi = (CheckBox)popup.findViewById(R.id.checkBoxStationLayer);
-                Log.d(BikefriendApplication.TAG, "onOptionSelected: displayMapStationLayer:"+displayMapStationLayer);
                 checkBoxStationsUi.setChecked(displayMapStationLayer);
                 checkBoxStationsUi.setText(messageLayerStations);
                 checkBoxStationsUi.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
@@ -444,9 +443,7 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
         getMap().moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
         // Restore Map Layers state
-        Log.d(BikefriendApplication.TAG, "onResume: displayMapStationLayer("+displayMapStationLayer+") -> "+displayMapStationLayer);
         displayMapStationLayer = preferences.mapStationsLayer().get();
-        Log.d(BikefriendApplication.TAG, "                                                             |-> "+displayMapStationLayer);
         displayMapWCLayer = preferences.mapWCLayer().get();
         displayMapDrinkableWaterLayer = preferences.mapDrinkableWaterLayer().get();
 
@@ -532,7 +529,6 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
         // Saves the state of the camera on the map.
         CameraPosition cameraPosition = getMap().getCameraPosition();
 
-        Log.d(BikefriendApplication.TAG, "onPause: displayMapStationLayer("+displayMapStationLayer+")");
         preferences.edit()
                 .cameraTargetLat().put((float) cameraPosition.target.latitude)
                 .cameraTargetLng().put((float) cameraPosition.target.longitude)
@@ -544,7 +540,6 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
                 .mapWCLayer().put(displayMapWCLayer)
                 .mapDrinkableWaterLayer().put(displayMapDrinkableWaterLayer)
                 .apply();
-        Log.d(BikefriendApplication.TAG, "                                                           |"+displayMapStationLayer);
     }
 
     @Override

@@ -1,10 +1,5 @@
 package com.lemoulinstudio.bikefriend;
 
-import android.content.Context;
-import android.util.Log;
-
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.j256.ormlite.dao.Dao;
 import com.lemoulinstudio.bikefriend.db.BikeStation;
 import com.lemoulinstudio.bikefriend.db.DataSourceEnum;
@@ -18,7 +13,6 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 import java.sql.SQLException;
 
 

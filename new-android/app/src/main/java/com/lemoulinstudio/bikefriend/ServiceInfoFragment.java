@@ -1,7 +1,6 @@
 package com.lemoulinstudio.bikefriend;
 
 import android.support.v4.app.Fragment;
-import android.widget.Button;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;

@@ -7,7 +7,6 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceGroup;
-import android.view.MenuItem;
 
 import com.lemoulinstudio.bikefriend.R;
 
@@ -21,12 +20,6 @@ public class BikefriendPreferenceActivity extends PreferenceActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Sets the inter-activity fade in/out animation.
-        //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-
-        // Sets up the home button in the action bar.
-        //getActionBar().setDisplayHomeAsUpEnabled(true);
-
         // Set which preferences to use.
         getPreferenceManager().setSharedPreferencesName(PREFERENCES_NAME);
 
@@ -35,19 +28,6 @@ public class BikefriendPreferenceActivity extends PreferenceActivity
 
         // Init the summary of items recursively.
         initSummary(getPreferenceScreen());
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // Handle the home button event.
-            case android.R.id.home: {
-                finish();
-                return true;
-            }
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -60,7 +40,6 @@ public class BikefriendPreferenceActivity extends PreferenceActivity
     protected void onPause() {
         super.onPause();
         getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
-        //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     @Override

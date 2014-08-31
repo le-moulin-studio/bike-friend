@@ -1,7 +1,6 @@
 package com.lemoulinstudio.bikefriend;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -12,7 +11,6 @@ import com.lemoulinstudio.bikefriend.db.BikeStation;
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
-import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.StringRes;
 
 import java.util.Date;

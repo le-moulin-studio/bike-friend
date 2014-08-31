@@ -3,7 +3,6 @@ package com.lemoulinstudio.bikefriend;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.widget.Button;
-import android.widget.Chronometer;
 import android.widget.TextView;
 
 import com.lemoulinstudio.bikefriend.preference.BikefriendPreferences_;
@@ -15,8 +14,6 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.Calendar;
-import java.util.Date;
-import java.util.prefs.Preferences;
 
 @EFragment(R.layout.fragment_chronometer)
 public class ChronometerFragment extends Fragment {

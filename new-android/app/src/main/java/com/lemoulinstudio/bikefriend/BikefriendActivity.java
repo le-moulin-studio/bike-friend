@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -206,10 +205,11 @@ public class BikefriendActivity extends ActionBarActivity {
                 }
             }
 
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, currentFragment)
-                    .commit();
+            if (currentFragment != null){
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, currentFragment)
+                        .commit();
+            }
 
             currentItemId = itemId;
         }

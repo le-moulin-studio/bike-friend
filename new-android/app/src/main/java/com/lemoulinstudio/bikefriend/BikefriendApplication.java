@@ -2,7 +2,6 @@ package com.lemoulinstudio.bikefriend;
 
 import android.app.Application;
 
-import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EApplication;
 //import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 
@@ -16,12 +15,6 @@ public class BikefriendApplication extends Application {
         super.onCreate();
 
 //        AndroidGraphicFactory.createInstance(this);
-
-        //initStuffsInBackground();
     }
-
-//    @Background
-//    private void initStuffsInBackground() {
-//    }
 
 }
