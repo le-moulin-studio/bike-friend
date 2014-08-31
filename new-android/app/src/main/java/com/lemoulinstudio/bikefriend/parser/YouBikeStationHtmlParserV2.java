@@ -87,10 +87,10 @@ public class YouBikeStationHtmlParserV2 implements BikeStationParser {
         //station.id             = dataSource.idPrefix + "";
         station.dataSource     = dataSource;
         station.lastUpdate     = dateFormat.parse(jsonStation.getString("mday"));
-        station.chineseName    = jsonStation.optString("sna");
-        station.chineseAddress = jsonStation.optString("ar");
-        station.englishName    = jsonStation.optString("snaen");
-        station.englishAddress = jsonStation.optString("aren");
+        station.chineseName    = jsonStation.optString("sna", null);
+        station.chineseAddress = jsonStation.optString("ar", null);
+        station.englishName    = jsonStation.optString("snaen", null);
+        station.englishAddress = jsonStation.optString("aren", null);
         station.latitude = Float.parseFloat(jsonStation.getString("lat"));
         station.longitude = Float.parseFloat(jsonStation.getString("lng"));
         station.nbBicycles = jsonStation.getInt("sbi");

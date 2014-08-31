@@ -44,6 +44,7 @@ import org.androidannotations.annotations.res.DrawableRes;
 import org.androidannotations.annotations.res.StringRes;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumMap;
@@ -120,6 +121,18 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         map.setMyLocationEnabled(true);
         map.setInfoWindowAdapter(siwa);
+
+        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                BikeStation bikeStation = siwa.getBikeStation(marker);
+                bikeStation.isPreferred = !bikeStation.isPreferred;
+                try {bikeStationProviderRepository.updateDbFromMem(bikeStation);}
+                catch (SQLException e) {}
+                marker.hideInfoWindow();
+                marker.showInfoWindow();
+            }
+        });
 
         map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             public void onCameraChange(CameraPosition cp) {

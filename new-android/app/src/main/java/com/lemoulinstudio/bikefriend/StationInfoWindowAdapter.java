@@ -3,6 +3,7 @@ package com.lemoulinstudio.bikefriend;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.google.android.gms.maps.GoogleMap;
@@ -61,6 +62,10 @@ public class StationInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         markerToStation.put(marker, station);
     }
 
+    public BikeStation getBikeStation(Marker marker) {
+        return markerToStation.get(marker);
+    }
+
     public void unbindMarker(Marker marker) {
     markerToStation.remove(marker);
     }
@@ -72,23 +77,29 @@ public class StationInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     public View getInfoWindow(Marker marker) {
         BikeStation station = markerToStation.get(marker);
 
-//        data_source_image
         ImageView dataSourceImageView = (ImageView) windowView.findViewById(R.id.data_source_image);
         dataSourceImageView.setImageResource(
                 station.dataSource.bikeSystem == BikeSystem.YouBike ?
                         R.drawable.map_marker_youbike : R.drawable.map_marker_citybike);
 
         TextView chineseNameView = (TextView) windowView.findViewById(R.id.chinese_name);
+        chineseNameView.setVisibility(station.chineseName != null ? View.VISIBLE : View.GONE);
         chineseNameView.setText(station.chineseName);
 
         TextView englishNameView = (TextView) windowView.findViewById(R.id.english_name);
+        englishNameView.setVisibility(station.englishName != null ? View.VISIBLE : View.GONE);
         englishNameView.setText(station.englishName);
 
         TextView chineseAddressView = (TextView) windowView.findViewById(R.id.chinese_address);
+        chineseAddressView.setVisibility(station.chineseAddress != null ? View.VISIBLE : View.GONE);
         chineseAddressView.setText(station.chineseAddress);
 
         TextView englishAddressView = (TextView) windowView.findViewById(R.id.english_address);
+        englishAddressView.setVisibility(station.englishAddress != null ? View.VISIBLE : View.GONE);
         englishAddressView.setText(station.englishAddress);
+
+        ImageButton favoriteImageButton = (ImageButton) windowView.findViewById(R.id.favorite_switch_button);
+        favoriteImageButton.setPressed(station.isPreferred);
 
         TextView nbBicycleView = (TextView) windowView.findViewById(R.id.nb_bicycles);
         nbBicycleView.setText("" + station.nbBicycles);
