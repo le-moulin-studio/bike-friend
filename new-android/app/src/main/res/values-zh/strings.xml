@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">自行車朋友</string>
+
+    <string name="navigation_drawer_open">開啟選單</string>
+    <string name="navigation_drawer_close">關閉選單</string>
+
+    <string name="drawer_map">地圖</string>
+    <string name="drawer_preferred_stations">最愛站點</string>
+    <string name="drawer_chronometer">計時器</string>
+    <string name="drawer_history">歷史紀錄</string>
+    <string name="drawer_lost_and_found">失物招領</string>
+    <string name="drawer_service_information">Service Information</string>
+    <string name="drawer_emergency">緊急求助</string>
+
+    <string name="menu_refresh">更新資料</string>
+    <string name="menu_bicycle">自行車數</string>
+    <string name="menu_parking">可停空位</string>
+    <string name="menu_layers">顯示圖層</string>
+
+    <string name="menu_places">地點</string>
+    <string name="menu_place_taipei">台北</string>
+    <string name="menu_place_changhua">彰化</string>
+    <string name="menu_place_taichung">台中</string>
+    <string name="menu_place_kaohsiung">高雄</string>
+    <string name="menu_place_tainan">台南</string>
+    <string name="menu_place_taiwan">台灣</string>
+
+    <string name="menu_settings">設定</string>
+
+    <string name="message_network_not_available">未連接至網路</string>
+    <string name="message_server_not_reachable_format">狀況: %s 伺服器沒有回應</string>
+    <string name="message_parse_error_format">狀況: %s 伺服器所提供的資料無法辨識</string>
+
+    <string name="map_popup_station_nb_bike_format">自行車數: %d</string>
+    <string name="map_popup_station_nb_parking_format">可停空位: %d</string>
+    <string name="map_popup_station_data_age_sec_format">站點資料為 %d 秒鐘前更新</string>
+    <string name="map_popup_station_data_age_min_format">站點資料為 %d 分鐘前更新</string>
+    <string name="map_popup_station_data_age_hour_format">站點資料為 %d 小時前更新</string>
+    <string name="map_popup_station_data_age_day_format">站點資料為 %d 天前更新</string>
+
+    <string name="map_popup_layer_stations">租賃站點</string>
+    <string name="map_popup_layer_toilets">公共廁所</string>
+    <string name="map_popup_layer_drinkable_water">公共飲水機</string>
+
+    <string name="favorite_list_empty_list_text">被設為最愛的租賃站點,\n將顯示在此列表</string>
+
+    <string name="chronometer_started_at_message_format">計時開始於 %1$02d:%2$02d:%3$02d</string>
+    <string name="chronometer_time_format">%1$02d:%2$02d:%3$02d</string>
+    <string name="chronometer_start_button">開始</string>
+    <string name="chronometer_stop_button">停止</string>
+
+    <string name="preference_activity_title">設定</string>
+
+    <string name="preference_auto_refresh_min_period">自動更新頻率</string>
+    <string-array name="preference_auto_refresh_min_period_value">
+        <item>60000</item> <!-- do not translate -->
+        <item>120000</item> <!-- do not translate -->
+        <item>180000</item> <!-- do not translate -->
+        <item>300000</item> <!-- do not translate -->
+    </string-array>
+    <string-array name="preference_auto_refresh_min_period_display">
+        <item>1 分鐘</item>
+        <item>2 分鐘</item>
+        <item>3 分鐘</item>
+        <item>5 分鐘</item>
+    </string-array>
+
+    <string name="preference_location_language">選擇站名顯示語言</string>
+    <string-array name="preference_location_language_value">
+        <item>DefinedBySystem</item> <!-- do not translate -->
+        <item>Chinese</item> <!-- do not translate -->
+        <item>English</item> <!-- do not translate -->
+        <item>ChineseAndEnglish</item> <!-- do not translate -->
+    </string-array>
+    <string-array name="preference_location_language_display">
+        <item>Defined by the system</item>
+        <item>Chinese</item>
+        <item>English</item>
+        <item>Chinese and english</item>
+    </string-array>
+
+    <string name="preference_map_provider">選擇使用地圖來源</string>
+    <string-array name="preference_map_provider_value">
+        <item>GoogleMap</item> <!-- do not translate -->
+        <item>OpenStreetMap</item> <!-- do not translate -->
+    </string-array>
+    <string-array name="preference_map_provider_display">
+        <item>Proprietary GoogleMap</item>
+        <item>Free OpenStreetMap</item>
+    </string-array>
+
+</resources>
