@@ -11,12 +11,16 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.res.StringRes;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.Calendar;
 
 @EFragment(R.layout.fragment_chronometer)
 public class ChronometerFragment extends Fragment {
+
+    @Pref
+    protected BikefriendPreferences_ preferences;
 
     @ViewById(R.id.chronometer_time_text)
     protected TextView timeTextView;
@@ -30,8 +34,11 @@ public class ChronometerFragment extends Fragment {
     @ViewById(R.id.chronometer_stop_button)
     protected Button stopButton;
 
-    @Pref
-    protected BikefriendPreferences_ preferences;
+    @StringRes(R.string.chronometer_started_at_message_format)
+    protected String chronometerStartedAtMessageFormat;
+
+    @StringRes(R.string.chronometer_time_format)
+    protected String chronometerTimeFormat;
 
     // Those 2 fields need to be persisted on disk, we use the preferences.
     protected boolean isStarted;
@@ -124,7 +131,7 @@ public class ChronometerFragment extends Fragment {
             int seconds = calendar.get(Calendar.SECOND);
             int minutes = calendar.get(Calendar.MINUTE);
             int hours = calendar.get(Calendar.HOUR_OF_DAY);
-            infoTextView.setText(String.format("(Started at %02d:%02d:%02d)", hours, minutes, seconds));
+            infoTextView.setText(String.format(chronometerStartedAtMessageFormat, hours, minutes, seconds));
         }
         else {
             infoTextView.setText("");
@@ -132,26 +139,29 @@ public class ChronometerFragment extends Fragment {
     }
 
     private void updateTimeTextView() {
+        long days = 0;
+        long hours = 0;
+        long minutes = 0;
+        long seconds = 0;
+
         if (isStarted) {
             long duration = System.currentTimeMillis() - startTime;
 
             duration /= 1000; // milliseconds -> seconds
-            long seconds = duration % 60;
+            seconds = duration % 60;
 
             duration /= 60; // seconds -> minutes
-            long minutes = duration % 60;
+            minutes = duration % 60;
 
             duration /= 60; // minutes -> hours
-            long hours = duration % 24;
+            hours = duration % 24;
 
             duration /= 24; // hours -> days
-            long days = duration;
+            days = duration;
 
-            timeTextView.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
         }
-        else {
-            timeTextView.setText("00:00:00");
-        }
+
+        timeTextView.setText(String.format(chronometerTimeFormat, hours, minutes, seconds));
     }
 
 }
