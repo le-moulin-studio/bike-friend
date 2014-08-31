@@ -19,10 +19,21 @@ android {
         versionCode 11
         versionName "1.0.0"
     }
+
+    signingConfigs {
+        release {
+            storeFile file(androidKeyStorePath)
+            storePassword androidKeyStorePassword
+            keyAlias androidReleaseKeyAlias
+            keyPassword androidReleaseKeyPassword
+        }
+    }
+
     buildTypes {
         release {
-            runProguard false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            runProguard false
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }
