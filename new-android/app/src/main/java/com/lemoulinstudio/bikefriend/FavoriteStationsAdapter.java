@@ -7,9 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lemoulinstudio.bikefriend.db.BikeStation;
+import com.lemoulinstudio.bikefriend.db.BikeSystem;
 
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.Bean;
@@ -38,13 +40,6 @@ public class FavoriteStationsAdapter extends BaseAdapter {
 
     @RootContext
     protected Context context;
-
-    // Duplicate with StationInfoWindowAdapter
-    @StringRes(R.string.map_popup_station_nb_bike_format)
-    protected String nbBikeFormat;
-
-    @StringRes(R.string.map_popup_station_nb_parking_format)
-    protected String nbParkingFormat;
 
     @StringRes(R.string.map_popup_station_data_age_sec_format)
     protected String dataAgeSecondFormat;
@@ -125,18 +120,37 @@ public class FavoriteStationsAdapter extends BaseAdapter {
             final BikeStation station = (BikeStation) obj;
             convertView = inflater.inflate(R.layout.fragment_favorite_station, parent, false);
 
-            // Duplicate with StationinfoWindowAdapter
-            TextView titleUi = ((TextView) convertView.findViewById(R.id.title));
-            String res = i18nStationName(station);
-            titleUi.setText(res);
+            ImageView dataSourceImageView = (ImageView) convertView.findViewById(R.id.data_source_image);
+            dataSourceImageView.setImageResource(
+                    station.dataSource.bikeSystem == BikeSystem.YouBike ?
+                            R.drawable.map_marker_youbike : R.drawable.map_marker_citybike);
 
-            TextView nbBicycleUi = ((TextView) convertView.findViewById(R.id.nb_bicycles));
-            nbBicycleUi.setText(String.format(nbBikeFormat, station.nbBicycles));
+            TextView chineseNameView = (TextView) convertView.findViewById(R.id.chinese_name);
+            chineseNameView.setVisibility(station.chineseName != null ? View.VISIBLE : View.GONE);
+            chineseNameView.setText(station.chineseName);
 
-            TextView nbEmptySlotUi = ((TextView) convertView.findViewById(R.id.nb_empty_slots));
-            nbEmptySlotUi.setText(String.format(nbParkingFormat, station.nbEmptySlots));
+            TextView englishNameView = (TextView) convertView.findViewById(R.id.english_name);
+            englishNameView.setVisibility(station.englishName != null ? View.VISIBLE : View.GONE);
+            englishNameView.setText(station.englishName);
 
-            TextView stationDataAgeUi = ((TextView) convertView.findViewById(R.id.station_data_age));
+            TextView chineseAddressView = (TextView) convertView.findViewById(R.id.chinese_address);
+            chineseAddressView.setVisibility(station.chineseAddress != null ? View.VISIBLE : View.GONE);
+            chineseAddressView.setText(station.chineseAddress);
+
+            TextView englishAddressView = (TextView) convertView.findViewById(R.id.english_address);
+            englishAddressView.setVisibility(station.englishAddress != null ? View.VISIBLE : View.GONE);
+            englishAddressView.setText(station.englishAddress);
+
+            ImageView favoriteImageView = (ImageView) convertView.findViewById(R.id.favorite_image_view);
+            favoriteImageView.setImageResource(station.isPreferred ? R.drawable.ic_action_important : R.drawable.ic_action_not_important);
+
+            TextView nbBicycleView = (TextView) convertView.findViewById(R.id.nb_bicycles);
+            nbBicycleView.setText("" + station.nbBicycles);
+
+            TextView nbParkingView = (TextView) convertView.findViewById(R.id.nb_parkings);
+            nbParkingView.setText("" + station.nbEmptySlots);
+
+            TextView stationDataAgeView = (TextView) convertView.findViewById(R.id.station_data_age);
 
             String ageString;
             long age = new Date().getTime() - station.lastUpdate.getTime();
@@ -152,25 +166,21 @@ public class FavoriteStationsAdapter extends BaseAdapter {
             else {
                 ageString = String.format(dataAgeDayFormat, age / (24 * 60 * 60 * 1000));
             }
-            stationDataAgeUi.setText(ageString);
-            // end
+            stationDataAgeView.setText(ageString);
 
-            ImageButton starButton = (ImageButton) convertView.findViewById(R.id.fragment_favorite_station_starbutton);
-            starButton.setImageResource(R.drawable.ic_action_important);
-
-            View.OnClickListener saveAsfavorite = new View.OnClickListener(){
+            View.OnClickListener favoriteImageViewListener = new View.OnClickListener(){
                 public void onClick(android.view.View view) {
                     station.isPreferred = !station.isPreferred;
                     try {
                         bikeStationProviderRepository.updateDbFromMem(station);
-                        ((ImageButton)view).setImageResource(station.isPreferred ? R.drawable.ic_action_important : R.drawable.ic_action_not_important);
+                        ((ImageView)view).setImageResource(station.isPreferred ? R.drawable.ic_action_important : R.drawable.ic_action_not_important);
                     } catch (SQLException e) {
                         Log.e(BikefriendApplication.TAG, "Error when deselecting favorite station" + station, e);
                     }
                 }
             };
 
-            starButton.setOnClickListener(saveAsfavorite);
+            favoriteImageView.setOnClickListener(favoriteImageViewListener);
         }
         else {
             // Provider

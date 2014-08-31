@@ -68,15 +68,22 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <ImageButton
-            android:id="@+id/favorite_switch_button"
+        <RelativeLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:src="@drawable/star_button"
-            android:background="@android:color/transparent"
-            />
+            >
+            <ImageView
+                android:id="@+id/favorite_image_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:padding="16dp"
+                android:src="@drawable/ic_action_not_important"
+                />
+        </RelativeLayout>
 
         <LinearLayout
             android:orientation="vertical"
