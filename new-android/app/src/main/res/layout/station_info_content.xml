@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/custom_info_bubble"
+    >
 
     <LinearLayout
         android:orientation="horizontal"
@@ -21,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:padding="4dp"
                 android:text="Chinese Name"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textAppearance="?android:attr/textAppearanceSmall"
                 />
             <TextView
                 android:id="@+id/english_name"
@@ -29,11 +31,11 @@
                 android:layout_height="wrap_content"
                 android:padding="4dp"
                 android:text="English Name"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textAppearance="?android:attr/textAppearanceSmall"
                 />
         </LinearLayout>
         <ImageView
-            android:id="@+id/data_source_system_image"
+            android:id="@+id/data_source_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/map_marker_youbike"
@@ -48,19 +50,19 @@
         android:layout_height="wrap_content">
         <TextView
             android:id="@+id/chinese_address"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="4dp"
             android:text="Chinese Address"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             />
         <TextView
             android:id="@+id/english_address"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="4dp"
             android:text="English Address"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             />
     </LinearLayout>
 
@@ -137,5 +139,13 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/station_data_age"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:textAppearanceSmall"
+        android:text="This is the age of the data."/>
+
 
 </LinearLayout>

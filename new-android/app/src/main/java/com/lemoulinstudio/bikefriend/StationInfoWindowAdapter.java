@@ -3,10 +3,12 @@ package com.lemoulinstudio.bikefriend;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 import com.lemoulinstudio.bikefriend.db.BikeStation;
+import com.lemoulinstudio.bikefriend.db.BikeSystem;
 
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.EBean;
@@ -36,12 +38,6 @@ public class StationInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     @RootContext
     protected Context context;
 
-    @StringRes(R.string.map_popup_station_nb_bike_format)
-    protected String nbBikeFormat;
-
-    @StringRes(R.string.map_popup_station_nb_empty_slot_format)
-    protected String nbEmptySlotFormat;
-
     @StringRes(R.string.map_popup_station_data_age_sec_format)
     protected String dataAgeSecondFormat;
 
@@ -58,7 +54,7 @@ public class StationInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
     @AfterInject
     protected void setWindowView() {
-        this.windowView = LayoutInflater.from(context).inflate(R.layout.station_info_window, null);
+        this.windowView = LayoutInflater.from(context).inflate(R.layout.station_info_content, null);
     }
 
     public void bindMarkerToStation(Marker marker, BikeStation station) {
@@ -76,16 +72,31 @@ public class StationInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     public View getInfoWindow(Marker marker) {
         BikeStation station = markerToStation.get(marker);
 
-        TextView titleUi = ((TextView) windowView.findViewById(R.id.title));
-        titleUi.setText(station.englishName);
+//        data_source_image
+        ImageView dataSourceImageView = (ImageView) windowView.findViewById(R.id.data_source_image);
+        dataSourceImageView.setImageResource(
+                station.dataSource.bikeSystem == BikeSystem.YouBike ?
+                        R.drawable.map_marker_youbike : R.drawable.map_marker_citybike);
 
-        TextView nbBicycleUi = ((TextView) windowView.findViewById(R.id.nb_bicycles));
-        nbBicycleUi.setText(String.format(nbBikeFormat, station.nbBicycles));
+        TextView chineseNameView = (TextView) windowView.findViewById(R.id.chinese_name);
+        chineseNameView.setText(station.chineseName);
 
-        TextView nbEmptySlotUi = ((TextView) windowView.findViewById(R.id.nb_empty_slots));
-        nbEmptySlotUi.setText(String.format(nbEmptySlotFormat, station.nbEmptySlots));
+        TextView englishNameView = (TextView) windowView.findViewById(R.id.english_name);
+        englishNameView.setText(station.englishName);
 
-        TextView stationDataAgeUi = ((TextView) windowView.findViewById(R.id.station_data_age));
+        TextView chineseAddressView = (TextView) windowView.findViewById(R.id.chinese_address);
+        chineseAddressView.setText(station.chineseAddress);
+
+        TextView englishAddressView = (TextView) windowView.findViewById(R.id.english_address);
+        englishAddressView.setText(station.englishAddress);
+
+        TextView nbBicycleView = (TextView) windowView.findViewById(R.id.nb_bicycles);
+        nbBicycleView.setText("" + station.nbBicycles);
+
+        TextView nbParkingView = (TextView) windowView.findViewById(R.id.nb_parkings);
+        nbParkingView.setText("" + station.nbEmptySlots);
+
+        TextView stationDataAgeView = (TextView) windowView.findViewById(R.id.station_data_age);
 
         String ageString;
         long age = new Date().getTime() - station.lastUpdate.getTime();
@@ -101,7 +112,7 @@ public class StationInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         else {
           ageString = String.format(dataAgeDayFormat, age / (24 * 60 * 60 * 1000));
         }
-        stationDataAgeUi.setText(ageString);
+        stationDataAgeView.setText(ageString);
 
         return windowView;
     }

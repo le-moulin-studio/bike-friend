@@ -43,7 +43,7 @@ public class FavoriteStationsAdapter extends BaseAdapter {
     @StringRes(R.string.map_popup_station_nb_bike_format)
     protected String nbBikeFormat;
 
-    @StringRes(R.string.map_popup_station_nb_empty_slot_format)
+    @StringRes(R.string.map_popup_station_nb_parking_format)
     protected String nbEmptySlotFormat;
 
     @StringRes(R.string.map_popup_station_data_age_sec_format)
