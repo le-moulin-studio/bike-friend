@@ -20,13 +20,14 @@
     <string name="menu_layers">Layers</string>
 
     <string name="menu_places">Places</string>
-    <string name="menu_settings">Settings</string>
     <string name="menu_place_taipei">Taipei</string>
     <string name="menu_place_changhua">Changhua</string>
     <string name="menu_place_taichung">Taichung</string>
     <string name="menu_place_kaohsiung">Kaohsiung</string>
     <string name="menu_place_tainan">Tainan</string>
     <string name="menu_place_taiwan">Taiwan</string>
+
+    <string name="menu_settings">Settings</string>
 
     <string name="message_network_not_available">Network is not available</string>
     <string name="message_server_not_reachable_format">Problem: The server for %s is not reachable</string>
@@ -45,14 +46,14 @@
 
     <string name="preference_activity_title">Settings</string>
 
-    <string name="preference_data_validity_duration">Data validity duration</string>
-    <string-array name="preference_data_validity_duration_value">
-        <item>1min</item> <!-- do not translate -->
-        <item>2min</item> <!-- do not translate -->
-        <item>3min</item> <!-- do not translate -->
-        <item>5min</item> <!-- do not translate -->
+    <string name="preference_auto_refresh_min_period">Auto-refresh period</string>
+    <string-array name="preference_auto_refresh_min_period_value">
+        <item>60000</item> <!-- do not translate -->
+        <item>120000</item> <!-- do not translate -->
+        <item>180000</item> <!-- do not translate -->
+        <item>300000</item> <!-- do not translate -->
     </string-array>
-    <string-array name="preference_data_validity_duration_display">
+    <string-array name="preference_auto_refresh_min_period_display">
         <item>1 minute</item>
         <item>2 minutes</item>
         <item>3 minutes</item>

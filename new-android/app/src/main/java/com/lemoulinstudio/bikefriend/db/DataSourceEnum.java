@@ -75,7 +75,7 @@ public enum DataSourceEnum {
      *
      * This limit might be requested by the server's owner, e.g. KaoHsiung for the CityBike service.
      */
-    public final long noReloadDurationInMs;
+    public final long noReloadDuration;
 
     private DataSourceEnum(
             String idPrefix,
@@ -86,13 +86,13 @@ public enum DataSourceEnum {
             float east,
             String url,
             BikeStationParser parser,
-            long noReloadDurationInMs) {
+            long noReloadDuration) {
         this.idPrefix = idPrefix;
         this.placeNameRes = placeNameRes;
         this.bounds = new LatLngBounds(new LatLng(south, west), new LatLng(north, east));
         this.url = Utils.toUrl(url);
         this.parser = parser;
-        this.noReloadDurationInMs = noReloadDurationInMs;
+        this.noReloadDuration = noReloadDuration;
 
         parser.setDataSource(this);
     }

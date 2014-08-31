@@ -1,5 +1,6 @@
 package com.lemoulinstudio.bikefriend;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -10,6 +11,7 @@ import com.j256.ormlite.stmt.DeleteBuilder;
 import com.lemoulinstudio.bikefriend.db.BikeStation;
 import com.lemoulinstudio.bikefriend.db.DataSourceEnum;
 import com.lemoulinstudio.bikefriend.parser.ParsingException;
+import com.lemoulinstudio.bikefriend.preference.BikefriendPreferences_;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,7 +25,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
-public class BikeStationProviderImpl implements BikeStationProvider {
+public class BikeStationProviderImpl implements BikeStationProvider,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     protected final DataSourceEnum dataSource;
     protected final Dao<BikeStation, String> bikeStationDao;
@@ -31,20 +34,32 @@ public class BikeStationProviderImpl implements BikeStationProvider {
     protected LatLngBounds bounds;
     protected Date lastUpdateDate;
 
-    protected long dataObsolescenceInMs; // This is tweaked by the user in the settings.
+    protected BikefriendPreferences_ preferences;
+    protected long autoRefreshMinPeriod;
 
     public BikeStationProviderImpl(
             DataSourceEnum dataSource,
-            Dao<BikeStation, String> bikeStationDao,
-            Date lastUpdateDate) {
+            BikefriendPreferences_ preferences,
+            Dao<BikeStation, String> bikeStationDao) {
         this.dataSource = dataSource;
         this.bikeStationDao = bikeStationDao;
         this.bikeStations = new ArrayList<BikeStation>();
-        this.lastUpdateDate = lastUpdateDate;
 
-        this.dataObsolescenceInMs = 60 * 1000; // 1 min
+        this.preferences = preferences;
+        this.autoRefreshMinPeriod = Long.parseLong(preferences.autoRefreshMinPeriod().get());
+        preferences.getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+
+        this.lastUpdateDate = new Date(0);
 
         new LoadStationsFromDbAsyncTask().execute(this);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(preferences.autoRefreshMinPeriod().key())) {
+            autoRefreshMinPeriod = Long.parseLong(preferences.autoRefreshMinPeriod().get());
+            //Log.i(BikefriendApplication.TAG, "autoRefreshMinPeriod = " + autoRefreshMinPeriod);
+        }
     }
 
     private void updateMemFromDb() throws SQLException {
@@ -174,7 +189,7 @@ public class BikeStationProviderImpl implements BikeStationProvider {
         long lastUpdate = lastUpdateDate == null ? 0 : lastUpdateDate.getTime();
         long duration = now - lastUpdate;
 
-        if (duration >= dataObsolescenceInMs && duration >= dataSource.noReloadDurationInMs) {
+        if (duration >= autoRefreshMinPeriod && duration >= dataSource.noReloadDuration) {
             //Log.d(BikefriendApplication.TAG, dataSource.name() + " duration = " + duration);
             updateData();
         }

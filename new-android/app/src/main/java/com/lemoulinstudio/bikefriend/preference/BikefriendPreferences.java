@@ -25,14 +25,14 @@ public interface BikefriendPreferences {
     @DefaultBoolean(false) boolean chronometerIsStarted();
     @DefaultLong(0) long chronometerStartTime();
 
-    /* Data exposed to the user. */
-
-    @DefaultString("2min") String dataValidityDuration();
-    @DefaultString("DefinedBySystem") String locationLanguage();
-    @DefaultString("GoogleMap") String mapProvider();
-
     @DefaultBoolean(true) boolean mapStationsLayer();
     @DefaultBoolean(false) boolean mapWCLayer();
     @DefaultBoolean(false) boolean mapDrinkableWaterLayer();
+
+    /* Data exposed to the user. */
+
+    @DefaultString("120000") String autoRefreshMinPeriod();
+    @DefaultString("DefinedBySystem") String locationLanguage();
+    @DefaultString("GoogleMap") String mapProvider();
 
 }
