@@ -44,7 +44,7 @@ public class FavoriteStationsAdapter extends BaseAdapter {
     protected String nbBikeFormat;
 
     @StringRes(R.string.map_popup_station_nb_parking_format)
-    protected String nbEmptySlotFormat;
+    protected String nbParkingFormat;
 
     @StringRes(R.string.map_popup_station_data_age_sec_format)
     protected String dataAgeSecondFormat;
@@ -85,9 +85,7 @@ public class FavoriteStationsAdapter extends BaseAdapter {
                         items.add(provider);
                         providerAlreadyAdded = true;
                     }
-                    if (i18nStationName(station) != null) {
-                        items.add(station);
-                    }
+                    items.add(station);
                 }
             }
         }
@@ -129,14 +127,14 @@ public class FavoriteStationsAdapter extends BaseAdapter {
 
             // Duplicate with StationinfoWindowAdapter
             TextView titleUi = ((TextView) convertView.findViewById(R.id.title));
-            String res = i18nStationName(station).trim();
+            String res = i18nStationName(station);
             titleUi.setText(res);
 
             TextView nbBicycleUi = ((TextView) convertView.findViewById(R.id.nb_bicycles));
             nbBicycleUi.setText(String.format(nbBikeFormat, station.nbBicycles));
 
             TextView nbEmptySlotUi = ((TextView) convertView.findViewById(R.id.nb_empty_slots));
-            nbEmptySlotUi.setText(String.format(nbEmptySlotFormat, station.nbEmptySlots));
+            nbEmptySlotUi.setText(String.format(nbParkingFormat, station.nbEmptySlots));
 
             TextView stationDataAgeUi = ((TextView) convertView.findViewById(R.id.station_data_age));
 
@@ -179,7 +177,7 @@ public class FavoriteStationsAdapter extends BaseAdapter {
             BikeStationProvider provider = (BikeStationProvider) obj;
             convertView = inflater.inflate(R.layout.fragment_favorite_station_header, parent, false);
             TextView header = (TextView) convertView.findViewById(R.id.fragment_favorite_station_region_separator);
-            header.setText(provider.getDataSourceEnum().name());
+            header.setText(provider.getDataSourceEnum().placeNameRes);
         }
         return convertView;
     }
