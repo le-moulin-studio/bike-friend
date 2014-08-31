@@ -24,9 +24,9 @@ public interface BikefriendPreferences {
     @DefaultBoolean(false) boolean chronometerIsStarted();
     @DefaultLong(0) long chronometerStartTime();
 
-    @DefaultBoolean(true) boolean mapStationsLayer();
-    @DefaultBoolean(false) boolean mapWCLayer();
-    @DefaultBoolean(false) boolean mapDrinkableWaterLayer();
+//    @DefaultBoolean(true) boolean mapStationsLayer();
+//    @DefaultBoolean(false) boolean mapWCLayer();
+//    @DefaultBoolean(false) boolean mapDrinkableWaterLayer();
 
     /* Data exposed to the user. */
 
