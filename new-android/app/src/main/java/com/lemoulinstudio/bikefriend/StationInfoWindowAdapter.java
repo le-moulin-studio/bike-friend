@@ -55,7 +55,7 @@ public class StationInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
     @AfterInject
     protected void setWindowView() {
-        this.windowView = LayoutInflater.from(context).inflate(R.layout.station_info_content, null);
+        this.windowView = LayoutInflater.from(context).inflate(R.layout.station_info_window, null);
     }
 
     public void bindMarkerToStation(Marker marker, BikeStation station) {

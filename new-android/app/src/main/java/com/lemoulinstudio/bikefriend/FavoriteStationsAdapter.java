@@ -144,10 +144,10 @@ public class FavoriteStationsAdapter extends BaseAdapter {
             ImageView favoriteImageView = (ImageView) convertView.findViewById(R.id.favorite_image_view);
             favoriteImageView.setImageResource(station.isPreferred ? R.drawable.ic_action_important : R.drawable.ic_action_not_important);
 
-            TextView nbBicycleView = (TextView) convertView.findViewById(R.id.nb_bicycles);
+            TextView nbBicycleView = (TextView) convertView.findViewById(R.id.nb_bicycle);
             nbBicycleView.setText("" + station.nbBicycles);
 
-            TextView nbParkingView = (TextView) convertView.findViewById(R.id.nb_parkings);
+            TextView nbParkingView = (TextView) convertView.findViewById(R.id.nb_parking);
             nbParkingView.setText("" + station.nbEmptySlots);
 
             TextView stationDataAgeView = (TextView) convertView.findViewById(R.id.station_data_age);
