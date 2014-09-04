@@ -33,8 +33,8 @@
     <string name="message_server_not_reachable_format">狀況: %s 伺服器沒有回應</string>
     <string name="message_parse_error_format">狀況: %s 伺服器所提供的資料無法辨識</string>
 
-    <string name="map_popup_station_nb_bike_format">自行車數: %d</string>
-    <string name="map_popup_station_nb_parking_format">可停空位: %d</string>
+    <string name="map_popup_station_nb_bike">自行車數</string>
+    <string name="map_popup_station_nb_parking">可停空位</string>
     <string name="map_popup_station_data_age_sec_format">站點資料為 %d 秒鐘前更新</string>
     <string name="map_popup_station_data_age_min_format">站點資料為 %d 分鐘前更新</string>
     <string name="map_popup_station_data_age_hour_format">站點資料為 %d 小時前更新</string>

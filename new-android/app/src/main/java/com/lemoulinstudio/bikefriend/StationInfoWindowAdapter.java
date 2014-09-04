@@ -101,10 +101,10 @@ public class StationInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         ImageView favoriteImageView = (ImageView) windowView.findViewById(R.id.favorite_image_view);
         favoriteImageView.setImageResource(station.isPreferred ? R.drawable.ic_action_important : R.drawable.ic_action_not_important);
 
-        TextView nbBicycleView = (TextView) windowView.findViewById(R.id.nb_bicycles);
+        TextView nbBicycleView = (TextView) windowView.findViewById(R.id.nb_bicycle);
         nbBicycleView.setText("" + station.nbBicycles);
 
-        TextView nbParkingView = (TextView) windowView.findViewById(R.id.nb_parkings);
+        TextView nbParkingView = (TextView) windowView.findViewById(R.id.nb_parking);
         nbParkingView.setText("" + station.nbEmptySlots);
 
         TextView stationDataAgeView = (TextView) windowView.findViewById(R.id.station_data_age);
