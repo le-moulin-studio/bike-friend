@@ -1,64 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <TextView
-        android:id="@+id/chronometer_info_text"
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Started at 15:32:45"
-        android:gravity="center_vertical"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_action_chronometer_grey_bg"
+        android:scaleType="center"
         />
 
-    <TextView
-        android:id="@+id/chronometer_time_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="70dp"
-        android:text="00:00:00"
-        android:gravity="center"
-        android:layout_weight="2"/>
-
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_weight="1"
-        android:gravity="center_vertical">
-        <Button
-            android:id="@+id/chronometer_start_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:text="@string/chronometer_start_button"
-            android:textColor="@android:color/white"
-            android:background="@drawable/start_button_selector"
-            android:layout_marginLeft="48dp"
-            android:layout_marginRight="24dp"
-            android:minHeight="48dp"
-            android:layout_weight="1"
-            />
-        <Button
-            android:id="@+id/chronometer_stop_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:text="@string/chronometer_stop_button"
-            android:textColor="@android:color/white"
-            android:background="@drawable/stop_button_selector"
-            android:layout_marginLeft="24dp"
-            android:layout_marginRight="48dp"
-            android:minHeight="48dp"
-            android:layout_weight="1"
-            />
-    </LinearLayout>
+        android:layout_height="match_parent">
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/chronometer_info_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Started at 15:32:45"
+            android:gravity="center_vertical"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:layout_weight="1"
+            />
+
+        <TextView
+            android:id="@+id/chronometer_time_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="70dp"
+            android:text="00:00:00"
+            android:gravity="center"
+            android:layout_weight="2"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:gravity="center_vertical">
+            <Button
+                android:id="@+id/chronometer_start_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:text="@string/chronometer_start_button"
+                android:textColor="@android:color/white"
+                android:background="@drawable/start_button_selector"
+                android:layout_marginLeft="48dp"
+                android:layout_marginRight="24dp"
+                android:minHeight="48dp"
+                android:layout_weight="1"
+                />
+            <Button
+                android:id="@+id/chronometer_stop_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:text="@string/chronometer_stop_button"
+                android:textColor="@android:color/white"
+                android:background="@drawable/stop_button_selector"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="48dp"
+                android:minHeight="48dp"
+                android:layout_weight="1"
+                />
+        </LinearLayout>
+
+    </LinearLayout>
+</FrameLayout>
