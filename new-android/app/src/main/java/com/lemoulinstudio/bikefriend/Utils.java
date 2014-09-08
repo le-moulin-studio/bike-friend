@@ -1,5 +1,9 @@
 package com.lemoulinstudio.bikefriend;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.lemoulinstudio.bikefriend.db.BikeStation;
@@ -84,5 +88,12 @@ public class Utils {
     String languageCode = Locale.getDefault().getLanguage();
     return "zh".equals(languageCode) || "ja".equals(languageCode);
   }
-  
+
+  public static boolean isNetworkAvailable(Context context) {
+    ConnectivityManager connectivityManager =
+          (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+    return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+  }
+
 }

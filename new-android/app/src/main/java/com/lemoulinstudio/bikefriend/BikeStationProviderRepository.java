@@ -41,6 +41,18 @@ public class BikeStationProviderRepository {
         return bikeStationProviders;
     }
 
+    public void registerForBikeStationUpdates(BikeStationListener listener) {
+        for (BikeStationProvider bikeStationProvider : bikeStationProviders) {
+            bikeStationProvider.addListener(listener);
+        }
+    }
+
+    public void unregisterForBikeStationUpdates(BikeStationListener listener) {
+        for (BikeStationProvider bikeStationProvider : bikeStationProviders) {
+            bikeStationProvider.removeListener(listener);
+        }
+    }
+
     public BikeStationProvider getBikeStationProvider(DataSourceEnum dataSource) {
         for (BikeStationProvider bikeStationProvider : bikeStationProviders) {
             if (bikeStationProvider.getDataSourceEnum() == dataSource) {

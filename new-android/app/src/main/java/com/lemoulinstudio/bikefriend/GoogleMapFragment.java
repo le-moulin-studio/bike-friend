@@ -192,7 +192,7 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
     }
 
     @Override
-    public void onActivityCreated (Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
     }
@@ -214,7 +214,7 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_refresh: {
-                if (isNetworkAvailable()) {
+                if (Utils.isNetworkAvailable(getActivity())) {
                     LatLngBounds visibleRegion = getMap().getProjection().getVisibleRegion().latLngBounds;
                     for (BikeStationProvider bikeStationProvider : bikeStationProviderRepository.getBikeStationProviders()) {
                         LatLngBounds providerBounds = bikeStationProvider.getBounds();
@@ -335,13 +335,6 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
                 return super.onOptionsItemSelected(item);
             }
         }
-    }
-
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager =
-                (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     private void animateCameraToBoundingBox(LatLngBounds bounds) {
@@ -526,18 +519,6 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
 //        removeAllMarkers(markers);
 //    }
 
-    private void registerForBikeStationUpdates() {
-        for (BikeStationProvider bikeStationProvider : bikeStationProviderRepository.getBikeStationProviders()) {
-            bikeStationProvider.addListener(this);
-        }
-    }
-
-    private void unregisterForBikeStationUpdates() {
-        for (BikeStationProvider bikeStationProvider : bikeStationProviderRepository.getBikeStationProviders()) {
-            bikeStationProvider.removeListener(this);
-        }
-    }
-
     public void onPause() {
         super.onPause();
 
@@ -560,16 +541,13 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
     @Override
     public void onStart() {
         super.onStart();
-
-        registerForBikeStationUpdates();
+        bikeStationProviderRepository.registerForBikeStationUpdates(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-
-        unregisterForBikeStationUpdates();
-
+        bikeStationProviderRepository.unregisterForBikeStationUpdates(this);
         siwa.unbindAllMarkers();
     }
 }

@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,8 +23,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
+import java.util.Set;
 
 /**
  * Created by davidandreoletti on 28/08/2014.
@@ -55,35 +55,48 @@ public class FavoriteStationsAdapter extends BaseAdapter {
     // end
 
     protected List<Object> items;
+    protected Set<BikeStationProvider> listedProviders;
     protected List<Class> itemClasses;
-
-    protected int total;
 
     @AfterInject
     protected void setupViews() {
         inflater = LayoutInflater.from(context);
-        items = new ArrayList();
+        items = new ArrayList<Object>();
+        listedProviders = new HashSet<BikeStationProvider>();
         itemClasses = Arrays.<Class>asList(BikeStation.class, BikeStationProvider.class);
 
-        updateItems();
+        selectItemsToList();
     }
 
-    private void updateItems() {
-        // Build List of favorite items
+    private void selectItemsToList() {
+        // Lists all the favorite items and their provider.
         items.clear();
-        Collection<BikeStationProvider> providers = bikeStationProviderRepository.getBikeStationProviders();
-        for (BikeStationProvider provider : providers) {
+        listedProviders.clear();
+
+        for (BikeStationProvider provider : bikeStationProviderRepository.getBikeStationProviders()) {
             boolean providerAlreadyAdded = false;
             for (BikeStation station : provider.getBikeStations()) {
                 if (station.isPreferred) {
                     if (!providerAlreadyAdded) {
                         items.add(provider);
+                        listedProviders.add(provider);
                         providerAlreadyAdded = true;
                     }
                     items.add(station);
                 }
             }
         }
+    }
+
+    public Collection<BikeStationProvider> getListedBikeStationProviders() {
+        return listedProviders;
+    }
+
+    public void refreshData() {
+        // We do not reset our selection of stations to show in the list.
+        // Instead, we just let the observers know that their value (and their view)
+        // has changed and that they need to fetch it from this adapter.
+        notifyDataSetChanged();
     }
 
     @Override
@@ -192,9 +205,4 @@ public class FavoriteStationsAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public static String i18nStationName(BikeStation station) {
-        String languageCode = Locale.getDefault().getLanguage();
-        return languageCode.equals("zh") || languageCode.equals("ja") ?
-             station.chineseName : station.englishName;
-    }
 }
