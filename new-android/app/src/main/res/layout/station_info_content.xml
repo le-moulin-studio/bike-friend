@@ -89,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:padding="8dp"
-                android:src="@drawable/ic_action_not_important"
+                android:src="@drawable/ic_action_star_grey"
                 />
         </RelativeLayout>
 

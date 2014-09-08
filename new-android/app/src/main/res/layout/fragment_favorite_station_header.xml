@@ -9,8 +9,9 @@
         style="?android:attr/listSeparatorTextViewStyle"
         android:id="@+id/fragment_favorite_station_region_separator"
         android:text="Header"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="8dp"
         android:background="#757678"
         android:textColor="#f5c227" />
 

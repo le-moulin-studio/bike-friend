@@ -179,7 +179,8 @@ public class FavoriteStationsAdapter extends BaseAdapter {
             holder.englishAddressView.setVisibility(station.englishAddress != null ? View.VISIBLE : View.GONE);
             holder.englishAddressView.setText(station.englishAddress);
 
-            holder.favoriteImageView.setImageResource(station.isPreferred ? R.drawable.ic_action_important : R.drawable.ic_action_not_important);
+            holder.favoriteImageView.setImageResource(station.isPreferred ?
+                    R.drawable.ic_action_star_yellow : R.drawable.ic_action_star_grey);
 
             holder.nbBicycleView.setText("" + station.nbBicycles);
 
@@ -207,7 +208,8 @@ public class FavoriteStationsAdapter extends BaseAdapter {
                     station.isPreferred = !station.isPreferred;
                     try {
                         bikeStationProviderRepository.updateDbFromMem(station);
-                        ((ImageView)view).setImageResource(station.isPreferred ? R.drawable.ic_action_important : R.drawable.ic_action_not_important);
+                        ((ImageView)view).setImageResource(station.isPreferred ?
+                                R.drawable.ic_action_star_yellow : R.drawable.ic_action_star_grey);
                     } catch (SQLException e) {
                         Log.e(BikefriendApplication.TAG, "Error when deselecting favorite station" + station, e);
                     }

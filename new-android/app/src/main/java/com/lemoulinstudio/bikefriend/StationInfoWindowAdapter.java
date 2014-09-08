@@ -99,7 +99,8 @@ public class StationInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         englishAddressView.setText(station.englishAddress);
 
         ImageView favoriteImageView = (ImageView) windowView.findViewById(R.id.favorite_image_view);
-        favoriteImageView.setImageResource(station.isPreferred ? R.drawable.ic_action_important : R.drawable.ic_action_not_important);
+        favoriteImageView.setImageResource(station.isPreferred ?
+                R.drawable.ic_action_star_yellow : R.drawable.ic_action_star_grey);
 
         TextView nbBicycleView = (TextView) windowView.findViewById(R.id.nb_bicycle);
         nbBicycleView.setText("" + station.nbBicycles);
