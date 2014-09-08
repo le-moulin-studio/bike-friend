@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.lemoulinstudio.bikefriend">
+    package="com.lemoulinstudio.bikefriend"
+    android:installLocation="auto">
 
     <!-- Needed by Google Map API v2 -->
     <uses-feature android:glEsVersion="0x00020000" android:required="true"/>
