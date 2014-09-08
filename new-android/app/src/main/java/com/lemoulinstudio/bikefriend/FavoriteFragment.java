@@ -6,8 +6,11 @@ import android.support.v4.app.ListFragment;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.lemoulinstudio.bikefriend.db.BikeStation;
 import com.lemoulinstudio.bikefriend.preference.BikefriendPreferences_;
 
 import org.androidannotations.annotations.AfterViews;
@@ -121,6 +124,17 @@ public class FavoriteFragment extends ListFragment implements BikeStationListene
 
         // Stops the auto-update task.
         handler.removeCallbacks(secondTickRunnable);
+    }
+
+    @Override
+    public void onListItemClick(ListView listView, View view, int position, long id) {
+        Object item = adapter.getItem(position);
+
+        if (item instanceof BikeStation) {
+            BikefriendActivity activity = (BikefriendActivity) getActivity();
+            BikeStation station = (BikeStation) item;
+            activity.showBikeStationOnMap(station);
+        }
     }
 
     @Override

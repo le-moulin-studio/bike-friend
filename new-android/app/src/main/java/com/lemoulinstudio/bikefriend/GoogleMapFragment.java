@@ -40,6 +40,7 @@ import com.lemoulinstudio.bikefriend.preference.BikefriendPreferences_;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.res.DrawableRes;
 import org.androidannotations.annotations.res.StringRes;
 import org.androidannotations.annotations.sharedpreferences.Pref;
@@ -549,5 +550,19 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
         super.onStop();
         bikeStationProviderRepository.unregisterForBikeStationUpdates(this);
         siwa.unbindAllMarkers();
+    }
+
+    @UiThread
+    public void showStation(BikeStation bikeStation) {
+        // Scrolls the camera to show the station.
+        getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(
+                new LatLng(bikeStation.latitude, bikeStation.longitude),
+                14));
+
+        // Opens the info windows.
+        Marker marker = siwa.getMarker(bikeStation);
+        if (marker != null) {
+            marker.showInfoWindow();
+        }
     }
 }

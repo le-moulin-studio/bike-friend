@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.lemoulinstudio.bikefriend.db.BikeStation;
 import com.lemoulinstudio.bikefriend.drawer.DrawerListAdapter;
 import com.lemoulinstudio.bikefriend.preference.BikefriendPreferenceActivity;
 import com.lemoulinstudio.bikefriend.preference.BikefriendPreferences_;
@@ -115,6 +116,16 @@ public class BikefriendActivity extends ActionBarActivity {
     private void onDrawerItemClicked(int itemId) {
         setClickedItem(itemId);
         drawerLayout.closeDrawers();
+    }
+
+    public void showBikeStationOnMap(BikeStation bikeStation) {
+        setClickedItem(mapItemId);
+
+        if (currentFragment == googleMapFragment) {
+            // This function call is made via an Handler (using @UiThread),
+            // so that the map markers are already created when it is executed.
+            googleMapFragment.showStation(bikeStation);
+        }
     }
 
     private final int mapItemId = 0;

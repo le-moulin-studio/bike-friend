@@ -133,4 +133,14 @@ public class StationInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     return null;
     }
 
+    /* This function is not called often, it is ok if it is slow. */
+    public Marker getMarker(BikeStation bikeStation) {
+        for (Map.Entry<Marker, BikeStation> entry : markerToStation.entrySet()) {
+            if (entry.getValue() == bikeStation) {
+                return entry.getKey();
+            }
+        }
+
+        return null;
+    }
 }
