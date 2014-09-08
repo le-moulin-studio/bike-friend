@@ -60,7 +60,8 @@ public class FavoriteFragment extends ListFragment implements BikeStationListene
                     }
                 }
 
-                handler.postDelayed(this, 1000);
+                // We re-schedule this task for 15 seconds later.
+                handler.postDelayed(this, 15 * 1000);
             }
         }
     };

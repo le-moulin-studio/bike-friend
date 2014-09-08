@@ -27,9 +27,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Created by davidandreoletti on 28/08/2014.
- */
 @EBean
 public class FavoriteStationsAdapter extends BaseAdapter {
 
@@ -119,51 +116,75 @@ public class FavoriteStationsAdapter extends BaseAdapter {
     }
 
     @Override
-    public int getItemViewType (int position) {
+    public int getItemViewType(int position) {
         return itemClasses.indexOf(items.get(position).getClass());
     }
 
+    private static class SectionViewHolder {
+        public TextView header;
+    }
+
+    private static class ItemViewHolder {
+        public ImageView dataSourceImageView;
+        public TextView chineseNameView;
+        public TextView englishNameView;
+        public TextView chineseAddressView;
+        public TextView englishAddressView;
+        public ImageView favoriteImageView;
+        public TextView nbBicycleView;
+        public TextView nbParkingView;
+        public TextView stationDataAgeView;
+    }
+
     @Override
-    public View getView(int i, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, ViewGroup parent) {
         // Fetch data at position
-        Object obj = getItem(i);
+        Object obj = getItem(position);
         // Create view
         if (obj instanceof BikeStation) {
+
+            if (convertView == null) {
+                convertView = inflater.inflate(R.layout.fragment_favorite_station, parent, false);
+                ItemViewHolder holder = new ItemViewHolder();
+                holder.dataSourceImageView = (ImageView) convertView.findViewById(R.id.data_source_image);
+                holder.chineseNameView = (TextView) convertView.findViewById(R.id.chinese_name);
+                holder.englishNameView = (TextView) convertView.findViewById(R.id.english_name);
+                holder.chineseAddressView = (TextView) convertView.findViewById(R.id.chinese_address);
+                holder.englishAddressView = (TextView) convertView.findViewById(R.id.english_address);
+                holder.favoriteImageView = (ImageView) convertView.findViewById(R.id.favorite_image_view);
+                holder.nbBicycleView = (TextView) convertView.findViewById(R.id.nb_bicycle);
+                holder.nbParkingView = (TextView) convertView.findViewById(R.id.nb_parking);
+                holder.stationDataAgeView = (TextView) convertView.findViewById(R.id.station_data_age);
+                convertView.setTag(holder);
+            }
+
+            ItemViewHolder holder = (ItemViewHolder) convertView.getTag();
+
             // Station
             final BikeStation station = (BikeStation) obj;
-            convertView = inflater.inflate(R.layout.fragment_favorite_station, parent, false);
 
-            ImageView dataSourceImageView = (ImageView) convertView.findViewById(R.id.data_source_image);
-            dataSourceImageView.setImageResource(
+            holder.dataSourceImageView.setImageResource(
                     station.dataSource.bikeSystem == BikeSystem.YouBike ?
                             R.drawable.map_marker_youbike : R.drawable.map_marker_citybike);
 
-            TextView chineseNameView = (TextView) convertView.findViewById(R.id.chinese_name);
-            chineseNameView.setVisibility(station.chineseName != null ? View.VISIBLE : View.GONE);
-            chineseNameView.setText(station.chineseName);
+            holder.chineseNameView.setVisibility(station.chineseName != null ? View.VISIBLE : View.GONE);
+            holder.chineseNameView.setText(station.chineseName);
 
-            TextView englishNameView = (TextView) convertView.findViewById(R.id.english_name);
-            englishNameView.setVisibility(station.englishName != null ? View.VISIBLE : View.GONE);
-            englishNameView.setText(station.englishName);
+            holder.englishNameView.setVisibility(station.englishName != null ? View.VISIBLE : View.GONE);
+            holder.englishNameView.setText(station.englishName);
 
-            TextView chineseAddressView = (TextView) convertView.findViewById(R.id.chinese_address);
-            chineseAddressView.setVisibility(station.chineseAddress != null ? View.VISIBLE : View.GONE);
-            chineseAddressView.setText(station.chineseAddress);
+            holder.chineseAddressView.setVisibility(station.chineseAddress != null ? View.VISIBLE : View.GONE);
+            holder.chineseAddressView.setText(station.chineseAddress);
 
-            TextView englishAddressView = (TextView) convertView.findViewById(R.id.english_address);
-            englishAddressView.setVisibility(station.englishAddress != null ? View.VISIBLE : View.GONE);
-            englishAddressView.setText(station.englishAddress);
+            holder.englishAddressView.setVisibility(station.englishAddress != null ? View.VISIBLE : View.GONE);
+            holder.englishAddressView.setText(station.englishAddress);
 
-            ImageView favoriteImageView = (ImageView) convertView.findViewById(R.id.favorite_image_view);
-            favoriteImageView.setImageResource(station.isPreferred ? R.drawable.ic_action_important : R.drawable.ic_action_not_important);
+            holder.favoriteImageView.setImageResource(station.isPreferred ? R.drawable.ic_action_important : R.drawable.ic_action_not_important);
 
-            TextView nbBicycleView = (TextView) convertView.findViewById(R.id.nb_bicycle);
-            nbBicycleView.setText("" + station.nbBicycles);
+            holder.nbBicycleView.setText("" + station.nbBicycles);
 
-            TextView nbParkingView = (TextView) convertView.findViewById(R.id.nb_parking);
-            nbParkingView.setText("" + station.nbEmptySlots);
+            holder.nbParkingView.setText("" + station.nbEmptySlots);
 
-            TextView stationDataAgeView = (TextView) convertView.findViewById(R.id.station_data_age);
 
             String ageString;
             long age = new Date().getTime() - station.lastUpdate.getTime();
@@ -179,7 +200,7 @@ public class FavoriteStationsAdapter extends BaseAdapter {
             else {
                 ageString = String.format(dataAgeDayFormat, age / (24 * 60 * 60 * 1000));
             }
-            stationDataAgeView.setText(ageString);
+            holder.stationDataAgeView.setText(ageString);
 
             View.OnClickListener favoriteImageViewListener = new View.OnClickListener(){
                 public void onClick(android.view.View view) {
@@ -193,15 +214,23 @@ public class FavoriteStationsAdapter extends BaseAdapter {
                 }
             };
 
-            favoriteImageView.setOnClickListener(favoriteImageViewListener);
+            holder.favoriteImageView.setOnClickListener(favoriteImageViewListener);
         }
         else {
+            if (convertView == null) {
+                convertView = inflater.inflate(R.layout.fragment_favorite_station_header, parent, false);
+                SectionViewHolder holder = new SectionViewHolder();
+                holder.header = (TextView) convertView.findViewById(R.id.fragment_favorite_station_region_separator);
+                convertView.setTag(holder);
+            }
+
+            SectionViewHolder holder = (SectionViewHolder) convertView.getTag();
+
             // Provider
             BikeStationProvider provider = (BikeStationProvider) obj;
-            convertView = inflater.inflate(R.layout.fragment_favorite_station_header, parent, false);
-            TextView header = (TextView) convertView.findViewById(R.id.fragment_favorite_station_region_separator);
-            header.setText(provider.getDataSourceEnum().placeNameRes);
+            holder.header.setText(provider.getDataSourceEnum().placeNameRes);
         }
+
         return convertView;
     }
 
