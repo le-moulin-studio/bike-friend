@@ -6,6 +6,7 @@ import com.lemoulinstudio.bikefriend.parser.BikeStationParser;
 import com.lemoulinstudio.bikefriend.R;
 import com.lemoulinstudio.bikefriend.Utils;
 import com.lemoulinstudio.bikefriend.parser.CityBikeStationXmlParserV1;
+import com.lemoulinstudio.bikefriend.parser.NewBikeStationHtmlParserV1;
 import com.lemoulinstudio.bikefriend.parser.YouBikeStationHtmlParserV2;
 import com.lemoulinstudio.bikefriend.parser.YouBikeStationJsonParserV1;
 
@@ -20,6 +21,15 @@ public enum DataSourceEnum {
             24.979649f, 121.493065f, 25.137976f, 121.662750f,
             "http://opendata.dot.taipei.gov.tw/opendata/gwjs_cityhall.json",
             new YouBikeStationJsonParserV1(),
+            0),
+
+    NewBike_NewTaipei(
+            "NTP",
+            R.string.menu_place_new_taipei,
+            BikeSystem.NewBike,
+            24.979649f, 121.493065f, 25.137976f, 121.662750f,
+            "http://bike.ntpc.gov.tw/Station1.aspx",
+            new NewBikeStationHtmlParserV1(),
             0),
 
     YouBike_Taichung(
@@ -60,7 +70,7 @@ public enum DataSourceEnum {
     public final int placeNameRes;
 
     /**
-     *
+     * The bike system used.
      */
     public final BikeSystem bikeSystem;
 

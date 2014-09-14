@@ -16,7 +16,7 @@
         android:id="@+id/menu_parking"
         android:icon="@drawable/ic_action_parking"
         app:showAsAction="ifRoom"
-        android:title="@string/menu_bicycle"/>
+        android:title="@string/menu_parking"/>
     <item
         android:id="@+id/menu_places"
         android:icon="@drawable/ic_action_goto_location"
@@ -28,6 +28,11 @@
                 android:icon="@drawable/ic_action_place"
                 app:showAsAction="never"
                 android:title="@string/menu_place_taipei"/>
+            <item
+                android:id="@+id/menu_place_new_taipei"
+                android:icon="@drawable/ic_action_place"
+                app:showAsAction="never"
+                android:title="@string/menu_place_new_taipei"/>
             <item
                 android:id="@+id/menu_place_taichung"
                 android:icon="@drawable/ic_action_place"

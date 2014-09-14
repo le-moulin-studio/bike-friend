@@ -3,13 +3,11 @@ package com.lemoulinstudio.bikefriend;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 import com.lemoulinstudio.bikefriend.db.BikeStation;
-import com.lemoulinstudio.bikefriend.db.BikeSystem;
 
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.EBean;
@@ -78,9 +76,7 @@ public class StationInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         BikeStation station = markerToStation.get(marker);
 
         ImageView dataSourceImageView = (ImageView) windowView.findViewById(R.id.data_source_image);
-        dataSourceImageView.setImageResource(
-                station.dataSource.bikeSystem == BikeSystem.YouBike ?
-                        R.drawable.map_marker_youbike : R.drawable.map_marker_citybike);
+        dataSourceImageView.setImageResource(station.dataSource.bikeSystem.mapMarkerResource);
 
         TextView chineseNameView = (TextView) windowView.findViewById(R.id.chinese_name);
         chineseNameView.setVisibility(station.chineseName != null ? View.VISIBLE : View.GONE);

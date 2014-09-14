@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lemoulinstudio.bikefriend.db.BikeStation;
-import com.lemoulinstudio.bikefriend.db.BikeSystem;
 
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.Bean;
@@ -163,9 +162,7 @@ public class FavoriteStationsAdapter extends BaseAdapter {
             // Station
             final BikeStation station = (BikeStation) obj;
 
-            holder.dataSourceImageView.setImageResource(
-                    station.dataSource.bikeSystem == BikeSystem.YouBike ?
-                            R.drawable.map_marker_youbike : R.drawable.map_marker_citybike);
+            holder.dataSourceImageView.setImageResource(station.dataSource.bikeSystem.mapMarkerResource);
 
             holder.chineseNameView.setVisibility(station.chineseName != null ? View.VISIBLE : View.GONE);
             holder.chineseNameView.setText(station.chineseName);
