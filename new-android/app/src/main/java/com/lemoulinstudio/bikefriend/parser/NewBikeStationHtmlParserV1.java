@@ -10,14 +10,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * This parser extracts information from the website of NewBike.
@@ -45,7 +42,64 @@ public class NewBikeStationHtmlParserV1 implements BikeStationParser {
 
   @Override
   public List<BikeStation> parse(InputStream in) throws IOException, ParsingException {
-      return new ArrayList<BikeStation>();
+      List<BikeStation> result= new ArrayList<BikeStation>();
+      BufferedReader br = new BufferedReader(new InputStreamReader(in));
+
+      try {
+          boolean inMarkerArray = false;
+
+          for (String line = br.readLine(); line != null; line = br.readLine()) {
+              line = line.trim();
+
+              if (!inMarkerArray) {
+                  if (line.equals("var markers = [")) {
+                      inMarkerArray = true;
+                  }
+              }
+              else {
+                  if (line.endsWith("];")) {
+                      line.substring(0, line.length() - 2);
+                      inMarkerArray = false;
+                  }
+                  else if (line.endsWith(",")) {
+                      line.substring(0, line.length() - 1);
+                  }
+
+                  result.add(parseStation(line));
+              }
+          }
+      }
+      catch (Exception e) {
+          throw new ParsingException(e);
+      }
+      finally {
+          br.close();
+      }
+
+      return result;
   }
-  
+
+    private BikeStation parseStation(String jsonText) throws JSONException {
+        JSONObject jsonStation = new JSONObject(jsonText);
+        //Log.i(jsonStation.toString(2));
+
+        BikeStation station = new BikeStation();
+        //station.id             = dataSource.idPrefix + "";
+        station.dataSource     = dataSource;
+        station.lastUpdate     = new Date();
+        station.chineseName    = jsonStation.optString("name", null);
+        station.chineseAddress = null;
+        station.englishName    = null;
+        station.englishAddress = null;
+        station.latitude = Float.parseFloat(jsonStation.getString("lat"));
+        station.longitude = Float.parseFloat(jsonStation.getString("lng"));
+        station.nbBicycles = 0;
+        station.nbEmptySlots = 0;
+
+        // TMP hack, until there are normal IDs.
+        station.id = dataSource.idPrefix + station.latitude + station.longitude;
+
+        return station;
+    }
+
 }

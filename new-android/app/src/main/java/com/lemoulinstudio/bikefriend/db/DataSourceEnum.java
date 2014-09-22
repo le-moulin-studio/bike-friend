@@ -28,7 +28,7 @@ public enum DataSourceEnum {
             R.string.menu_place_new_taipei,
             BikeSystem.NewBike,
             24.979649f, 121.493065f, 25.137976f, 121.662750f,
-            "http://bike.ntpc.gov.tw/Station1.aspx",
+            "http://bike.ntpc.gov.tw/MapStation1.aspx",
             new NewBikeStationHtmlParserV1(),
             0),
 
