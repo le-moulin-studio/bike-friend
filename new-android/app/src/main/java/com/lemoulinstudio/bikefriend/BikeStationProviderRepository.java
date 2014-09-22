@@ -11,7 +11,7 @@ import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.OrmLiteDao;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.sql.SQLException;
 
@@ -29,12 +29,10 @@ public class BikeStationProviderRepository {
 
     @AfterInject
     public void afterInject() {
-        bikeStationProviders = Arrays.<BikeStationProvider>asList(
-                new BikeStationProviderImpl(DataSourceEnum.YouBike_Taipei, preferences, bikeStationDao),
-                new BikeStationProviderImpl(DataSourceEnum.YouBike_Taichung, preferences, bikeStationDao),
-                new BikeStationProviderImpl(DataSourceEnum.YouBike_Changhua, preferences, bikeStationDao),
-                new BikeStationProviderImpl(DataSourceEnum.CityBike_Kaohsiung, preferences, bikeStationDao)
-        );
+        bikeStationProviders = new ArrayList<BikeStationProvider>();
+        for (DataSourceEnum dataSource : DataSourceEnum.values()) {
+            bikeStationProviders.add(new BikeStationProviderImpl(dataSource, preferences, bikeStationDao));
+        }
     }
 
     public Collection<BikeStationProvider> getBikeStationProviders() {
