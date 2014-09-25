@@ -27,11 +27,11 @@ public class YouBikeStationCSVParserV1 implements BikeStationParser {
   @Override
   public List<BikeStation> parse(InputStream in) throws IOException, ParsingException {
     List<BikeStation> result = new ArrayList<BikeStation>();
-    
+    String rawData = Utils.readToString(in);
+
     try {
       Date now = new Date();
       
-      String rawData = Utils.readToString(in);
       String[] lines = rawData.split("\\|");
       for (String line : lines) {
         //Log.i("bikefriend", "line = " + line);
@@ -59,7 +59,7 @@ public class YouBikeStationCSVParserV1 implements BikeStationParser {
       }
     }
     catch (Exception e) {
-      throw new ParsingException(e);
+      throw new ParsingException(rawData, e);
     }
     finally {
       in.close();

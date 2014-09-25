@@ -215,8 +215,12 @@ public class BikeStationProviderImpl implements BikeStationProvider,
 
         @Override
         protected Void doInBackground(BikeStationProvider... params) {
-            try {updateMemFromDb();}
-            catch (SQLException e) {}
+            try {
+                updateMemFromDb();
+            }
+            catch (SQLException e) {
+                Log.e(BikefriendApplication.TAG, "SQL exception", e);
+            }
 
             return null;
         }
@@ -259,7 +263,9 @@ public class BikeStationProviderImpl implements BikeStationProvider,
                         updateDbFromMem();
                     }
                 }
-                catch (SQLException e) {}
+                catch (SQLException e) {
+                    Log.e(BikefriendApplication.TAG, "SQL exception", e);
+                }
                 bounds = Utils.computeBounds(bikeStations);
                 lastUpdateDate = new Date();
                 isFetchingStations = false;
@@ -267,11 +273,11 @@ public class BikeStationProviderImpl implements BikeStationProvider,
                 return stations;
             }
             catch (IOException e) {
-                //Log.d(BikefriendApplication.TAG, "Network problem.", e);
+                //Log.d(BikefriendApplication.TAG, "Network problem on " + dataSource.name(), e);
                 networkProblem = true;
             }
             catch (ParsingException e) {
-                //Log.d(BikefriendApplication.TAG, "Parsing problem.", e);
+                Log.e(BikefriendApplication.TAG, "Problem while parsing " + dataSource.name() + ": " + e.getMessage(), e);
                 parsingProblem = true;
             }
 

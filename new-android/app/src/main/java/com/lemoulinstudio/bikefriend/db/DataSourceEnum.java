@@ -7,6 +7,7 @@ import com.lemoulinstudio.bikefriend.R;
 import com.lemoulinstudio.bikefriend.Utils;
 import com.lemoulinstudio.bikefriend.parser.CityBikeStationXmlParserV1;
 import com.lemoulinstudio.bikefriend.parser.NewBikeStationHtmlParserV1;
+import com.lemoulinstudio.bikefriend.parser.NewBikeStationJsonParserV1;
 import com.lemoulinstudio.bikefriend.parser.YouBikeStationHtmlParserV2;
 import com.lemoulinstudio.bikefriend.parser.YouBikeStationJsonParserV1;
 
@@ -27,9 +28,9 @@ public enum DataSourceEnum {
             "NTP",
             R.string.menu_place_new_taipei,
             BikeSystem.NewBike,
-            24.979649f, 121.493065f, 25.137976f, 121.662750f,
-            "http://bike.ntpc.gov.tw/MapStation1.aspx",
-            new NewBikeStationHtmlParserV1(),
+            24.997747f, 121.452415f, 25.029684f, 121.480370f,
+            "http://data.ntpc.gov.tw/NTPC/od/data/api/2120500427/?$format=json",
+            new NewBikeStationJsonParserV1(),
             0),
 
     YouBike_Taichung(
