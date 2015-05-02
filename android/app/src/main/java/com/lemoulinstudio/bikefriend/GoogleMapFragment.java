@@ -326,6 +326,11 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
                         .getBikeStationProvider(DataSourceEnum.CityBike_Kaohsiung).getBounds());
                 return true;
             }
+            case R.id.menu_place_pingtung: {
+                animateCameraToBoundingBox(bikeStationProviderRepository
+                        .getBikeStationProvider(DataSourceEnum.PingtungBike_Pingtung).getBounds());
+                return true;
+            }
             case R.id.menu_place_taiwan: {
                 animateCameraToBoundingBox(new LatLngBounds(
                         new LatLng(21.885012f, 119.877213f),

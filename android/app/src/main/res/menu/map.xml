@@ -50,6 +50,11 @@
                 android:title="@string/menu_place_tainan"
                 android:visible="false"/>
             <item
+                android:id="@+id/menu_place_pingtung"
+                android:icon="@drawable/ic_action_place"
+                app:showAsAction="never"
+                android:title="@string/menu_place_pingtung"/>
+            <item
                 android:id="@+id/menu_place_taiwan"
                 android:icon="@drawable/ic_action_taiwan"
                 app:showAsAction="never"
