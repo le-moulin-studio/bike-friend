@@ -311,11 +311,6 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
                         .getBikeStationProvider(DataSourceEnum.YouBike_Taipei).getBounds());
                 return true;
             }
-            case R.id.menu_place_new_taipei: {
-                animateCameraToBoundingBox(bikeStationProviderRepository
-                        .getBikeStationProvider(DataSourceEnum.NewBike_NewTaipei).getBounds());
-                return true;
-            }
             case R.id.menu_place_taichung: {
                 animateCameraToBoundingBox(bikeStationProviderRepository
                         .getBikeStationProvider(DataSourceEnum.YouBike_Taichung).getBounds());
