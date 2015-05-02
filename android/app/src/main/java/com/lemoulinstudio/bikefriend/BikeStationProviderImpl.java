@@ -237,7 +237,7 @@ public class BikeStationProviderImpl implements BikeStationProvider,
         private volatile boolean parsingProblem;
 
         protected InputStream getDataStream() throws IOException {
-            HttpURLConnection connection = (HttpURLConnection) dataSource.url.openConnection();
+            HttpURLConnection connection = (HttpURLConnection) dataSource.urlProvider.getUrl().openConnection();
             connection.setReadTimeout(10000 /* milliseconds */);
             connection.setConnectTimeout(10000 /* milliseconds */);
             connection.setRequestMethod("GET");

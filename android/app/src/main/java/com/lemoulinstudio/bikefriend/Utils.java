@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 import java.util.Locale;
 
@@ -83,7 +85,29 @@ public class Utils {
       throw new RuntimeException(e);
     }
   }
-  
+
+  public static String md5(final String s) {
+    try {
+      // Create MD5 Hash
+      MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
+      digest.update(s.getBytes());
+      byte[] messageDigest = digest.digest();
+
+      // Create Hex String
+      StringBuilder hexString = new StringBuilder();
+      for (byte aMessageDigest : messageDigest) {
+        String h = Integer.toHexString(0xFF & aMessageDigest);
+        while (h.length() < 2) h = "0" + h;
+        hexString.append(h);
+      }
+      return hexString.toString();
+
+    } catch (NoSuchAlgorithmException e) {
+      e.printStackTrace();
+    }
+    return "";
+  }
+
   public static boolean shouldDisplayChineseLocationsAndAddresses() {
     String languageCode = Locale.getDefault().getLanguage();
     return "zh".equals(languageCode) || "ja".equals(languageCode);
