@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lemoulinstudio.bikefriend.db.BikeStation;
+import com.lemoulinstudio.bikefriend.db.DataSourceEnum;
 
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.Bean;
@@ -121,14 +122,13 @@ public class FavoriteStationsAdapter extends BaseAdapter {
 
     private static class SectionViewHolder {
         public TextView header;
+        public ImageView dataSourceImageView;
     }
 
     private static class ItemViewHolder {
-        public ImageView dataSourceImageView;
+        //public ImageView dataSourceImageView;
         public TextView chineseNameView;
         public TextView englishNameView;
-        public TextView chineseAddressView;
-        public TextView englishAddressView;
         public ImageView favoriteImageView;
         public TextView nbBicycleView;
         public TextView nbParkingView;
@@ -145,11 +145,8 @@ public class FavoriteStationsAdapter extends BaseAdapter {
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.fragment_favorite_station, parent, false);
                 ItemViewHolder holder = new ItemViewHolder();
-                holder.dataSourceImageView = (ImageView) convertView.findViewById(R.id.data_source_image);
                 holder.chineseNameView = (TextView) convertView.findViewById(R.id.chinese_name);
                 holder.englishNameView = (TextView) convertView.findViewById(R.id.english_name);
-                holder.chineseAddressView = (TextView) convertView.findViewById(R.id.chinese_address);
-                holder.englishAddressView = (TextView) convertView.findViewById(R.id.english_address);
                 holder.favoriteImageView = (ImageView) convertView.findViewById(R.id.favorite_image_view);
                 holder.nbBicycleView = (TextView) convertView.findViewById(R.id.nb_bicycle);
                 holder.nbParkingView = (TextView) convertView.findViewById(R.id.nb_parking);
@@ -162,19 +159,11 @@ public class FavoriteStationsAdapter extends BaseAdapter {
             // Station
             final BikeStation station = (BikeStation) obj;
 
-            holder.dataSourceImageView.setImageResource(station.dataSource.bikeSystem.mapMarkerResource);
-
             holder.chineseNameView.setVisibility(station.chineseName != null ? View.VISIBLE : View.GONE);
             holder.chineseNameView.setText(station.chineseName);
 
             holder.englishNameView.setVisibility(station.englishName != null ? View.VISIBLE : View.GONE);
             holder.englishNameView.setText(station.englishName);
-
-            holder.chineseAddressView.setVisibility(station.chineseAddress != null ? View.VISIBLE : View.GONE);
-            holder.chineseAddressView.setText(station.chineseAddress);
-
-            holder.englishAddressView.setVisibility(station.englishAddress != null ? View.VISIBLE : View.GONE);
-            holder.englishAddressView.setText(station.englishAddress);
 
             holder.favoriteImageView.setImageResource(station.isPreferred ?
                     R.drawable.ic_action_star_yellow : R.drawable.ic_action_star_grey);
@@ -220,6 +209,7 @@ public class FavoriteStationsAdapter extends BaseAdapter {
                 convertView = inflater.inflate(R.layout.fragment_favorite_station_header, parent, false);
                 SectionViewHolder holder = new SectionViewHolder();
                 holder.header = (TextView) convertView.findViewById(R.id.fragment_favorite_station_region_separator);
+                holder.dataSourceImageView = (ImageView) convertView.findViewById(R.id.data_source_image);
                 convertView.setTag(holder);
             }
 
@@ -227,7 +217,9 @@ public class FavoriteStationsAdapter extends BaseAdapter {
 
             // Provider
             BikeStationProvider provider = (BikeStationProvider) obj;
-            holder.header.setText(provider.getDataSourceEnum().placeNameRes);
+            DataSourceEnum dataSource = provider.getDataSourceEnum();
+            holder.header.setText(dataSource.placeNameRes);
+            holder.dataSourceImageView.setImageResource(dataSource.bikeSystem.mapMarkerResource);
         }
 
         return convertView;
