@@ -7,13 +7,14 @@ import android.util.Log;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import com.lemoulinstudio.bikefriend.BikefriendApplication;
 
 import java.sql.SQLException;
 
 public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String DATABASE_NAME = "bikefriend.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public MyDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -35,6 +36,16 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
+        if (oldVersion != newVersion) {
+            if (newVersion == 2) {
+                try {
+                    TableUtils.clearTable(connectionSource, BikeStation.class);
+                }
+                catch (SQLException e) {
+                    Log.e(BikefriendApplication.TAG, "Error while clearing table", e);
+                }
+            }
+        }
     }
 
 }

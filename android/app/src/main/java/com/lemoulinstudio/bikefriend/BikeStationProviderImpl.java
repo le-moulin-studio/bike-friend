@@ -16,6 +16,8 @@ import com.lemoulinstudio.bikefriend.preference.BikefriendPreferences_;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -237,11 +239,32 @@ public class BikeStationProviderImpl implements BikeStationProvider,
         private volatile boolean parsingProblem;
 
         protected InputStream getDataStream() throws IOException {
-            HttpURLConnection connection = (HttpURLConnection) dataSource.urlProvider.getUrl().openConnection();
-            connection.setReadTimeout(10000 /* milliseconds */);
-            connection.setConnectTimeout(10000 /* milliseconds */);
-            connection.setRequestMethod("GET");
-            connection.setDoInput(true);
+            URL url = dataSource.urlProvider.getUrl();
+            int nbRedirect = 0;
+            int responseCode;
+            HttpURLConnection connection;
+
+            while (true) {
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setInstanceFollowRedirects(false); // turned off because implementation is buggy
+                responseCode = connection.getResponseCode();
+
+                if (responseCode >= 300 && responseCode < 400) {
+                    nbRedirect++;
+                    if (nbRedirect == 5) {
+                        throw new IOException("Too many redirections (" + nbRedirect + ").");
+                    }
+
+                    String location = connection.getHeaderField("Location");
+                    //Log.d(BikefriendApplication.TAG, "Redirection to " + location);
+                    url = new URL(location);
+                    connection.disconnect();
+                }
+                else {
+                    break;
+                }
+            }
+
             connection.connect();
 
             return connection.getInputStream();

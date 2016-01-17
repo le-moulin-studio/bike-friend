@@ -10,9 +10,7 @@ import com.lemoulinstudio.bikefriend.parser.PingtungUrlProvider;
 import com.lemoulinstudio.bikefriend.parser.StaticUrlProvider;
 import com.lemoulinstudio.bikefriend.parser.UrlProvider;
 import com.lemoulinstudio.bikefriend.parser.YouBikeStationHtmlParserV2;
-import com.lemoulinstudio.bikefriend.parser.YouBikeStationJsonParserV1;
-
-import java.net.URL;
+import com.lemoulinstudio.bikefriend.parser.YouBikeStationJsonParserV2;
 
 public enum DataSourceEnum {
 
@@ -21,8 +19,8 @@ public enum DataSourceEnum {
             R.string.menu_place_taipei,
             BikeSystem.YouBike,
             24.970415f, 121.414665f, 25.137976f, 121.674339f,
-            new StaticUrlProvider("http://opendata.dot.taipei.gov.tw/opendata/gwjs_cityhall.json"),
-            new YouBikeStationJsonParserV1(),
+            new StaticUrlProvider("http://data.taipei/youbike"),
+            new YouBikeStationJsonParserV2(),
             0),
 
     YouBike_Taichung(
