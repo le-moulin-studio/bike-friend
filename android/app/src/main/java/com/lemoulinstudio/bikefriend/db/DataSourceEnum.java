@@ -11,6 +11,7 @@ import com.lemoulinstudio.bikefriend.parser.StaticUrlProvider;
 import com.lemoulinstudio.bikefriend.parser.UrlProvider;
 import com.lemoulinstudio.bikefriend.parser.YouBikeStationHtmlParserV2;
 import com.lemoulinstudio.bikefriend.parser.YouBikeStationJsonParserV2;
+import com.lemoulinstudio.bikefriend.parser.YouBikeStationJsonParserV3;
 
 public enum DataSourceEnum {
 
@@ -21,6 +22,15 @@ public enum DataSourceEnum {
             24.970415f, 121.414665f, 25.137976f, 121.674339f,
             new StaticUrlProvider("http://data.taipei/youbike"),
             new YouBikeStationJsonParserV2(),
+            0),
+
+    YouBike_NewTaipei(
+            "NTP",
+            R.string.menu_place_new_taipei,
+            BikeSystem.YouBike,
+            24.970415f, 121.414665f, 25.137976f, 121.674339f,
+            new StaticUrlProvider("http://data.ntpc.gov.tw/od/data/api/54DDDC93-589C-4858-9C95-18B2046CC1FC?$format=json"),
+            new YouBikeStationJsonParserV3(),
             0),
 
     YouBike_Taichung(
