@@ -316,6 +316,16 @@ public class GoogleMapFragment extends SupportMapFragment implements BikeStation
                         .getBikeStationProvider(DataSourceEnum.YouBike_NewTaipei).getBounds());
                 return true;
             }
+            case R.id.menu_place_taoyuan: {
+                animateCameraToBoundingBox(bikeStationProviderRepository
+                        .getBikeStationProvider(DataSourceEnum.YouBike_Taoyuan).getBounds());
+                return true;
+            }
+            case R.id.menu_place_hsinchu: {
+                animateCameraToBoundingBox(bikeStationProviderRepository
+                        .getBikeStationProvider(DataSourceEnum.YouBike_Hsinchu).getBounds());
+                return true;
+            }
             case R.id.menu_place_taichung: {
                 animateCameraToBoundingBox(bikeStationProviderRepository
                         .getBikeStationProvider(DataSourceEnum.YouBike_Taichung).getBounds());

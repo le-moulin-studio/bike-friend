@@ -22,8 +22,10 @@
     <string name="menu_places">Places</string>
     <string name="menu_place_taipei">Taipei</string>
     <string name="menu_place_new_taipei">New Taipei</string>
-    <string name="menu_place_changhua">Changhua</string>
+    <string name="menu_place_taoyuan">Taoyuan</string>
+    <string name="menu_place_hsinchu">Hsinchu</string>
     <string name="menu_place_taichung">Taichung</string>
+    <string name="menu_place_changhua">Changhua</string>
     <string name="menu_place_kaohsiung">Kaohsiung</string>
     <string name="menu_place_tainan">Tainan</string>
     <string name="menu_place_pingtung">Pingtung</string>

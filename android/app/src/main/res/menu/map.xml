@@ -34,6 +34,16 @@
                 app:showAsAction="never"
                 android:title="@string/menu_place_new_taipei"/>
             <item
+                android:id="@+id/menu_place_taoyuan"
+                android:icon="@drawable/ic_action_place"
+                app:showAsAction="never"
+                android:title="@string/menu_place_taoyuan"/>
+            <item
+                android:id="@+id/menu_place_hsinchu"
+                android:icon="@drawable/ic_action_place"
+                app:showAsAction="never"
+                android:title="@string/menu_place_hsinchu"/>
+            <item
                 android:id="@+id/menu_place_taichung"
                 android:icon="@drawable/ic_action_place"
                 app:showAsAction="never"

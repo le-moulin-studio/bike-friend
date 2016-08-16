@@ -33,6 +33,24 @@ public enum DataSourceEnum {
             new YouBikeStationJsonParserV3(),
             0),
 
+    YouBike_Taoyuan(
+            "TY",
+            R.string.menu_place_taoyuan,
+            BikeSystem.YouBike,
+            24.940031f, 121.194664f, 25.060061f, 121.370972f,
+            new StaticUrlProvider("http://chcg.youbike.com.tw/cht/f12.php?loc=tycg"),
+            new YouBikeStationHtmlParserV2(),
+            0),
+
+    YouBike_Hsinchu(
+            "HSC",
+            R.string.menu_place_hsinchu,
+            BikeSystem.YouBike,
+            24.796843f, 120.956619f, 24.811226f, 120.996689f,
+            new StaticUrlProvider("http://chcg.youbike.com.tw/cht/f12.php?loc=hccg"),
+            new YouBikeStationHtmlParserV2(),
+            0),
+
     YouBike_Taichung(
             "TCH",
             R.string.menu_place_taichung,
